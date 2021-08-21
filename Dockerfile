@@ -1,4 +1,4 @@
-FROM node:12.16.3-alpine3.9
+FROM node:14.9
 
 RUN mkdir -p /var/www/hashgraph_chess/app
 WORKDIR /var/www/hashgraph_chess/app

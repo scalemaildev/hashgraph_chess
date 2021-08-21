@@ -1,0 +1,15 @@
+version: "3.7"
+
+services:
+  app:
+    build: ./app
+    container_name: hashgraph_chess
+    restart: always
+    ports:
+      - "3000:3000"
+    command: "npm run start"
+    networks:
+      - nuxt-network
+networks:
+  nuxt-network:
+    driver: bridge
