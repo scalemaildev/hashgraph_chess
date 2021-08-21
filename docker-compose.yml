@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.8"
 
 services:
   app:
@@ -10,6 +10,24 @@ services:
     command: "npm run start"
     networks:
       - nuxt-network
+
+ web-server:
+   image: nginx:1.21.1-alpine
+   container_name: hashgraph_chess_webserver
+   volumes:
+     - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+     - web-root:/var/www/webserver
+   ports:
+     - 80:80
+   networks:
+     nuxt-network:
+   depends_on:
+     - app
+   restart: unless-stopped
+   
+volumes:
+ web-root
+ 
 networks:
   nuxt-network:
     driver: bridge
