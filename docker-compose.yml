@@ -10,8 +10,7 @@ services:
     command: "npm run start"
     networks:
       - nuxt-network
-
- web-server:
+  web-server:
    image: nginx:1.21.1-alpine
    container_name: hashgraph_chess_webserver
    volumes:
@@ -24,9 +23,9 @@ services:
    depends_on:
      - app
    restart: unless-stopped
-   
+
 volumes:
- web-root
+ web-root:
  
 networks:
   nuxt-network:
