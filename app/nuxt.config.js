@@ -1,6 +1,13 @@
-import colors from 'vuetify/es5/util/colors'
+import colors from 'vuetify/es5/util/colors';
 
 export default {
+  publicRuntimeConfig: {
+    accountId: process.env.ACCOUNT_ID,
+    socketPort: process.env.PORT,
+  },
+  privateRuntimeConfig: {
+    privateKey: process.env.PRIVATE_KEY,
+  },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'Hashgraph Chess',
@@ -20,6 +27,7 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
+    '@/assets/styles.scss'
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
