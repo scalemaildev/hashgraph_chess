@@ -54,7 +54,10 @@ export default {
     sockets: [{      
       default: true,
       name: 'main',
-      url: 'http://localhost:3001'
+      url: 'http://localhost:3001',
+      vuex: {
+	actions: []
+      }
     }],
   },
 
@@ -80,4 +83,4 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   }
-}
+};
