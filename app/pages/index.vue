@@ -1,6 +1,11 @@
 <template>
 <v-container>
-  Test
+  <div v-if="!topicSet && !topicQuerying">
+    <StartPanel />
+  </div>
+  <div v-else>
+    Main Panels Go Here
+  </div>
 </v-container>
 </template>
 
@@ -8,18 +13,16 @@
 import { mapActions } from 'vuex';
 
 export default {
-    data() {
-	return {
-	    topicId: "",
-	    rules: {
-		topicId: value => {
-		    const pattern = /0.0.[0-9]{3,}/
-		    return pattern.test(value) || "Topic Id should look like 0.0.xxx"
-		}
-	    }
-	}
-    },
     computed: {
+	topicQuerying () {
+	    return this.$store.state.topicQuerying
+	},
+	topicSet () {
+	    return this.$store.state.topicSet
+	},
+	mirrorSubbed () {
+	    return this.$store.state.mirrorSubbed
+	}
     },
     mounted() {
 	this.$root.mainSocket = this.$nuxtSocket({
@@ -40,5 +43,5 @@ export default {
 	    console.log(result);
 	},
     }
-};  
+};
 </script>

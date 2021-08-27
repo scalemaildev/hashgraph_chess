@@ -1,5 +1,23 @@
 /* State */
-export const state = () => ({});
+export const state = () => ({
+    consensusMessages: [],
+    topicId: "",
+    topicQuerying: false,
+    topicSet: false,
+    mirrorSubbed: false
+});
+
+/* Mutations */
+export const mutations = {
+    pushMessage(state, message) {
+	state.consensusMessages.push(message);
+    },
+    toggleStateFlag(state, flag) {
+	console.log(flag);
+	console.log(state[flag.flagName]);
+	state[flag.flagName] = flag.bool;
+    },
+};
 
 /* Actions */
 export const actions = {
