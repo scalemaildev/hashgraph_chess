@@ -51,13 +51,10 @@ export default {
   ],
 
   io: {
-    sockets: [{      
+    sockets: [{     
       default: true,
-      name: 'main',
-      url: 'http://localhost:3001',
-      vuex: {
-	actions: []
-      }
+      name: 'main', 
+      url: 'http://localhost:3001'
     }],
   },
 

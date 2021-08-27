@@ -1,6 +1,5 @@
 const dotenv = require('dotenv').config();
-// import hashgraph
-// import other utils
+const hashgraph = require('./hashgraph');
 
 if (!process.env.ACCOUNT_ID) {
   throw 'NO ACCOUNT ID FOUND IN .ENV!';
@@ -16,10 +15,15 @@ const io = require("socket.io")(3001, {
 
 // IO
 io.on('connection', socket => {
-  console.log('socket connected!');
+    console.log('New socket connection ...');
+
+    socket.on('initHashgraphClient', () => {
+	let response = hashgraph.initHashgraphClient();
+	io.emit('initHashgraphClient', response);
+    });
 });
 
 // Since we are a serverMiddleware, we have to return a handler, even if this it does nothing
-export default function (req, res, next) {
-  next();
+export default function (req, res, next) {    
+    next();
 }
