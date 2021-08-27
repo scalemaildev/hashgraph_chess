@@ -2,21 +2,21 @@
 <v-container class="content-body">
   <v-row>
     <v-col cols="12" align="center" justify="center">
-      <h3>Welcome to Hashgraph Chess.</h3>
+      <h2>Welcome to Hashgraph Chess.</h2>
       <h3>You can resume a match in-progress, or begin a new one.</h3>
     </v-col>
   </v-row>
   <v-row align="center" justify="center">
     <v-col cols="12" align="center">
       <v-btn
-	@click="setTopicId(topicId)"
+	@click="resumeGame()"
 	>
 	<h3>Resume Match</h3>
       </v-btn>
     </v-col>
     <v-col cols="12" align="center">
       <v-btn
-	@click="createAndSetTopicId()">
+	@click="newGame()">
 	<h3>New Match</h3>
       </v-btn>
     </v-col>
@@ -46,11 +46,9 @@ export default {
 	...mapActions([
 	    'asyncEmit'
 	]),    
-	async setTopicId(topicId) {
+	resumeGame() {
 	},        
-	async createNewTopicId() {
-	},    
-	createAndSetTopicId() {
+	newGame() {
 	},
     },
 }
