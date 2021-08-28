@@ -1,15 +1,11 @@
 const dotenv = require('dotenv').config();
 const hashgraph = require('./hashgraph');
 
-if (!process.env.ACCOUNT_ID) {
-  throw 'NO ACCOUNT ID FOUND IN .ENV!';
-}
-
 // Socket
 console.log("Setting up socket.io server ...");
 const io = require("socket.io")(3001, {
     cors: {
-        origin: '*',
+        origin: '*', // CORS can be set for prod if this app is put on AWS ECS
     }
 });
 

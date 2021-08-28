@@ -1,37 +1,32 @@
 /* Utils */
-const TextDecoder = require("text-encoding").TextDecoder;
+//const TextDecoder = require("text-encoding").TextDecoder;
 
 /* From SDK */
 const {
-  Client,
-  AccountId,
-  PrivateKey,
+    Client,
+    AccountId,
+    PrivateKey,
 } = require("@hashgraph/sdk");
 
 /* Inits */
 var HederaClient = "";
 var operatorAccountId = process.env.ACCOUNT_ID;
 
-function initHashgraphClient() {
-  if (!process.env.ACCOUNT_ID || !process.env.PRIVATE_KEY) {
-    console.error("Did not find ACCOUNT_ID or PRIVATE_KEY in .env file!");
-    return -1;
-  } else {
+// Testnet only as for right now. Can add Mainnet later
+function initHashgraphClient(incAccountId, incPrivateKey) {
     try {
-      HederaClient = Client.forTestnet();
-      let accountId = AccountId.fromString(process.env.ACCOUNT_ID);
-      let privateKey = PrivateKey.fromString(process.env.PRIVATE_KEY);
-      HederaClient.setOperator(accountId, privateKey);
-      operatorAccountId = accountId;
-      return 'Hedera client initialized ...';
+	HederaClient = Client.forTestnet();
+	let accountId = AccountId.fromString(incAccountId);
+	let privateKey = PrivateKey.fromString(incPrivateKey);
+	HederaClient.setOperator(accountId, privateKey);
+	operatorAccountId = accountId;
+	return 'Hedera client initialized ...';
     } catch (error) {
-      console.error(error);
-      return -1;
+	console.error(error);
     }
-  }
 }
 
 module.exports = {
-  operatorAccountId,
-  initHashgraphClient,
+    operatorAccountId,
+    initHashgraphClient,
 };
