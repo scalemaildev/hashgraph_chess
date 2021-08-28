@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar color="#0c1527" class="navbar-wrapper">
+  <v-toolbar color="rgba(18, 32, 59, 0.8);" class="navbar-wrapper">
     <v-toolbar-title class="navbar-backing">
       <h2 style="display: inline">♄ashgraph Chess</h2>
     </v-toolbar-title>
