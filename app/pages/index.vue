@@ -1,10 +1,7 @@
 <template>
 <v-container>
-  <div v-if="!topicSet && !topicQuerying">
+  <div v-if="activePanel == 'startPanel'">
     <StartPanel />
-  </div>
-  <div v-else>
-    Main Panels Go Here
   </div>
 </v-container>
 </template>
@@ -14,15 +11,9 @@ import { mapActions } from 'vuex';
 
 export default {
     computed: {
-	topicQuerying () {
-	    return this.$store.state.topicQuerying
+	activePanel () {
+	    return this.$store.state.activePanel
 	},
-	topicSet () {
-	    return this.$store.state.topicSet
-	},
-	mirrorSubbed () {
-	    return this.$store.state.mirrorSubbed
-	}
     },
     mounted() {
 	this.$root.mainSocket = this.$nuxtSocket({
@@ -30,18 +21,6 @@ export default {
 	    persist: 'mainSocket',
 	    reconnection: false
 	})
-	this.initHederaClient()
     },
-    methods: {
-	...mapActions([
-	    'asyncEmit'
-	]),
-	async initHederaClient () {
-	    const result = await this.asyncEmit({
-		'eventName': 'initHashgraphClient'
-	    });
-	    console.log(result);
-	},
-    }
 };
 </script>

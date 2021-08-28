@@ -1,10 +1,7 @@
 /* State */
 export const state = () => ({
     consensusMessages: [],
-    topicId: "",
-    topicQuerying: false,
-    topicSet: false,
-    mirrorSubbed: false
+    activePanel: 'startPanel',
 });
 
 /* Mutations */
@@ -12,8 +9,8 @@ export const mutations = {
     pushMessage(state, message) {
 	state.consensusMessages.push(message);
     },
-    toggleStateFlag(state, flag, bool) {
-	state[flag.flagName] = flag.bool;
+    setActivePanel(state, newPanel) {
+	state.activePanel = newPanel;
     },
 };
 

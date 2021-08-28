@@ -1,3 +1,3 @@
 # HASHGRAPH CHESS
 
-Play chess over the Hashgraph Consensus Service.
+Play chess over the Hedera Consensus Service.

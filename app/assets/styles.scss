@@ -4,51 +4,28 @@
     background-size: 80vh;
     color: #e0e0e0;
     font-family: "baskerville-urw",serif;
-    font-size: 1.0rem;
+    font-size: 1.1rem;
     bottom: 0 !important;
 }
 
 .navbar-wrapper {
     font-size: 1.15rem;
     z-index: 99;
-    flex-wrap: wrap
+    flex-wrap: wrap;
 }
 
 .navbar-backing {
     color: #e0e0e0;
 }
 
-.content-padded {
-    padding-top: 10% !important;
-}
-
 .content-body {
     background-color: #0c1527;
     border: 1px solid #0c2547;
-    min-height: 40% !important;
+    min-height: 50% !important;
     max-width: 80% !important;
+    margin-top: 10vh !important;
     padding-left: 4% !important;
     padding-right: 4% !important;
     padding-top: 2.5% !important;
     padding-bottom: 2.5% !important;
-}
-
-.chatwindow {
-    background-color: #0c1527;
-    border: 1px solid #0c2547;
-    height: 60vh !important;
-    max-width: 80% !important;
-    padding-left: 4% !important;
-    padding-right: 4% !important;
-    padding-bottom: 5% !important;    
-}
-
-.chatbox {
-    background-color: #0c1527;
-    border: 1px solid #0c2547;
-    height: 15vh !important;
-    max-width: 80% !important;
-    padding-left: 4% !important;
-    padding-right: 4% !important;
-    padding-bottom: 5% !important;    
 }
