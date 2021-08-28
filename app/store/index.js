@@ -12,9 +12,7 @@ export const mutations = {
     pushMessage(state, message) {
 	state.consensusMessages.push(message);
     },
-    toggleStateFlag(state, flag) {
-	console.log(flag);
-	console.log(state[flag.flagName]);
+    toggleStateFlag(state, flag, bool) {
 	state[flag.flagName] = flag.bool;
     },
 };

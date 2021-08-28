@@ -47,6 +47,9 @@ export default {
 	    'asyncEmit'
 	]),    
 	resumeGame() {
+	    this.toggleStateFlag({
+		flagName: 'topicId',
+		bool: true})
 	},        
 	newGame() {
 	},
