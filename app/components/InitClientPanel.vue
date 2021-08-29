@@ -2,7 +2,7 @@
 <v-container class="content-body">
   <v-row>
     <v-col cols="12" align="center" justify="center">      
-      <h3>Enter Account Information:</h3>
+      <h3>Enter Testnet Account Information:</h3>
     </v-col>
   </v-row>
 </v-container>  
@@ -16,9 +16,9 @@ export default {
 	return {
 	    topicId: "",
 	    rules: {
-		topicId: value => {
+		accountId: value => {
 		    const pattern = /0.0.[0-9]{3,}/
-		    return pattern.test(value) || "Topic Id should look like 0.0.xxx"
+		    return pattern.test(value) || "Account ID should look like 0.0.xxx"
 		}
 	    }
 	}
