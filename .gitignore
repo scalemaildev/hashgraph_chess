@@ -7,6 +7,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+#package for eslint
+/package.json
+
 # Runtime data
 pids
 *.pid
