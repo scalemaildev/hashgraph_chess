@@ -14,11 +14,13 @@
   </v-row>
   <v-row align="center" justify="center">
     <v-col cols="12" align="center" justify="center">      
-      <h3>You can begin a new chess match, or resume a match in-progress, via the buttons on the navbar header.</h3>
+      <h3>You can begin a new chess match, or resume a match in-progress.</h3>
     </v-col>
   </v-row>
 </v-container>  
 </template>
 
 <script>
+export default {
+}  
 </script>
