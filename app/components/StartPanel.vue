@@ -17,10 +17,25 @@
       <h3>You can begin a new chess match, or resume a match in-progress.</h3>
     </v-col>
   </v-row>
+  <v-row>
+    <v-col sm="12" md="6" align="center" justify="center">
+      <v-btn @click="setActivePanel('newGame')"><h3>New Game</h3></v-btn>
+    </v-col>
+    <v-col sm="12" md="6" align="center" justify="center">
+      <v-btn @click="setActivePanel('resumeGame')"><h3>Resume Game</h3></v-btn>
+    </v-col>
+  </v-row>
 </v-container>  
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+  
 export default {
+    methods: {
+	...mapMutations([
+	    'setActivePanel'
+	])
+    }
 }  
 </script>
