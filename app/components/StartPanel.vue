@@ -40,14 +40,14 @@
     <v-row>
       <v-spacer />
       <v-col cols="8" align="center" justify="center">
-	<v-btn>
+	<v-btn
+	  @click="initHashgraphClient()">
 	  Initialize Client
 	</v-btn>
       </v-col>
       <v-spacer />
     </v-row>
-    <div v-if="clientError">
-      <br>
+    <div v-if="clientError" class="content-spaced-small">
       <v-row align="center" justify="center">
 	<v-col cols="12" align="center" justify="center">
 	  <span style="color: red;"><h3>An error occurred initializing the client. Check the console log for details.</h3></span>
@@ -55,7 +55,7 @@
       </v-row>
     </div>
   </div>
-  <div v-if="!clientSet && clientInitializing">
+  <div v-if="!clientSet && clientInitializing" class="content-spaced-mid">
     <v-row>
       <v-col cols="12" align="center" justify="center">
 	<v-progress-circular
@@ -63,7 +63,7 @@
 	  />
       </v-col>
       <v-col cols="12" align="center" justify="center">
-	... Initializing Hedera Client ...
+	... Initializing HCS Client ...
       </v-col>
     </v-row>
   </div>
@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapActions } from 'vuex';
 
 export default {
     data () {
@@ -92,7 +92,20 @@ export default {
     methods: {
 	...mapMutations([
 	    'setActivePanel'
-	])
+	]),
+	...mapActions([
+	    'asyncEmit'
+	]),
+	async initHashgraphClient () {
+	    this.clientInitializing = true;
+	    const result = await this.asyncEmit({
+		'eventName': 'initHashgraphClient',
+		'accountId': this.accountId,
+		'privateKey': this.privateKey
+	    });
+	    this.accountId = "";
+	    this.privateKey = "";
+	},
     }
 }  
 </script>
