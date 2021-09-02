@@ -2,6 +2,7 @@
 export const state = () => ({
     consensusMessages: [],
     activePanel: 'startPanel',
+    isClientSet: false,
 });
 
 /* Mutations */
@@ -11,6 +12,9 @@ export const mutations = {
     },
     setActivePanel(state, newPanel) {
 	state.activePanel = newPanel;
+    },
+    setClientBool(state, clientBool) {
+	state.isClientSet = clientBool;
     },
 };
 
