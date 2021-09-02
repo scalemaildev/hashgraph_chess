@@ -103,8 +103,7 @@ export default {
 		'accountId': this.accountId,
 		'privateKey': this.privateKey
 	    });
-	    this.accountId = "";
-	    this.privateKey = "";
+	    console.log(result);
 	},
     }
 }  

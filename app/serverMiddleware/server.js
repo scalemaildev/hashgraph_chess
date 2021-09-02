@@ -13,8 +13,8 @@ const io = require("socket.io")(3001, {
 io.on('connection', socket => {
     console.log('New socket connection ...');
 
-    socket.on('initHashgraphClient', () => {
-	let response = hashgraph.initHashgraphClient();
+    socket.on('initHashgraphClient', (context) => {
+	let response = hashgraph.initHashgraphClient(context.accountId, context.privateKey);
 	io.emit('initHashgraphClient', response);
     });
 });
