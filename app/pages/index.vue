@@ -3,6 +3,9 @@
   <div v-if="activePanel == 'startPanel'">
     <StartPanel />
   </div>
+  <div v-else="activePanel == 'accountPanel'">
+    <AccountPanel />
+  </div>
 </v-container>
 </template>
 

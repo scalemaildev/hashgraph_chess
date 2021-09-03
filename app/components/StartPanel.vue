@@ -13,10 +13,11 @@
   </v-row>
   <v-row align="center" justify="center">
     <v-col cols="12" align="center" justify="center">
-      <h3>To begin, enter your Testnet account information below.</h3>
+      <h3>To begin, enter your <strong>TESTNET</strong> account information below.</h3>
     </v-col>
   </v-row>
-  <div v-if="!clientSet && !clientInitializing">
+  <div v-if="!clientInitializing">    
+    <v-form @submit="initHashgraphClient()">
     <v-row>
       <v-spacer />
       <v-col cols="8" align="center" justify="center">
@@ -40,22 +41,24 @@
     <v-row>
       <v-spacer />
       <v-col cols="8" align="center" justify="center">
-	<v-btn
-	  @click="initHashgraphClient()">
-	  Initialize Client
-	</v-btn>
+	  <v-btn
+	    type="submit">
+	    Initialize Client
+	  </v-btn>
       </v-col>
       <v-spacer />
-    </v-row>
+    </v-row>    
+    </v-form>
     <div v-if="clientError" class="content-spaced-small">
       <v-row align="center" justify="center">
 	<v-col cols="12" align="center" justify="center">
-	  <span style="color: red;"><h3>An error occurred initializing the client. Check the console log for details.</h3></span>
+	  <span style="color: red;"><h3>An error occurred initializing the client:</h3></span>
+	  <p style="color: red;">Double check your <strong>TESTNET</strong> Account ID and Private Key.</p>
 	</v-col>
       </v-row>
     </div>
   </div>
-  <div v-if="!clientSet && clientInitializing" class="content-spaced-mid">
+  <div v-if="clientInitializing" class="content-spaced-mid">
     <v-row>
       <v-col cols="12" align="center" justify="center">
 	<v-progress-circular
@@ -98,12 +101,21 @@ export default {
 	]),
 	async initHashgraphClient () {
 	    this.clientInitializing = true;
-	    const result = await this.asyncEmit({
+	    this.clientError = false;
+	    
+	    const response = await this.asyncEmit({
 		'eventName': 'initHashgraphClient',
 		'accountId': this.accountId,
 		'privateKey': this.privateKey
 	    });
-	    console.log(result);
+	    
+	    if (response.result == 'SUCCESS') {
+		console.log(response.context);
+		this.setActivePanel('accountPanel')
+	    } else {
+		this.clientInitializing = false;
+		this.clientError = true;
+	    }
 	},
     }
 }  

@@ -12,7 +12,6 @@ const {
 
 // Testnet only as for right now. Can add Mainnet later
 function initHashgraphClient(incAccountId, incPrivateKey) {
-    console.log(incAccountId, incPrivateKey);
     try {
 	HederaClient = Client.forTestnet();
 	let accountId = AccountId.fromString(incAccountId);
@@ -22,10 +21,10 @@ function initHashgraphClient(incAccountId, incPrivateKey) {
 	    result: 'SUCCESS',
 	    context: 'Hashgraph client intialized!'
 	};
-    } catch (error) { 
+    } catch (error) {
 	return {
 	    result: 'FAILURE',
-	    context: error
+	    context: 'Hashgraph client failed to initialize!'
 	};
     }
 }
