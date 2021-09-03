@@ -4,6 +4,7 @@ export const state = () => ({
     activePanel: 'startPanel',
     isClientSet: false,
     accountId: "",
+    gameId: ""
 });
 
 /* Mutations */
