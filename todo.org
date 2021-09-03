@@ -1,0 +1,15 @@
+* NOW
+** Features
+*** Get a chessboard.js with chess.js rules into the game page
+*** Get a chat window and message text field into the game page
+*** Add a logout button to the navbar
+**** Should be disabled/only appear after client initialization
+**** Must clear both client and vuex (might need another action for the client)
+** Bugs
+*** Need vuex-persistedstate module to allow players to refresh page without dropping vuex data
+* FUTURE
+** Modify chessboard to send and receive moves over HCS
+** Add a resume game feature to connect to an existing topic id
+** Creating a new game should require an opponent account id
+** Limit moves and chat messages to valid account id's
+** games should go into their own page with a /match_<matchId> URI
