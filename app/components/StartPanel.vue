@@ -94,7 +94,8 @@ export default {
     },
     methods: {
 	...mapMutations([
-	    'setActivePanel'
+	    'setActivePanel',
+	    'setAccountId'
 	]),
 	...mapActions([
 	    'asyncEmit'
@@ -111,7 +112,9 @@ export default {
 	    
 	    if (response.result == 'SUCCESS') {
 		console.log(response.context);
-		this.setActivePanel('accountPanel')
+		this.setActivePanel('accountPanel');
+		this.setAccountId(this.accountId);
+		
 	    } else {
 		this.clientInitializing = false;
 		this.clientError = true;

@@ -1,20 +1,24 @@
 /* State */
 export const state = () => ({
-    consensusMessages: [],
+    topicMessages: [],
     activePanel: 'startPanel',
     isClientSet: false,
+    accountId: "",
 });
 
 /* Mutations */
 export const mutations = {
     pushMessage(state, message) {
-	state.consensusMessages.push(message);
+	state.topicMessages.push(message);
     },
     setActivePanel(state, newPanel) {
 	state.activePanel = newPanel;
     },
     setClientBool(state, clientBool) {
 	state.isClientSet = clientBool;
+    },
+    setAccountId(state, accountId) {
+	state.accountId = accountId;
     },
 };
 
