@@ -17,7 +17,7 @@
     </v-col>
   </v-row>
   <div v-if="!clientInitializing">    
-    <v-form @submit="initHashgraphClient()">
+    <v-form @submit="initHashgraphClient(accountId, privateKey)">
     <v-row>
       <v-spacer />
       <v-col cols="8" align="center" justify="center">
@@ -100,20 +100,20 @@ export default {
 	...mapActions([
 	    'asyncEmit'
 	]),
-	async initHashgraphClient () {
+	async initHashgraphClient (accountId, privateKey) {
 	    this.clientInitializing = true;
 	    this.clientError = false;
 	    
 	    const response = await this.asyncEmit({
 		'eventName': 'initHashgraphClient',
-		'accountId': this.accountId,
-		'privateKey': this.privateKey
+		'accountId': accountId,
+		'privateKey': privateKey
 	    });
 	    
 	    if (response.result == 'SUCCESS') {
 		this.setActivePanel('accountPanel');
-		this.$store.commit('sessionStorage/setAccountId', this.accountId);
-		this.$store.commit('sessionStorage/setPrivateKey', this.privateKey);
+		this.$store.commit('sessionStorage/setAccountId', accountId);
+		console.log(response.context)
 		
 	    } else {
 		this.clientInitializing = false;
