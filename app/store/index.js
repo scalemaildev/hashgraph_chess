@@ -2,9 +2,6 @@
 export const state = () => ({
     topicMessages: [],
     activePanel: 'startPanel',
-    isClientSet: false,
-    accountId: "",
-    gameId: ""
 });
 
 /* Mutations */

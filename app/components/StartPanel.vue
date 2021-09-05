@@ -104,16 +104,14 @@ export default {
 	    this.clientInitializing = true;
 	    this.clientError = false;
 	    
-	    const response = await this.asyncEmit({
-		'eventName': 'initHashgraphClient',
+	    const response = await this.$store.dispatch('sessionStorage/initHashgraphClient', {
 		'accountId': accountId,
 		'privateKey': privateKey
-	    });
-	    
+	    })
+
 	    if (response.result == 'SUCCESS') {
 		this.setActivePanel('accountPanel');
-		this.$store.commit('sessionStorage/setAccountId', accountId);
-		console.log(response.context)
+		console.log('Hashgraph client initialized!')
 		
 	    } else {
 		this.clientInitializing = false;

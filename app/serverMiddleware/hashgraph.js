@@ -19,12 +19,12 @@ function initHashgraphClient(incAccountId, incPrivateKey) {
 	HederaClient.setOperator(accountId, privateKey);
 	return {
 	    result: 'SUCCESS',
-	    context: 'Hashgraph client intialized!'
+	    context: HederaClient
 	};
     } catch (error) {
 	return {
 	    result: 'FAILURE',
-	    context: 'Hashgraph client failed to initialize!'
+	    context: 'ERROR - hashgraph client failed to initialize'
 	};
     }
 }
