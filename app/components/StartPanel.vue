@@ -111,9 +111,9 @@ export default {
 	    });
 	    
 	    if (response.result == 'SUCCESS') {
-		console.log(response.context);
 		this.setActivePanel('accountPanel');
-		this.setAccountId(this.accountId);
+		this.$store.commit('sessionStorage/setAccountId', this.accountId);
+		this.$store.commit('sessionStorage/setPrivateKey', this.privateKey);
 		
 	    } else {
 		this.clientInitializing = false;

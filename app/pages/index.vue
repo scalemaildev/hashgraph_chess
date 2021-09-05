@@ -17,6 +17,7 @@ export default {
 	},
     },
     mounted() {
+	console.log(this.$store.state.sessionStorage.accountId)
 	this.$root.mainSocket = this.$nuxtSocket({
 	    name: 'main',
 	    persist: 'mainSocket',

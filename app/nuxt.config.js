@@ -40,7 +40,8 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    'nuxt-socket-io'
+      'nuxt-socket-io',
+      'nuxt-vuex-localstorage'
   ],
 
   io: {

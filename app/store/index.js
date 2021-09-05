@@ -18,9 +18,6 @@ export const mutations = {
     setClientBool(state, clientBool) {
 	state.isClientSet = clientBool;
     },
-    setAccountId(state, accountId) {
-	state.accountId = accountId;
-    },
 };
 
 /* Actions */
