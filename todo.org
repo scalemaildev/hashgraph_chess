@@ -1,10 +1,9 @@
 * NOW
-** Features
-*** Get a chessboard.js with chess.js rules into the game page
-*** Get a chat window and message text field into the game page
+** TODO games should go into their own dynamic page with a /match_<matchId> URI
+*** Use _slug and /matches
+** TODO Get a chessboard.js with chess.js rules into the game page
+** TODO Get a chat window and message text field into the game page
 * FUTURE
-** Modify chessboard to send and receive moves over HCS
-** Add a resume game feature to connect to an existing topic id
-** Creating a new game should require an opponent account id
-** Limit moves and chat messages to valid account id's
-** games should go into their own page with a /match_<matchId> URI
+** TODO Modify chessboard to send and receive moves over HCS
+** TODO Add a resume game feature to connect to an existing topic id
+** TODO Limit moves and chat messages to valid account id's
