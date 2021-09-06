@@ -1,6 +1,6 @@
 /* State */
 export const state = () => ({
-    activePanel: 'startPanel',
+    activePanel: 'loadingPanel',
 });
 
 /* Mutations */
