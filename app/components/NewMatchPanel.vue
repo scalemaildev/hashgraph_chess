@@ -13,7 +13,7 @@
     <v-row
       no-gutters
       style="flex-wrap: nowrap;">
-      <v-col cols="6" class="flex-grow-1 flex-shrink-0">
+      <v-col class="flex-grow-1 flex-shrink-0">
 	<v-text-field
 	  v-model="oppAccountId"
 	  :error-messages="oppAccountIdErrors"
@@ -22,7 +22,7 @@
 	  @blur="$v.oppAccountId.$touch()"
 	  label="Opponent's Account ID"/>
       </v-col>
-      <v-col cols="6" class="flex-grow-0 flex-shrink-1">
+      <v-col class="flex-grow-0 flex-shrink-1 pa-2">
 	<v-btn type="submit">
 	  Create Match
 	</v-btn>
@@ -31,7 +31,7 @@
   </v-form>
   <v-row>
     <v-col cols="12" align="center" justify="center">
-      <v-btn block>
+      <v-btn block @click="returnToAccountPanel">
 	Return
       </v-btn>
     </v-col>
@@ -70,8 +70,14 @@ export default {
     },
     
     methods: {
+	...mapMutations([
+	    'setActivePanel',
+	]),
 	async createMatch () {
 	    console.log('hi');
+	},
+	returnToAccountPanel () {
+	    this.setActivePanel('accountPanel');
 	}
     },
 }

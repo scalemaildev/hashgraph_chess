@@ -36,6 +36,7 @@ export const actions = {
     unsetClient({ commit }, context) {
 	commit('setAccountId', "");
 	commit('setClient', null);
+	commit('toggleLockButton', false, { root: true });
 	commit('setActivePanel', 'startPanel', { root: true });
     }
 };

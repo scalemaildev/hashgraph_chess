@@ -87,7 +87,6 @@ export default {
 	return {
 	    accountId: "",
 	    privateKey: "",
-	    clientSet: false,
 	    clientError: false,
 	}
     },
@@ -111,6 +110,7 @@ export default {
     methods: {
 	...mapMutations([
 	    'setActivePanel',
+	    'toggleLockButton'
 	]),
 	...mapActions([
 	    'asyncEmit'
@@ -131,6 +131,7 @@ export default {
 	    
 	    if (response.result == 'SUCCESS') {
 		this.setActivePanel('accountPanel');
+		this.toggleLockButton(true);
 		console.log('Hashgraph client initialized!')		
 	    } else {
 		this.clientError = true;

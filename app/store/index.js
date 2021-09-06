@@ -1,12 +1,16 @@
 /* State */
 export const state = () => ({
     activePanel: 'loadingPanel',
+    lockButton: false,
 });
 
 /* Mutations */
 export const mutations = {
     setActivePanel(state, newPanel) {
 	state.activePanel = newPanel;
+    },
+    toggleLockButton(state, bool) {
+	state.lockButton = bool;
     },
 };
 

@@ -14,7 +14,7 @@
 export default {
     computed: {
 	clientSet () {
-	    return this.$store.state.sessionStorage.hashgraphClient;
+	    return this.$store.state.lockButton;
 	}
     },
     methods: {

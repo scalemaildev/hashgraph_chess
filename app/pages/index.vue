@@ -11,7 +11,7 @@
       <v-col cols="12" align="center" justify="center">
 	... Initializing ...
       </v-col>
-    </v-row>    
+    </v-row>
   </div>
   <div v-else-if="activePanel == 'startPanel'">
     <StartPanel />
@@ -29,28 +29,33 @@
 import { mapMutations } from 'vuex';
 
 export default {
-    computed: {
+    computed: {	
+	clientSet () {
+	    return this.$store.state.sessionStorage.hashgraphClient;
+	},
 	activePanel () {
-	    return this.$store.state.activePanel
+	    return this.$store.state.activePanel;
 	},
     },
-    
     mounted() {
-	if (!this.$store.state.sessionStorage.hashgraphClient) {
-	    this.setActivePanel('startPanel');
-	} else {
-	    this.setActivePanel('accountPanel');
-	}
-	
 	this.$root.mainSocket = this.$nuxtSocket({
 	    name: 'main',
-	    persist: 'mainSocket'
+	    persist: 'mainSocket',
+	    reconnection: false
 	})
+
+	if (!this.clientSet) {
+	    this.setActivePanel('startPanel')
+	} else {
+	    this.setActivePanel('accountPanel')
+	    this.toggleLockButton(true)
+	}
     },
     
     methods: {
 	...mapMutations([
 	    'setActivePanel',
+	    'toggleLockButton'
 	]),
     },
 };
