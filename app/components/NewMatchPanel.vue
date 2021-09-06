@@ -6,7 +6,7 @@
     </v-col>
     <v-col cols="12" align="center" justify="center">
       <p>From this panel, you can create a new chess match. You'll need to know your opponent's <strong>Account ID</strong> in order to create the match. Other players will also be able to join your match as observers, but only you and your opponent will be able to move pieces and send chat messages.</p>
-      <p>After creating the match, you'll be given a <strong>Topic ID</strong>. To invite your opponent to the match, give them this ID. They can input it on the <strong>Join Game</strong> panel to enter the match.</p>
+      <p>After creating the match, you'll be given a <strong>Topic ID</strong>. To invite your opponent to the match, give them this ID. They can enter it in the <strong>Join Game</strong> panel to enter the match.</p>
     </v-col>    
   </v-row>
   <v-form>
@@ -37,6 +37,15 @@
       </v-btn>
     </v-col>
   </v-row>
+  <div v-if="matchCreationError" class="content-spaced-small">
+    <v-row align="center" justify="center">
+      <v-col cols="12" align="center" justify="center">
+	<span style="color: red;"><h3>An error occurred creating the match:</h3></span>
+	<p style="color: red;">Double check your <strong>TESTNET</strong> Account ID and Private Key.</p>
+      </v-col>
+    </v-row>
+  </div>
+</div>
 </v-container>
 </template>
 
@@ -58,6 +67,7 @@ export default {
 	return {
 	    oppAccountId: "",
 	    matchCreationError: false,
+	    matchCreationErrorMessage: ""
 	}
     },
     
@@ -95,7 +105,12 @@ export default {
 		this.matchCreationError = false;
 		
 		this.createNewTopic().then(resp => {
-		    console.log(resp)
+		    if (resp.result == 'SUCCESS') {
+			console.log(resp.context)
+		    } else {
+			this.matchCreationError = true;
+			this.matchCreationErrorMessage = resp.error;
+		    }
 		})
 	    }
 	},
