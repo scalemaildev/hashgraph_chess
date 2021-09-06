@@ -16,7 +16,6 @@
       <h3>To begin, enter your <strong>TESTNET</strong> account information below.</h3>
     </v-col>
   </v-row>
-  <div v-if="!clientError">    
     <v-form
       @submit.prevent="submit">
       <v-row>

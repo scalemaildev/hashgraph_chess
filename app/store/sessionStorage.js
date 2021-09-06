@@ -1,5 +1,5 @@
 export const state = () => ({    
-    hashgraphClient: null,    
+    hashgraphClient: null,
     topicMessages: [],
     accountId: "",
 });
