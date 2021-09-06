@@ -118,15 +118,15 @@ export default {
 	submit () {
 	    this.$v.$touch();
 	    if (!this.$v.$invalid) {
-		this.initHashgraphClient(this.accountId, this.privateKey);
+		this.initHashgraphClient();
 	    }
 	},
-	async initHashgraphClient (accountId, privateKey) {
+	async initHashgraphClient () {
 	    this.clientError = false;
 	    
 	    const response = await this.$store.dispatch('sessionStorage/initHashgraphClient', {
-		'accountId': accountId,
-		'privateKey': privateKey
+		'accountId': this.accountId,
+		'privateKey': this.privateKey
 	    })
 	    
 	    if (response.result == 'SUCCESS') {
