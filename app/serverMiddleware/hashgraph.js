@@ -8,6 +8,8 @@ const {
     PrivateKey,
     TopicId,
     TopicCreateTransaction,
+    TopicMessageQuery,
+    TopicMessageSubmitTransaction
 } = require("@hashgraph/sdk");
 
 var HederaClient = "";
@@ -56,8 +58,29 @@ async function createNewTopic() {
     }
 }
 
+async function sendHCSMessage(data) {
+    let messagePayload = JSON.stringify(data);
+    
+    try {
+	let response = await new TopicMessageSubmitTransaction({
+	    topicId: data.topicId,
+	    message: messagePayload})
+	    .execute(HederaClient);
+	return {
+	    result: 'SUCCESS',
+	    context: response
+	};
+    } catch (error) {
+	return {
+	    result: 'FAILURE',
+	    error: error
+	};
+    }
+}
+
 module.exports = {
     initHashgraphClient,
     unsetClient,
     createNewTopic,
+    sendHCSMessage,
 };

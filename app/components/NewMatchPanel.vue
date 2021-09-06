@@ -9,39 +9,54 @@
       <p>After creating the match, you'll be given a <strong>Topic ID</strong>. To invite your opponent to the match, give them this ID. They can enter it in the <strong>Join Game</strong> panel to enter the match.</p>
     </v-col>    
   </v-row>
-  <v-form>
-    <v-row
-      no-gutters
-      style="flex-wrap: nowrap;"
-      class="pb-2">
-      <v-col class="flex-grow-1 flex-shrink-0">
-	<v-text-field
-	  v-model="oppAccountId"
-	  :error-messages="oppAccountIdErrors"
-	  required
-	  @input="$v.oppAccountId.$touch()"
-	  @blur="$v.oppAccountId.$touch()"
-	  label="Opponent's Account ID"/>
-      </v-col>
-      <v-col class="flex-grow-0 flex-shrink-1 pa-2">
-	<v-btn @click="createMatch">
-	  Create Match
+  <div v-if="!creatingMatch">
+    <v-form>
+      <v-row
+	no-gutters
+	style="flex-wrap: nowrap;"
+	class="pb-2">
+	<v-col class="flex-grow-1 flex-shrink-0">
+	  <v-text-field
+	    v-model="oppAccountId"
+	    :error-messages="oppAccountIdErrors"
+	    required
+	    @input="$v.oppAccountId.$touch()"
+	    @blur="$v.oppAccountId.$touch()"
+	    label="Opponent's Account ID"/>
+	</v-col>
+	<v-col class="flex-grow-0 flex-shrink-1 pa-2">
+	  <v-btn @click="createMatch">
+	    Create Match
+	  </v-btn>
+	</v-col>
+      </v-row>
+    </v-form>
+    <v-row>
+      <v-col cols="12" align="center" justify="center">
+	<v-btn block @click="returnToAccountPanel">
+	  Return
 	</v-btn>
       </v-col>
     </v-row>
-  </v-form>
-  <v-row>
-    <v-col cols="12" align="center" justify="center">
-      <v-btn block @click="returnToAccountPanel">
-	Return
-      </v-btn>
-    </v-col>
-  </v-row>
+    
+  </div>
   <div v-if="matchCreationError" class="content-spaced-small">
     <v-row align="center" justify="center">
       <v-col cols="12" align="center" justify="center">
 	<span style="color: red;"><h3>An error occurred creating the match:</h3></span>
 	<p style="color: red;">Double check your <strong>TESTNET</strong> Account ID and Private Key.</p>
+      </v-col>
+    </v-row>
+  </div>
+  <div v-if="creatingMatch" class="content-spaced-small">
+    <v-row>
+      <v-col cols="12" align="center" justify="center">
+	<v-progress-circular
+	  indeterminate
+	  />
+      </v-col>
+      <v-col cols="12" align="center" justify="center">
+	... Creating Match ...
       </v-col>
     </v-row>
   </div>
@@ -67,7 +82,8 @@ export default {
 	return {
 	    oppAccountId: "",
 	    matchCreationError: false,
-	    matchCreationErrorMessage: ""
+	    matchCreationErrorMessage: "",
+	    creatingMatch: false
 	}
     },
     
@@ -103,16 +119,38 @@ export default {
 	    this.$v.$touch();
 	    if (!this.$v.$invalid) {
 		this.matchCreationError = false;
+		this.creatingMatch = true;
 		
 		this.createNewTopic().then(resp => {
 		    if (resp.result == 'SUCCESS') {
-			console.log(resp.context)
+			let newTopicId = resp.context;
+			console.log('Created new topic: ' + newTopicId);
+			this.initMatchMessage(newTopicId).then(resp => {
+			    if (resp.result == 'SUCCESS') {
+				console.log('Sent initial HCS message for ' + newTopicId);
+				this.creatingMatch = false;
+			    } else {
+				this.matchCreationError = true;
+				this.matchCreationErrorMessage = resp.error;
+				this.creatingMatch = false;
+			    }
+			});
 		    } else {
 			this.matchCreationError = true;
 			this.matchCreationErrorMessage = resp.error;
+			this.creatingMatch = false;
 		    }
 		})
 	    }
+	},
+	async initMatchMessage(message) {
+	    const response = await this.asyncEmit({
+		'eventName': 'sendHCSMessage',
+		'messageType': 'initial',
+		'player1': this.$store.state.sessionStorage.accountId,
+		'player2': this.oppAccountId
+	    });
+	    return response;
 	},
     },
 }
