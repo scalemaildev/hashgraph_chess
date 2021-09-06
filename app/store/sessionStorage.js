@@ -1,5 +1,6 @@
-export const state = () => ({
-    hashgraphClient: null,
+export const state = () => ({    
+    hashgraphClient: null,    
+    topicMessages: [],
     accountId: "",
 });
 
@@ -9,7 +10,10 @@ export const mutations = {
     },
     setClient(state, client) {
 	state.hashgraphClient = client;
-    }
+    },    
+    pushMessage(state, message) {
+	state.topicMessages.push(message);
+    },
 };
 
 export const actions = {

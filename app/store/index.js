@@ -1,19 +1,12 @@
 /* State */
 export const state = () => ({
-    topicMessages: [],
     activePanel: 'startPanel',
 });
 
 /* Mutations */
 export const mutations = {
-    pushMessage(state, message) {
-	state.topicMessages.push(message);
-    },
     setActivePanel(state, newPanel) {
 	state.activePanel = newPanel;
-    },
-    setClientBool(state, clientBool) {
-	state.isClientSet = clientBool;
     },
 };
 

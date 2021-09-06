@@ -16,38 +16,46 @@
       <h3>To begin, enter your <strong>TESTNET</strong> account information below.</h3>
     </v-col>
   </v-row>
-  <div v-if="!clientInitializing">    
-    <v-form @submit="initHashgraphClient(accountId, privateKey)">
-    <v-row>
-      <v-spacer />
-      <v-col cols="8" align="center" justify="center">
-	<v-text-field
-	  v-model="accountId"
-	  :rules="[rules.accountId]"
-	  label="Account ID"/>
-      </v-col>    
-      <v-spacer />
-    </v-row>
-    <v-row>
-      <v-spacer />
-      <v-col cols="8" align="center" justify="center">
-	<v-text-field
-	  v-model="privateKey"
-	  type="password"
-	  label="Private Key"/>
-      </v-col>
-      <v-spacer />
-    </v-row>
-    <v-row>
-      <v-spacer />
-      <v-col cols="8" align="center" justify="center">
+  <div v-if="!clientError">    
+    <v-form
+      @submit.prevent="submit">
+      <v-row>
+	<v-spacer />
+	<v-col cols="8" align="center" justify="center">
+	  <v-text-field
+	    v-model="accountId"
+	    :error-messages="accountIdErrors"
+	    required
+	    @input="$v.accountId.$touch()"
+	    @blur="$v.accountId.$touch()"
+	    label="Account ID"/>
+	</v-col>    
+	<v-spacer />
+      </v-row>
+      <v-row>
+	<v-spacer />
+	<v-col cols="8" align="center" justify="center">
+	  <v-text-field
+	    v-model="privateKey"
+	    :error-messages="privateKeyErrors"
+	    type="password"
+	    required
+	    @input="$v.privateKey.$touch()"
+	    @blur="$v.privateKey.$touch()"
+	    label="Private Key"/>
+	</v-col>
+	<v-spacer />
+      </v-row>
+      <v-row>
+	<v-spacer />
+	<v-col cols="8" align="center" justify="center">
 	  <v-btn
 	    type="submit">
 	    Initialize Client
 	  </v-btn>
-      </v-col>
-      <v-spacer />
-    </v-row>    
+	</v-col>
+	<v-spacer />
+      </v-row>    
     </v-form>
     <div v-if="clientError" class="content-spaced-small">
       <v-row align="center" justify="center">
@@ -58,63 +66,74 @@
       </v-row>
     </div>
   </div>
-  <div v-if="clientInitializing" class="content-spaced-mid">
-    <v-row>
-      <v-col cols="12" align="center" justify="center">
-	<v-progress-circular
-	  indeterminate
-	  />
-      </v-col>
-      <v-col cols="12" align="center" justify="center">
-	... Initializing HCS Client ...
-      </v-col>
-    </v-row>
-  </div>
 </v-container>  
 </template>
 
 <script>
 import { mapMutations, mapActions } from 'vuex';
+import { validationMixin } from 'vuelidate'
+import { required, helpers } from 'vuelidate/lib/validators'
+
+const accountIdRegex = helpers.regex('accountIdRegex', /0.0.[0-9]{3,}/);
 
 export default {
+    mixins: [validationMixin],
+    
+    validations: {
+	accountId: { required, accountIdRegex },
+	privateKey: { required },
+    },
+    
     data () {
 	return {
 	    accountId: "",
 	    privateKey: "",
-	    clientInitializing: false,
 	    clientSet: false,
 	    clientError: false,
-	    rules: {
-		accountId: value => {
-		    const pattern = /0.0.[0-9]{3,}/
-		    return pattern.test(value) || "Account ID should look like 0.0.xxx"
-		}
-	    }
 	}
     },
+    
+    computed: {
+	accountIdErrors () {
+	    const errors = [];
+	    if (!this.$v.accountId.$dirty) return errors
+	    !this.$v.accountId.required && errors.push('Account ID is required.')
+	    !this.$v.accountId.accountIdRegex && errors.push('Account ID should look like 0.0.xxx.')
+	    return errors;
+	},
+	privateKeyErrors () {
+	    const errors = [];
+	    if (!this.$v.privateKey.$dirty) return errors
+	    !this.$v.privateKey.required && errors.push('Private Key is required.')
+	    return errors;
+	}
+    },
+    
     methods: {
 	...mapMutations([
 	    'setActivePanel',
-	    'setAccountId'
 	]),
 	...mapActions([
 	    'asyncEmit'
 	]),
+	submit () {
+	    this.$v.$touch();
+	    if (!this.$v.$invalid) {
+		this.initHashgraphClient(this.accountId, this.privateKey);
+	    }
+	},
 	async initHashgraphClient (accountId, privateKey) {
-	    this.clientInitializing = true;
 	    this.clientError = false;
 	    
 	    const response = await this.$store.dispatch('sessionStorage/initHashgraphClient', {
 		'accountId': accountId,
 		'privateKey': privateKey
 	    })
-
+	    
 	    if (response.result == 'SUCCESS') {
 		this.setActivePanel('accountPanel');
-		console.log('Hashgraph client initialized!')
-		
+		console.log('Hashgraph client initialized!')		
 	    } else {
-		this.clientInitializing = false;
 		this.clientError = true;
 	    }
 	},
