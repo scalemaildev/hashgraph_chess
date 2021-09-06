@@ -84,7 +84,6 @@ export default {
 	async createNewTopic() {
 	    const response = await this.asyncEmit({
 		'eventName': 'createNewTopic',
-		'client': this.$store.state.sessionStorage.hashgraphClient,
 		'oppAccountId': this.oppAccountId,
 		'operatorAccountId': this.$store.state.sessionStorage.accountId
 	    });

@@ -132,7 +132,7 @@ export default {
 	    if (response.result == 'SUCCESS') {
 		this.setActivePanel('accountPanel');
 		this.toggleLockButton(true);
-		console.log('Hashgraph client initialized!')		
+		console.log(response.context)
 	    } else {
 		this.clientError = true;
 	    }

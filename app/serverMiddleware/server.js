@@ -18,8 +18,13 @@ io.on('connection', socket => {
 	io.emit('initHashgraphClient', response);
     });
 
+    socket.on('unsetClient', () => {
+	let response = hashgraph.unsetClient();
+	io.emit('unsetClient', response);
+    });
+
     socket.on('createNewTopic', async (context) => {
-	let response = await hashgraph.createNewTopic(context.client);
+	let response = await hashgraph.createNewTopic();
 	io.emit('createNewTopic', response);
     });
     

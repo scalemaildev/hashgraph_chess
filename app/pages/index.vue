@@ -31,7 +31,7 @@ import { mapMutations } from 'vuex';
 export default {
     computed: {	
 	clientSet () {
-	    return this.$store.state.sessionStorage.hashgraphClient;
+	    return this.$store.state.sessionStorage.clientExists;
 	},
 	activePanel () {
 	    return this.$store.state.activePanel;

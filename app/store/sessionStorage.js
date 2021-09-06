@@ -1,14 +1,14 @@
 export const state = () => ({
     accountId: "",
-    hashgraphClient: null,
+    clientExists: false,
 });
 
 export const mutations = {    
     setAccountId(state, accountId) {
 	state.accountId = accountId;
     },
-    setClient(state, client) {
-	state.hashgraphClient = client;
+    toggleClientExists(state, bool) {
+	state.clientExists = bool;
     },
 };
 
@@ -23,7 +23,7 @@ export const actions = {
 
 	if (response.result == 'SUCCESS') {
 	    commit('setAccountId', context.accountId);
-	    commit('setClient', response.context);
+	    commit('toggleClientExists', true);
 	}
 	
 	return response;
@@ -31,8 +31,13 @@ export const actions = {
 
     unsetClient({ commit }, context) {
 	commit('setAccountId', "");
-	commit('setClient', null);
+	commit('toggleClientExists', false);
 	commit('toggleLockButton', false, { root: true });
 	commit('setActivePanel', 'startPanel', { root: true });
+
+	// dispatch a method to clear the client server-side
+	this.dispatch('asyncEmit', {
+	    'eventName': 'unsetClient'
+	});
     }
 };

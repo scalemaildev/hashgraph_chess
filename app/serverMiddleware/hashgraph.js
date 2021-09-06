@@ -10,19 +10,18 @@ const {
     TopicCreateTransaction,
 } = require("@hashgraph/sdk");
 
-var tempClient = "";
+var HederaClient = "";
 
 // Testnet only as for right now. Can add Mainnet later
 function initHashgraphClient(incAccountId, incPrivateKey) {
     try {
-	const HederaClient = Client.forTestnet();
+	HederaClient = Client.forTestnet();
 	let accountId = AccountId.fromString(incAccountId);
 	let privateKey = PrivateKey.fromString(incPrivateKey);
 	HederaClient.setOperator(accountId, privateKey);
-	tempClient = HederaClient;
 	return {
 	    result: 'SUCCESS',
-	    context: HederaClient
+	    context: 'Hedera Hashgraph client initialized!'
 	};
     } catch (error) {
 	return {
@@ -33,14 +32,16 @@ function initHashgraphClient(incAccountId, incPrivateKey) {
     }
 }
 
-async function createNewTopic(client) {
+function unsetClient() {
+    HederaClient = "";
+    return "Hashgraph client has been unset!";
+}
+
+async function createNewTopic() {
     try {
-	const tx = await new TopicCreateTransaction().execute(tempClient);
-	console.log(tx);
-	const receipt = await tx.getReceipt(tempClient);
-	console.log(receipt);
+	const tx = await new TopicCreateTransaction().execute(HederaClient);
+	const receipt = await tx.getReceipt(HederaClient);
 	const newTopicId = receipt.topicId + ''; // BUG: TopicId.fromString() complains about 'text.split' unless empty string is appended
-	console.log(newTopicId);
 	return {
 	    result: 'SUCCESS',
 	    context: newTopicId
@@ -57,5 +58,6 @@ async function createNewTopic(client) {
 
 module.exports = {
     initHashgraphClient,
+    unsetClient,
     createNewTopic,
 };
