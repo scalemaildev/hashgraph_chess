@@ -6,18 +6,16 @@
     </v-col>
   </v-row>
   <v-row>
-    <v-spacer />
     <v-col cols="12" align="center" justify="center">
-      <v-btn>
+      <v-btn block>
 	New Match
       </v-btn>
     </v-col>
     <v-col cols="12" align="center" justify="center">
-      <v-btn>
-	Resume
+      <v-btn block>
+	Join Match
       </v-btn>
     </v-col>
-    <v-spacer />
   </v-row>
 </v-container>
 </template>
