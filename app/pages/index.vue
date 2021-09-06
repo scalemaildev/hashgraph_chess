@@ -19,6 +19,9 @@
   <div v-else-if="activePanel == 'accountPanel'">
     <AccountPanel />
   </div>
+  <div v-else-if="activePanel == 'newMatchPanel'">
+    <NewMatchPanel />
+  </div>
 </v-container>
 </template>
 

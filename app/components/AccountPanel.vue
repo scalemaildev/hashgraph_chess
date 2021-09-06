@@ -7,7 +7,7 @@
   </v-row>
   <v-row>
     <v-col cols="12" align="center" justify="center">
-      <v-btn block>
+      <v-btn block @click="createNewMatch">
 	New Match
       </v-btn>
     </v-col>
@@ -21,13 +21,11 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-
 export default {
     methods: {
-	...mapActions([
-	    'asyncEmit'
-	]),
+	createNewMatch() {
+	    this.$store.commit('setActivePanel', 'newMatchPanel');
+	},
     },
 }
 </script>
