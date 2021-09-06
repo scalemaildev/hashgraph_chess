@@ -12,7 +12,8 @@
   <v-form>
     <v-row
       no-gutters
-      style="flex-wrap: nowrap;">
+      style="flex-wrap: nowrap;"
+      class="pb-2">
       <v-col class="flex-grow-1 flex-shrink-0">
 	<v-text-field
 	  v-model="oppAccountId"
@@ -23,7 +24,7 @@
 	  label="Opponent's Account ID"/>
       </v-col>
       <v-col class="flex-grow-0 flex-shrink-1 pa-2">
-	<v-btn type="submit">
+	<v-btn @click="createMatch">
 	  Create Match
 	</v-btn>
       </v-col>
@@ -56,6 +57,7 @@ export default {
     data () {
 	return {
 	    oppAccountId: "",
+	    matchCreationError: false,
 	}
     },
     
@@ -73,12 +75,31 @@ export default {
 	...mapMutations([
 	    'setActivePanel',
 	]),
-	async createMatch () {
-	    console.log('hi');
-	},
+	...mapActions([
+	    'asyncEmit'
+	]),
 	returnToAccountPanel () {
 	    this.setActivePanel('accountPanel');
-	}
+	},
+	async createNewTopic() {
+	    const response = await this.asyncEmit({
+		'eventName': 'createNewTopic',
+		'client': this.$store.state.sessionStorage.hashgraphClient,
+		'oppAccountId': this.oppAccountId,
+		'operatorAccountId': this.$store.state.sessionStorage.accountId
+	    });
+	    return response;
+	},
+	createMatch() {
+	    this.$v.$touch();
+	    if (!this.$v.$invalid) {
+		this.matchCreationError = false;
+		
+		this.createNewTopic().then(resp => {
+		    console.log(resp)
+		})
+	    }
+	},
     },
 }
 </script>

@@ -17,6 +17,12 @@ io.on('connection', socket => {
 	let response = hashgraph.initHashgraphClient(context.accountId, context.privateKey);
 	io.emit('initHashgraphClient', response);
     });
+
+    socket.on('createNewTopic', async (context) => {
+	let response = await hashgraph.createNewTopic(context.client);
+	io.emit('createNewTopic', response);
+    });
+    
 });
 
 // Since we are a serverMiddleware, we have to return a handler, even if this it does nothing
