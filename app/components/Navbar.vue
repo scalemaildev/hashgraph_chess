@@ -4,7 +4,7 @@
     <h2 style="display: inline">♄ashgraph Chess</h2>
   </v-toolbar-title>
   <v-spacer />
-  <v-btn>
+  <v-btn v-if="clientSet" @click="unsetClient">
     Lock
   </v-btn>
 </v-toolbar>
@@ -16,7 +16,12 @@ export default {
 	clientSet () {
 	    return this.$store.state.sessionStorage.hashgraphClient;
 	}
-    }
+    },
+    methods: {
+	unsetClient() {
+	    this.$store.dispatch('sessionStorage/unsetClient', {});
+	}
+    },
 }
 </script>
 

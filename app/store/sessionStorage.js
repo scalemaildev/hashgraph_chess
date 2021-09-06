@@ -31,5 +31,11 @@ export const actions = {
 	}
 	
 	return response;
+    },
+
+    unsetClient({ commit }, context) {
+	commit('setAccountId', "");
+	commit('setClient', null);
+	commit('setActivePanel', 'startPanel', { root: true });
     }
 };
