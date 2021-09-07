@@ -90,10 +90,8 @@ async function subscribeToTopic(io, topicId) {
 		});
 	    });
     } catch (error) {
-	return {
-	    result: 'FAILURE',
-	    error: error
-	};
+	// we never return values from this method
+	console.error(error);
     }
 }
 

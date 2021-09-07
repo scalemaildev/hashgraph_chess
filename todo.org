@@ -1,5 +1,7 @@
 * NOW
 ** DONE games should go into their own dynamic page with a /match_<matchId> URI
+** TODO Logically split up the match page more
+** TODO If on match page with no client it should kick the player back to the start panel
 ** TODO Each match page should async load the topic messages from HCS
 *** TODO Needs a loading spinner for initial load
 *** TODO Needs a method for subscribing to the topic
