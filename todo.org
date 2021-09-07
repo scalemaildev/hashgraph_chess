@@ -1,8 +1,13 @@
 * NOW
-** TODO games should go into their own dynamic page with a /match_<matchId> URI
-*** Use _slug and /matches
-** TODO Get a chessboard.js with chess.js rules into the game page
+** DONE games should go into their own dynamic page with a /match_<matchId> URI
+** TODO Each match page should async load the topic messages from HCS
+*** TODO Needs a loading spinner for initial load
+*** TODO Needs a method for subscribing to the topic
+*** TODO Needs a method for handling new messages from the topic
+*** TODO Needs a method for parsing the topic's init message
 ** TODO Get a chat window and message text field into the game page
+*** TODO Only accept messages from players
+** TODO Get a chessboard.js with chess.js rules into the game page
 * FUTURE
 ** TODO Modify chessboard to send and receive moves over HCS
 ** TODO Add a resume game feature to connect to an existing topic id

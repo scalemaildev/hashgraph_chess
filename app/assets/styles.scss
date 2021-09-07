@@ -19,6 +19,10 @@
     color: #e0e0e0;
 }
 
+.match-header {
+    margin-top: 1% !important;
+}
+
 .content-body {
     background-color: rgba(18, 32, 59, 0.8);
     border: 1px solid #0c2547;
@@ -26,6 +30,26 @@
     max-width: 80% !important;
     margin-top: 10vh !important;
     margin-bottom: 10vh !important;
+    padding-left: 4% !important;
+    padding-right: 4% !important;
+    padding-top: 2.5% !important;
+    padding-bottom: 2.5% !important;
+}
+
+.content-body-left {
+    background-color: rgba(18, 32, 59, 0.8);
+    border: 1px solid #0c2547;
+    min-height: 50% !important;
+    padding-left: 4% !important;
+    padding-right: 4% !important;
+    padding-top: 2.5% !important;
+    padding-bottom: 2.5% !important;
+}
+
+.content-body-right {
+    background-color: rgba(18, 32, 59, 0.8);
+    border: 1px solid #0c2547;
+    min-height: 50% !important;
     padding-left: 4% !important;
     padding-right: 4% !important;
     padding-top: 2.5% !important;
