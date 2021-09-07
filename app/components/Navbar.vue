@@ -20,6 +20,7 @@ export default {
     methods: {
 	unsetClient() {
 	    this.$store.dispatch('sessionStorage/unsetClient', {});
+	    this.$router.push('/');
 	}
     },
 }
