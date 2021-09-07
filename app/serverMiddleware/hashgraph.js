@@ -1,5 +1,5 @@
 /* Utils */
-//const TextDecoder = require("text-encoding").TextDecoder;
+const TextDecoder = require("text-encoding").TextDecoder;
 
 /* From SDK */
 const {
@@ -78,9 +78,29 @@ async function sendHCSMessage(data) {
     }
 }
 
+async function subscribeToTopic(io, topicId) {
+    try {
+	new TopicMessageQuery()
+	    .setTopicId(topicId)
+	    .setStartTime(0)
+	    .subscribe(HederaClient, res => {
+		let contents = new TextDecoder("utf-8").decode(res.contents);
+		io.emit('messageReceived', {
+		    'contents': contents
+		});
+	    });
+    } catch (error) {
+	return {
+	    result: 'FAILURE',
+	    error: error
+	};
+    }
+}
+
 module.exports = {
     initHashgraphClient,
     unsetClient,
     createNewTopic,
     sendHCSMessage,
+    subscribeToTopic,
 };

@@ -146,7 +146,7 @@ export default {
 	async initMatchMessage(message) {
 	    const response = await this.asyncEmit({
 		'eventName': 'sendHCSMessage',
-		'messageType': 'initial',
+		'messageType': 'matchCreation',
 		'player1': this.$store.state.sessionStorage.accountId,
 		'player2': this.oppAccountId
 	    });

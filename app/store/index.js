@@ -2,6 +2,7 @@
 export const state = () => ({
     activePanel: 'loadingPanel',
     lockButton: false,
+    messages: [],
 });
 
 /* Mutations */
@@ -31,4 +32,20 @@ export const actions = {
 	    });
 	});
     },
+
+    parseMessage(message) {
+	switch(message.messageType) {
+	case 'matchCreation':
+	    console.log(message);
+	default:
+	    console.log('Got unknown message');
+	}
+    },
+
+    messageReceived({ commit }, data) {
+	let message = JSON.parse(data.contents);
+	message = parseMessage(message);
+    },
 };
+
+

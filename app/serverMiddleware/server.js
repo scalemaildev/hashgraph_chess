@@ -32,6 +32,13 @@ io.on('connection', socket => {
 	let response = await hashgraph.sendHCSMessage(context);
 	io.emit('sendHCSMessage', response);
     });
+
+    socket.on('subscribeToTopic', async (data) => {
+	let response = await hashgraph.subscribeToTopic(io, data.topicId);
+	// this return only happens on an error /w the mirror subscription
+	// new messages go directly to vuex
+	io.emit('subscribeToTopic', response);
+    });
     
 });
 
