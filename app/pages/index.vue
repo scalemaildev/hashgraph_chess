@@ -38,12 +38,6 @@ export default {
 	},
     },
     mounted() {
-	this.$root.mainSocket = this.$nuxtSocket({
-	    name: 'main',
-	    persist: 'mainSocket',
-	    reconnection: false
-	})
-
 	if (!this.clientSet) {
 	    this.setActivePanel('startPanel')
 	} else {

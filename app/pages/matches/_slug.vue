@@ -7,10 +7,7 @@
       </v-container>
     </v-col>
   </v-row>
-  <div v-if="clientSet">
-    We're good
-  </div>
-  <v-container v-else class="content-body-hightop">
+  <v-container v-if="!clientSet" class="content-body-hightop">
     <v-row align="center" justify="center">
       <v-col cols="12" align="center" justify="center">
 	<span style="color: red;"><h3>No Hashgraph Client Initialized</h3></span>
@@ -33,7 +30,6 @@ export default {
     
     data () {
 	return {
-	    socket: this.$root.mainSocket,
 	    subscribed: false,
 	    subscriptionError: false,
 	}
@@ -49,34 +45,25 @@ export default {
 	topicMessages () {
 	    return this.$store.state.messages[this.topicID];
 	},
-	
     },
     
     mounted() {
 	if (this.clientSet) {
+	    console.log('Subscribing to topic ' + this.topicID + '...');
 	    this.subscribeToTopic()
-	} else {
-	    this.$root.mainSocket = this.$nuxtSocket({
-		name: 'main',
-		persist: 'mainSocket',
-		reconnection: false
-	    })
 	}
     },
     
     methods: {
 	async subscribeToTopic() {
-	    console.log('Subscribing to topic ' + this.topicID + '...');
 	    try {
-		this.socket.emit('subscribeToTopic', {
+		this.$root.mainSocket.emit('subscribeToTopic', {
 		    'topicId': this.topicId
 		});
 	    } catch (error) {
 		console.error(error);
-		this.subscriptionError = true;
 		return -1;
 	    }
-	    this.subscribed = true;
 	}
     },
 }
