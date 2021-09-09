@@ -48,23 +48,18 @@ export default {
     },
     
     mounted() {
+    },
+
+    created() {
 	if (this.clientSet) {
+	    console.log(topicId)
+	    console.log(this.topicId)
 	    console.log('Subscribing to topic ' + this.topicID + '...');
 	    this.subscribeToTopic()
 	}
     },
     
     methods: {
-	async subscribeToTopic() {
-	    try {
-		this.$root.mainSocket.emit('subscribeToTopic', {
-		    'topicId': this.topicId
-		});
-	    } catch (error) {
-		console.error(error);
-		return -1;
-	    }
-	}
     },
 }
 </script>

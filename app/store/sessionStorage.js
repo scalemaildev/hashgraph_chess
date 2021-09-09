@@ -1,6 +1,7 @@
 export const state = () => ({
     accountId: "",
     clientExists: false,
+    topicSubs: {},
 });
 
 export const mutations = {    
@@ -39,5 +40,25 @@ export const actions = {
 	this.dispatch('asyncEmit', {
 	    'eventName': 'unsetClient'
 	});
-    }
+    },
+
+    async subscribeToTopic() {
+	this.$root.mainSocket.emit('subscribeToTopic', {
+	    'topicId': this.topicId
+	});
+    },
+
+    parseMessage(message) {
+	switch(message.messageType) {
+	case 'matchCreation':
+	    console.log(message);
+	default:
+	    console.log('Got unknown message');
+	}
+    },
+
+    messageReceived({ commit }, data) {
+	let message = JSON.parse(data.contents);
+	message = parseMessage(message);
+    },
 };

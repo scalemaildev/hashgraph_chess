@@ -123,20 +123,8 @@ export default {
 		
 		this.createNewTopic().then(resp => {
 		    if (resp.result == 'SUCCESS') {
-			let newTopicId = resp.context;
+			let newTopicId = resp.newTopicId;
 			console.log('Created new topic: ' + newTopicId);
-			this.initMatchMessage(newTopicId).then(resp => {
-			    if (resp.result == 'SUCCESS') {
-				console.log('Sent initial HCS message for ' + newTopicId);
-				this.creatingMatch = false;
-				let newMatchUrl = "/matches/" + newTopicId;
-				this.$router.push(newMatchUrl);
-			    } else {
-				this.matchCreationError = true;
-				this.matchCreationErrorMessage = resp.error;
-				this.creatingMatch = false;
-			    }
-			});
 		    } else {
 			this.matchCreationError = true;
 			this.matchCreationErrorMessage = resp.error;
@@ -144,15 +132,6 @@ export default {
 		    }
 		})
 	    }
-	},
-	async initMatchMessage(message) {
-	    const response = await this.asyncEmit({
-		'eventName': 'sendHCSMessage',
-		'messageType': 'matchCreation',
-		'player1': this.$store.state.sessionStorage.accountId,
-		'player2': this.oppAccountId
-	    });
-	    return response;
 	},
     },
 }

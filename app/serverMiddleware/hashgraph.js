@@ -42,11 +42,12 @@ function unsetClient() {
 async function createNewTopic() {
     try {
 	const tx = await new TopicCreateTransaction().execute(HederaClient);
-	const receipt = await tx.getReceipt(HederaClient);
-	const newTopicId = receipt.topicId + ''; // BUG: TopicId.fromString() complains about 'text.split' unless empty string is appended
+	const topicReceipt = await tx.getReceipt(HederaClient);
+	const newTopicId = receipt.topicId.toString();
 	return {
 	    result: 'SUCCESS',
-	    context: newTopicId
+	    context: topicReceipt,
+	    newTopicId: newTopicId
 	};
     } catch (error) {
 	console.log(error);
@@ -85,7 +86,7 @@ async function subscribeToTopic(io, topicId) {
 	    .setStartTime(0)
 	    .subscribe(HederaClient, res => {
 		let contents = new TextDecoder("utf-8").decode(res.contents);
-		io.emit('messageReceived', {
+		io.emit('processMessage', {
 		    'contents': contents
 		});
 	    });

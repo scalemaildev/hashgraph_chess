@@ -49,7 +49,7 @@ export default {
 	    default: true,
 	    name: 'main', 
 	    url: 'http://localhost:3001',
-	    actions: ['messageReceived']
+	    actions: [{ processMessage: 'sessionStorage/processMessage' }]
 	}],
     },
 
