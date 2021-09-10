@@ -1,54 +1,47 @@
 <template>
 <v-container>
-  <div v-if="activePanel == 'loadingPanel'" class="content-spaced-mid">
+  <div v-if="ACTIVE_PANEL == 'loadingPanel'" class="content-spaced-mid">
     <v-row>
       <v-col cols="12" align="center" justify="center">
 	<v-progress-circular indeterminate />
       </v-col>
       <v-col cols="12" align="center" justify="center">
-	... Initializing ...
+	<p>... Initializing ...</p>
       </v-col>
     </v-row>
   </div>
-  <div v-else-if="activePanel == 'startPanel'">
+  <div v-else-if="ACTIVE_PANEL == 'startPanel'">
     <StartPanel />
   </div>
-  <div v-else-if="activePanel == 'accountPanel'">
+  <div v-else-if="ACTIVE_PANEL == 'accountPanel'">
     <AccountPanel />
   </div>
-  <div v-else-if="activePanel == 'newMatchPanel'">
+  <div v-else-if="ACTIVE_PANEL == 'newMatchPanel'">
     <NewMatchPanel />
   </div>
 </v-container>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
-    computed: {	
-	clientSet () {
-	    return this.$store.state.sessionStorage.CLIENT_EXISTS;
-	},
-	activePanel () {
-	    return this.$store.state.ACTIVE_PANEL;
-	},
+    computed: {
+	...mapState('sessionStorage', ['CLIENT_EXISTS', 'ACTIVE_PANEL']),
     },
     
     mounted() {
-	if (!this.clientSet) {
-	    this.SET_ACTIVE_PANEL('startPanel')
+	if (!this.CLIENT_EXISTS) {
+	    this.SET_ACTIVE_PANEL('startPanel');
 	} else {
-	    this.SET_ACTIVE_PANEL('accountPanel')
-	    this.TOGGLE_LOCK_BUTTON(true)
+	    this.SET_ACTIVE_PANEL('accountPanel');
+	    this.TOGGLE_LOCK_BUTTON(true);
 	}
     },
     
     methods: {
-	...mapMutations([
-	    'SET_ACTIVE_PANEL',
-	    'TOGGLE_LOCK_BUTTON'
-	]),
+	...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL',
+					   'TOGGLE_LOCK_BUTTON']),
     },
 };
 </script>

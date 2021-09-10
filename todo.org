@@ -1,10 +1,4 @@
 * NOW
-** TODO Fix the topic subscription method chain
-*** Look in the NewMatchPanel component as well as matches _slug
-*** Should probably move the method to vuex
-*** Have the method invoked only from the _slug (newmatch should just route to _slug)
-*** Chain goes sessionStorage -> server index -> hashgraph
-** TODO Fix the match page showing that client is not initialized during the loading period
 ** TODO If player inits their client on the match page it should subscribe to the topic afterwards
 ** TODO Add Join Match Panel
 ** TODO Build out matchCreation message handling

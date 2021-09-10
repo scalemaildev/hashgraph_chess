@@ -1,17 +1,9 @@
 /* State */
 export const state = () => ({
-    ACTIVE_PANEL: 'loadingPanel',
-    LOCK_BUTTON: false,
 });
 
 /* Mutations */
 export const mutations = {
-    SET_ACTIVE_PANEL(state, newPanel) {
-	state.ACTIVE_PANEL = newPanel;
-    },
-    TOGGLE_LOCK_BUTTON(state, bool) {
-	state.LOCK_BUTTON = bool;
-    },
 };
 
 /* Actions */

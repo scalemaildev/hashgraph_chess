@@ -1,10 +1,18 @@
 export const state = () => ({
+    ACTIVE_PANEL: 'loadingPanel',
+    LOCK_BUTTON: false,
     ACCOUNT_ID: "",
     CLIENT_EXISTS: false,
     MATCHES: {},
 });
 
-export const mutations = {    
+export const mutations = {
+    TOGGLE_LOCK_BUTTON(state, bool) {
+	state.LOCK_BUTTON = bool;
+    },
+    SET_ACTIVE_PANEL(state, newPanel) {
+	state.ACTIVE_PANEL = newPanel;
+    },
     SET_ACCOUNT_ID(state, accountId) {
 	state.ACCOUNT_ID = accountId;
     },
@@ -18,6 +26,8 @@ export const mutations = {
 	    messages: [],
 	    moves: []
 	};
+
+	console.log(state.MATCHES);
     },
     PUSH_MESSAGE(state, topicId, message) {
 	state.MATCHES.topicId.messages.append(message);
@@ -44,8 +54,8 @@ export const actions = {
     UNSET_CLIENT({ commit }, context) {
 	commit('SET_ACCOUNT_ID', "");
 	commit('TOGGLE_CLIENT_EXISTS', false);
-	commit('TOGGLE_LOCK_BUTTON', false, { root: true });
-	commit('SET_ACTIVE_PANEL', 'startPanel', { root: true });
+	commit('TOGGLE_LOCK_BUTTON', false);
+	commit('SET_ACTIVE_PANEL', 'startPanel');
 
 	// dispatch a method to clear the client server-side
 	this.dispatch('ASYNC_EMIT', {
@@ -80,7 +90,7 @@ export const actions = {
 	    });
 	}
 
-	// always return something
+	// return bad response from topic creation otherwise
 	return response;
     },
 

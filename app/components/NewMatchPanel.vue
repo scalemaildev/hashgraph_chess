@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { mapMutations, mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required, helpers } from 'vuelidate/lib/validators';
 
@@ -84,12 +84,12 @@ export default {
 	return {
 	    opponentAccountId: "",
 	    matchCreationError: false,
-	    matchCreationErrorMessage: "",
 	    creatingMatch: false
 	}
     },
     
     computed: {
+	...mapState('sessionStorage', ['ACCOUNT_ID']),
 	opponentAccountIdErrors () {
 	    const errors = [];
 	    if (!this.$v.opponentAccountId.$dirty) return errors
@@ -97,15 +97,12 @@ export default {
 	    !this.$v.opponentAccountId.accountIdRegex && errors.push('Account ID should look like 0.0.xxx.')
 	    return errors;
 	},
-	accountId () {
-	    return this.$store.state.sessionStorage.ACCOUNT_ID;
-	}
     },
     
     methods: {
-	...mapMutations([
-	    'SET_ACTIVE_PANEL',
-	]),
+	...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL',
+					   'TOGGLE_LOCK_BUTTON']),
+	...mapActions('sessionStorage', ['CREATE_MATCH']),
 	returnToAccountPanel () {
 	    this.SET_ACTIVE_PANEL('accountPanel');
 	},
@@ -119,8 +116,8 @@ export default {
 	    this.matchCreationError = false;
 	    this.creatingMatch = true;
 	    
-	    const response = await this.$store.dispatch('sessionStorage/CREATE_MATCH', {
-		'player1': this.accountId,
+	    const response = await this.CREATE_MATCH({
+		'player1': this.ACCOUNT_ID,
 		'player2': this.opponentAccountId
 	    })
 
@@ -131,7 +128,6 @@ export default {
 		this.$router.push(newMatchUrl);
 	    } else {
 		this.matchCreationError = true;
-		this.matchCreationErrorMessage = resp.error;
 		this.creatingMatch = false;
 	    }
 	}

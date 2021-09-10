@@ -91,10 +91,7 @@ export default {
     },
     
     methods: {
-	...mapMutations([
-	    'SET_ACTIVE_PANEL',
-	    'TOGGLE_LOCK_BUTTON'
-	]),
+	...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL']),
 	submit () {
 	    this.$v.$touch();
 	    if (!this.$v.$invalid) {
@@ -111,7 +108,7 @@ export default {
 	    
 	    if (response.result == 'SUCCESS') {
 		this.SET_ACTIVE_PANEL('accountPanel');
-		this.TOGGLE_LOCK_BUTTON(true);
+		this.$store.commit('sessionStorage/TOGGLE_LOCK_BUTTON', true);
 		console.log(response.responseMessage);
 	    } else {
 		console.log(response.responseMessage);

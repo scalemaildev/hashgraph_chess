@@ -14,7 +14,7 @@
 export default {
     computed: {
 	clientSet () {
-	    return this.$store.state.LOCK_BUTTON;
+	    return this.$store.state.sessionStorage.LOCK_BUTTON;
 	}
     },
     

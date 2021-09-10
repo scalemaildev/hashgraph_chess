@@ -7,20 +7,11 @@
       </v-container>
     </v-col>
   </v-row>
-  <v-container v-if="!clientSet" class="content-body-hightop">
-    <v-row align="center" justify="center">
-      <v-col cols="12" align="center" justify="center">
-	<span style="color: red;"><h3>No Hashgraph Client Initialized</h3></span>
-	<p style="color: red;">You must initialize the hashgraph client with your Account ID and Private Key before subscribing to a match.</p>
-      </v-col>
-    </v-row>
-    <InitClientForm />
-  </v-container>
 </div>
 </template>
 
 <script>
-import { mapMutations, mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 
 export default {
     async asyncData({ params }) {
@@ -30,27 +21,22 @@ export default {
     
     data () {
 	return {
-	    subscribed: false,
-	    subscriptionError: false,
 	}
     },
     
     computed: {
-	clientSet () {
-	    return this.$store.state.sessionStorage.CLIENT_EXISTS;
-	},
-	accountId () {
-	    return this.$store.state.sessionStorage.ACCOUNT_ID;
-	},
+	...mapState('sessionStorage', ['CLIENT_EXISTS',
+				       'ACCOUNT_ID',
+				      'MATCHES']),
+	topicData () {
+	    return this.MATCHES[this.topicIdString]
+	}
     },
     
     mounted() {
     },
-
+    
     created() {
-	if (this.clientSet) {
-	    console.log(this.$store.state.sessionStorage.MATCHES[this.topicIdString]);
-	}
     },
     
     methods: {
