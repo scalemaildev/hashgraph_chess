@@ -1,7 +1,14 @@
 export const state = () => ({
     accountId: "",
     clientExists: false,
-    topicSubs: {},
+    topicSubs: {
+	'exampleTopicId': {
+	    player1: "",
+	    player2: "",
+	    messages: [],
+	    moves: []
+	}
+    },
 });
 
 export const mutations = {    
@@ -11,6 +18,9 @@ export const mutations = {
     toggleClientExists(state, bool) {
 	state.clientExists = bool;
     },
+    pushMessage(state, topicId, message) {
+	topicSubs.topicId.messages.append(message);
+    }
 };
 
 export const actions = {
@@ -48,17 +58,17 @@ export const actions = {
 	});
     },
 
-    parseMessage(message) {
+    processMessage({ commit }, data) {
+	let message = JSON.parse(data.contents);
 	switch(message.messageType) {
 	case 'matchCreation':
 	    console.log(message);
+	case 'chatMessage':
+	    console.log(message);
+	case 'chessMove':
+	    console.log(message);
 	default:
-	    console.log('Got unknown message');
+	    console.log('Got unknown message type');
 	}
-    },
-
-    processMessage({ commit }, data) {
-	let message = JSON.parse(data.contents);
-	message = parseMessage(message);
     },
 };

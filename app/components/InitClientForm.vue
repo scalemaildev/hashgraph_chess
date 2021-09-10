@@ -53,8 +53,8 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex';
-import { validationMixin } from 'vuelidate'
-import { required, helpers } from 'vuelidate/lib/validators'
+import { validationMixin } from 'vuelidate';
+import { required, helpers } from 'vuelidate/lib/validators';
 
 const accountIdRegex = helpers.regex('accountIdRegex', /0.0.[0-9]{3,}/);
 

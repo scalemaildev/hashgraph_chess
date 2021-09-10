@@ -1,8 +1,18 @@
 * NOW
-** TODO Fix the topic subscription method chain (move it out to vuex?)
+** TODO Fix the topic subscription method chain
+*** Look in the NewMatchPanel component as well as matches _slug
+*** Should probably move the method to vuex
+*** Chain goes sessionStorage -> server index -> hashgraph
 ** TODO Fix the match page showing that client is not initialized during the loading period
 ** TODO If player inits their client on the match page it should subscribe to the topic afterwards
 ** TODO Add Join Match Panel
+** TODO Build out matchCreation message handling
+*** TODO Match creation should create the object in topic subs
+**** Set the players to the account id's
+** TODO Build out the Chatmessage handling
+*** Messages means chat messages? Find a better term
+*** TODO Messages should be pushed to the messages array
+**** Needs a validation that the message came from a player
 * FUTURE
 ** TODO Each match page should async load the topic messages from HCS
 *** TODO Needs a loading spinner for initial load
@@ -12,6 +22,10 @@
 ** TODO Get a chat window and message text field into the game page
 *** TODO Only accept messages from players
 ** TODO Get a chessboard.js with chess.js rules into the game page
+** TODO Chess moves go to the chess moves array
+**** Needs a validation that the move came from the current player(?)
+**** Needs a validatino that the chess move was legal(?)
+**** Chess.js might take care of the above
 ** TODO Modify chessboard to send and receive moves over HCS
 ** TODO Add a resume game feature to connect to an existing topic id
 ** TODO Limit moves and chat messages to valid account id's
