@@ -14,13 +14,13 @@
 export default {
     computed: {
 	clientSet () {
-	    return this.$store.state.lockButton;
+	    return this.$store.state.LOCK_BUTTON;
 	}
     },
     
     methods: {
 	unsetClient() {
-	    this.$store.dispatch('sessionStorage/unsetClient', {});
+	    this.$store.dispatch('sessionStorage/UNSET_CLIENT', {});
 	    this.$router.push('/');
 	}
     },

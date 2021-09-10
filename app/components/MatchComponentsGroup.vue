@@ -52,13 +52,10 @@ export default {
     
     computed: {
 	clientSet () {
-	    return this.$store.state.sessionStorage.clientExists;
+	    return this.$store.state.sessionStorage.CLIENT_EXISTS;
 	},
 	accountId () {
-	    return this.$store.state.sessionStorage.accountId;
-	},
-	topicMessages () {
-	    return this.$store.state.messages[this.topicID];
+	    return this.$store.state.sessionStorage.ACCOUNT_ID;
 	},
 	
     },

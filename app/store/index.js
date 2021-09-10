@@ -1,22 +1,22 @@
 /* State */
 export const state = () => ({
-    activePanel: 'loadingPanel',
-    lockButton: false,
+    ACTIVE_PANEL: 'loadingPanel',
+    LOCK_BUTTON: false,
 });
 
 /* Mutations */
 export const mutations = {
-    setActivePanel(state, newPanel) {
-	state.activePanel = newPanel;
+    SET_ACTIVE_PANEL(state, newPanel) {
+	state.ACTIVE_PANEL = newPanel;
     },
-    toggleLockButton(state, bool) {
-	state.lockButton = bool;
+    TOGGLE_LOCK_BUTTON(state, bool) {
+	state.LOCK_BUTTON = bool;
     },
 };
 
 /* Actions */
 export const actions = {
-    asyncEmit({ commit }, context) {
+    ASYNC_EMIT({ commit }, context) {
 	if (!context.eventName) {
 	    console.error('No eventName in asyncEmit invocation!');
 	    return -1;

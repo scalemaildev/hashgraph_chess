@@ -11,22 +11,23 @@
   </v-row>
   <!-- MATCH CREATION FORM -->
   <div v-if="!creatingMatch">
-    <v-form>
+    <v-form
+      @submit.prevent="submit">
       <v-row
 	no-gutters
 	style="flex-wrap: nowrap;"
 	class="pb-2">
 	<v-col class="flex-grow-1 flex-shrink-0">
 	  <v-text-field
-	    v-model="oppAccountId"
-	    :error-messages="oppAccountIdErrors"
+	    v-model="opponentAccountId"
+	    :error-messages="opponentAccountIdErrors"
 	    required
-	    @input="$v.oppAccountId.$touch()"
-	    @blur="$v.oppAccountId.$touch()"
+	    @input="$v.opponentAccountId.$touch()"
+	    @blur="$v.opponentAccountId.$touch()"
 	    label="Opponent's ID"/>
 	</v-col>
 	<v-col class="flex-grow-0 flex-shrink-1 pa-2">
-	  <v-btn @click="createMatch">
+	  <v-btn type="submit">
 	    Create Match
 	  </v-btn>
 	</v-col>
@@ -76,12 +77,12 @@ export default {
     mixins: [validationMixin],
     
     validations: {
-	oppAccountId: { required, accountIdRegex },
+	opponentAccountId: { required, accountIdRegex },
     },
     
     data () {
 	return {
-	    oppAccountId: "",
+	    opponentAccountId: "",
 	    matchCreationError: false,
 	    matchCreationErrorMessage: "",
 	    creatingMatch: false
@@ -89,51 +90,42 @@ export default {
     },
     
     computed: {
-	oppAccountIdErrors () {
+	opponentAccountIdErrors () {
 	    const errors = [];
-	    if (!this.$v.oppAccountId.$dirty) return errors
-	    !this.$v.oppAccountId.required && errors.push("An Opponent's Account ID is required.")
-	    !this.$v.oppAccountId.accountIdRegex && errors.push('Account ID should look like 0.0.xxx.')
+	    if (!this.$v.opponentAccountId.$dirty) return errors
+	    !this.$v.opponentAccountId.required && errors.push("An Opponent's Account ID is required.")
+	    !this.$v.opponentAccountId.accountIdRegex && errors.push('Account ID should look like 0.0.xxx.')
 	    return errors;
 	},
+	accountId () {
+	    return this.$store.state.sessionStorage.ACCOUNT_ID;
+	}
     },
     
     methods: {
 	...mapMutations([
-	    'setActivePanel',
-	]),
-	...mapActions([
-	    'asyncEmit'
+	    'SET_ACTIVE_PANEL',
 	]),
 	returnToAccountPanel () {
-	    this.setActivePanel('accountPanel');
+	    this.SET_ACTIVE_PANEL('accountPanel');
 	},
-	async createNewTopic() {
-	    const response = await this.asyncEmit({
-		'eventName': 'createNewTopic',
-		'oppAccountId': this.oppAccountId,
-		'operatorAccountId': this.$store.state.sessionStorage.accountId
-	    });
-	    return response;
-	},
-	createMatch() {
+	submit () {
 	    this.$v.$touch();
 	    if (!this.$v.$invalid) {
-		this.matchCreationError = false;
-		this.creatingMatch = true;
-		
-		this.createNewTopic().then(resp => {
-		    if (resp.result == 'SUCCESS') {
-			let newTopicId = resp.newTopicId;
-			console.log('Created new topic: ' + newTopicId);
-		    } else {
-			this.matchCreationError = true;
-			this.matchCreationErrorMessage = resp.error;
-			this.creatingMatch = false;
-		    }
-		})
+		this.createMatch();
 	    }
 	},
+	async createMatch() {
+	    this.matchCreationError = false;
+	    this.creatingMatch = true;
+
+	    const response = await this.$store.dispatch('sessionStorage/CREATE_MATCH', {
+		'player1': this.accountId,
+		'player2': this.opponentAccountId
+	    })
+
+	    console.log(response);
+	}
     },
 }
 </script>

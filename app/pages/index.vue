@@ -28,26 +28,26 @@ import { mapMutations } from 'vuex';
 export default {
     computed: {	
 	clientSet () {
-	    return this.$store.state.sessionStorage.clientExists;
+	    return this.$store.state.sessionStorage.CLIENT_EXISTS;
 	},
 	activePanel () {
-	    return this.$store.state.activePanel;
+	    return this.$store.state.ACTIVE_PANEL;
 	},
     },
     
     mounted() {
 	if (!this.clientSet) {
-	    this.setActivePanel('startPanel')
+	    this.SET_ACTIVE_PANEL('startPanel')
 	} else {
-	    this.setActivePanel('accountPanel')
-	    this.toggleLockButton(true)
+	    this.SET_ACTIVE_PANEL('accountPanel')
+	    this.TOGGLE_LOCK_BUTTON(true)
 	}
     },
     
     methods: {
 	...mapMutations([
-	    'setActivePanel',
-	    'toggleLockButton'
+	    'SET_ACTIVE_PANEL',
+	    'TOGGLE_LOCK_BUTTON'
 	]),
     },
 };

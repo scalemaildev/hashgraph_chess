@@ -23,38 +23,38 @@ function initHashgraphClient(incAccountId, incPrivateKey) {
 	HederaClient.setOperator(accountId, privateKey);
 	return {
 	    result: 'SUCCESS',
-	    context: 'Hedera Hashgraph client initialized!'
+	    responseMessage: 'Hedera Hashgraph client initialized'
 	};
     } catch (error) {
 	return {
 	    result: 'FAILURE',
-	    context: 'ERROR - hashgraph client failed to initialize',
-	    error: error
+	    responseMessage: 'Hedera Hashgraph client failed to initialize'
 	};
     }
 }
 
 function unsetClient() {
     HederaClient = "";
-    return "Hashgraph client has been unset!";
+    return "Hashgraph client has been unset";
 }
 
 async function createNewTopic() {
     try {
 	const tx = await new TopicCreateTransaction().execute(HederaClient);
 	const topicReceipt = await tx.getReceipt(HederaClient);
-	const newTopicId = receipt.topicId.toString();
+	const newTopicId = topicReceipt.topicId.toString();
 	return {
 	    result: 'SUCCESS',
-	    context: topicReceipt,
+	    responseMessage: 'Created new topic ' + newTopicId,
+	    topicReceipt: topicReceipt,
 	    newTopicId: newTopicId
 	};
     } catch (error) {
 	console.log(error);
 	return {
 	    result: 'FAILURE',
-	    context: 'ERROR - failed to create a topic',
-	    error: error
+	    responseMessage: 'Failed to create a new topic',
+	    errorMessage: error
 	};
     }
 }
@@ -69,12 +69,13 @@ async function sendHCSMessage(data) {
 	    .execute(HederaClient);
 	return {
 	    result: 'SUCCESS',
-	    context: response
+	    responseMessage: 'Sent message to HCS',
+	    response: response
 	};
     } catch (error) {
 	return {
 	    result: 'FAILURE',
-	    error: error
+	    responseMessage: 'Failed to send message to HCS'
 	};
     }
 }

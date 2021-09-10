@@ -92,11 +92,8 @@ export default {
     
     methods: {
 	...mapMutations([
-	    'setActivePanel',
-	    'toggleLockButton'
-	]),
-	...mapActions([
-	    'asyncEmit'
+	    'SET_ACTIVE_PANEL',
+	    'TOGGLE_LOCK_BUTTON'
 	]),
 	submit () {
 	    this.$v.$touch();
@@ -107,16 +104,17 @@ export default {
 	async initHashgraphClient () {
 	    this.clientError = false;
 	    
-	    const response = await this.$store.dispatch('sessionStorage/initHashgraphClient', {
+	    const response = await this.$store.dispatch('sessionStorage/INIT_HASHGRAPH_CLIENT', {
 		'accountId': this.accountId,
 		'privateKey': this.privateKey
 	    })
 	    
 	    if (response.result == 'SUCCESS') {
-		this.setActivePanel('accountPanel');
-		this.toggleLockButton(true);
-		console.log(response.context)
+		this.SET_ACTIVE_PANEL('accountPanel');
+		this.TOGGLE_LOCK_BUTTON(true);
+		console.log(response.responseMessage);
 	    } else {
+		console.log(response.responseMessage);
 		this.clientError = true;
 	    }
 	},

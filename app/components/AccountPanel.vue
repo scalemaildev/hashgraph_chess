@@ -26,16 +26,16 @@ import { mapMutations } from 'vuex';
 export default {
     computed: {
 	accountId () {
-	    return this.$store.state.sessionStorage.accountId
+	    return this.$store.state.sessionStorage.ACCOUNT_ID;
 	}
     },
     
     methods: {
 	...mapMutations([
-	    'setActivePanel'
+	    'SET_ACTIVE_PANEL'
 	]),
 	createNewMatch() {
-	    this.setActivePanel('newMatchPanel');
+	    this.SET_ACTIVE_PANEL('newMatchPanel');
 	},
     },
 }
