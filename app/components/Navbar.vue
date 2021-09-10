@@ -4,23 +4,24 @@
     <h2 style="display: inline">♄ashgraph Chess</h2> <sup>Pre-Beta</sup>
   </v-toolbar-title>
   <v-spacer />
-  <v-btn v-if="clientSet" @click="unsetClient">
+  <v-btn v-show="CLIENT_EXISTS" @click="unsetClient">
     Lock
   </v-btn>
 </v-toolbar>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
+  
 export default {
     computed: {
-	clientSet () {
-	    return this.$store.state.sessionStorage.LOCK_BUTTON;
-	}
+	...mapState('sessionStorage', ['CLIENT_EXISTS']),
     },
     
     methods: {
+	...mapActions('sessionStorage', ['UNSET_CLIENT']),
 	unsetClient() {
-	    this.$store.dispatch('sessionStorage/UNSET_CLIENT', {});
+	    this.UNSET_CLIENT();
 	    this.$router.push('/');
 	}
     },

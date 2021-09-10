@@ -30,7 +30,7 @@ export default {
 	...mapState('sessionStorage', ['CLIENT_EXISTS', 'ACTIVE_PANEL']),
     },
     
-    mounted() {
+    created() {
 	if (!this.CLIENT_EXISTS) {
 	    this.SET_ACTIVE_PANEL('startPanel');
 	} else {

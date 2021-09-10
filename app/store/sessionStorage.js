@@ -51,7 +51,7 @@ export const actions = {
 	return response;
     },
 
-    UNSET_CLIENT({ commit }, context) {
+    UNSET_CLIENT({ commit }) {
 	commit('SET_ACCOUNT_ID', "");
 	commit('TOGGLE_CLIENT_EXISTS', false);
 	commit('TOGGLE_LOCK_BUTTON', false);
