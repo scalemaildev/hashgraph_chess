@@ -4,9 +4,6 @@
     <v-col cols="12" align="center">
       <h1>Welcome to ♄ashgraph Chess.</h1>
     </v-col>
-    <v-col cols="12" align="center">
-      <strong>Pre-Beta</strong>
-    </v-col>
   </v-row>
   <v-row align="center">
     <v-col cols="12" align="center">
@@ -22,6 +19,3 @@
     <InitClientForm />
 </v-container>  
 </template>
-
-<script>
-</script>

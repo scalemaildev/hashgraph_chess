@@ -9,6 +9,7 @@
       <p>After creating the match, you'll be given a <strong>Topic ID</strong>. To invite your opponent to the match, give them this ID. They can enter it in the <strong>Join Game</strong> panel to enter the match.</p>
     </v-col>    
   </v-row>
+  <!-- MATCH CREATION FORM -->
   <div v-if="!creatingMatch">
     <v-form>
       <v-row
@@ -37,8 +38,7 @@
 	  Return
 	</v-btn>
       </v-col>
-    </v-row>
-    
+    </v-row>    
   </div>
   <div v-if="matchCreationError" class="content-spaced-small">
     <v-row align="center" justify="center">
@@ -48,6 +48,7 @@
       </v-col>
     </v-row>
   </div>
+  <!-- LOADING -->
   <div v-if="creatingMatch" class="content-spaced-small">
     <v-row>
       <v-col cols="12" align="center" justify="center">
@@ -66,8 +67,8 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex';
-import { validationMixin } from 'vuelidate'
-import { required, helpers } from 'vuelidate/lib/validators'
+import { validationMixin } from 'vuelidate';
+import { required, helpers } from 'vuelidate/lib/validators';
 
 const accountIdRegex = helpers.regex('accountIdRegex', /0.0.[0-9]{3,}/);
 

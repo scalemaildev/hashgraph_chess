@@ -57,7 +57,7 @@ export const actions = {
 	}
     },
 
-    messageReceived({ commit }, data) {
+    processMessage({ commit }, data) {
 	let message = JSON.parse(data.contents);
 	message = parseMessage(message);
     },

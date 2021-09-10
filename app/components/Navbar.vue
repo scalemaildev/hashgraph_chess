@@ -1,7 +1,7 @@
 <template>
-<v-toolbar color="rgba(18, 32, 59, 0.8);">
+<v-toolbar color="rgba(18, 32, 59, 0.8);" class="navbar-wrapper">
   <v-toolbar-title class="navbar-backing">
-    <h2 style="display: inline">♄ashgraph Chess</h2>
+    <h2 style="display: inline">♄ashgraph Chess</h2> <sup>Pre-Beta</sup>
   </v-toolbar-title>
   <v-spacer />
   <v-btn v-if="clientSet" @click="unsetClient">
@@ -17,6 +17,7 @@ export default {
 	    return this.$store.state.lockButton;
 	}
     },
+    
     methods: {
 	unsetClient() {
 	    this.$store.dispatch('sessionStorage/unsetClient', {});

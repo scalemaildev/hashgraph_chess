@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+  
 export default {
     computed: {
 	accountId () {
@@ -29,8 +31,11 @@ export default {
     },
     
     methods: {
+	...mapMutations([
+	    'setActivePanel'
+	]),
 	createNewMatch() {
-	    this.$store.commit('setActivePanel', 'newMatchPanel');
+	    this.setActivePanel('newMatchPanel');
 	},
     },
 }

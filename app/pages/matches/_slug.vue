@@ -3,7 +3,7 @@
   <v-row>
     <v-col cols="12" align="center" justify="center">
       <v-container fluid class="match-header">
-	<h1>Match ID: {{ this.topicId }}</h1>
+	<h1>Match ID: {{ this.topicIdString }}</h1>
       </v-container>
     </v-col>
   </v-row>
@@ -24,8 +24,8 @@ import { mapMutations, mapActions } from 'vuex';
 
 export default {
     async asyncData({ params }) {
-	const topicId = params.slug;
-	return { topicId }
+	const topicIdString = params.slug;
+	return { topicIdString }
     },
     
     data () {
@@ -52,9 +52,7 @@ export default {
 
     created() {
 	if (this.clientSet) {
-	    console.log(topicId)
-	    console.log(this.topicId)
-	    console.log('Subscribing to topic ' + this.topicID + '...');
+	    console.log('Subscribing to topic ' + this.topicIDString + '...');
 	    this.subscribeToTopic()
 	}
     },

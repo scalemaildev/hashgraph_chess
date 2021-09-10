@@ -1,8 +1,9 @@
 * NOW
-** DONE games should go into their own dynamic page with a /match_<matchId> URI
-** TODO Fix computed vs watched and everything to fix the page behavior wrt components and panels
+** TODO Fix the topic subscription method chain (move it out to vuex?)
+** TODO Fix the match page showing that client is not initialized during the loading period
 ** TODO If player inits their client on the match page it should subscribe to the topic afterwards
-** TODO Logically split up the match page more
+** TODO Add Join Match Panel
+* FUTURE
 ** TODO Each match page should async load the topic messages from HCS
 *** TODO Needs a loading spinner for initial load
 *** TODO Needs a method for subscribing to the topic
@@ -11,7 +12,6 @@
 ** TODO Get a chat window and message text field into the game page
 *** TODO Only accept messages from players
 ** TODO Get a chessboard.js with chess.js rules into the game page
-* FUTURE
 ** TODO Modify chessboard to send and receive moves over HCS
 ** TODO Add a resume game feature to connect to an existing topic id
 ** TODO Limit moves and chat messages to valid account id's

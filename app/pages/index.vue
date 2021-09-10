@@ -1,12 +1,9 @@
 <template>
 <v-container>
-  <div v-if="activePanel == 'loadingPanel'"
-       class="content-spaced-mid">
+  <div v-if="activePanel == 'loadingPanel'" class="content-spaced-mid">
     <v-row>
       <v-col cols="12" align="center" justify="center">
-	<v-progress-circular
-	  indeterminate
-	  />
+	<v-progress-circular indeterminate />
       </v-col>
       <v-col cols="12" align="center" justify="center">
 	... Initializing ...
@@ -37,6 +34,7 @@ export default {
 	    return this.$store.state.activePanel;
 	},
     },
+    
     mounted() {
 	if (!this.clientSet) {
 	    this.setActivePanel('startPanel')
