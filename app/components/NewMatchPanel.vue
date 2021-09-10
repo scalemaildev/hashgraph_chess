@@ -118,13 +118,22 @@ export default {
 	async createMatch() {
 	    this.matchCreationError = false;
 	    this.creatingMatch = true;
-
+	    
 	    const response = await this.$store.dispatch('sessionStorage/CREATE_MATCH', {
 		'player1': this.accountId,
 		'player2': this.opponentAccountId
 	    })
 
-	    console.log(response);
+	    if (response.result == 'SUCCESS') {
+		let newTopicId = response.newTopicId;
+		console.log('Created new topic: ' + newTopicId);
+		let newMatchUrl = "/matches/" + newTopicId;
+		this.$router.push(newMatchUrl);
+	    } else {
+		this.matchCreationError = true;
+		this.matchCreationErrorMessage = resp.error;
+		this.creatingMatch = false;
+	    }
 	}
     },
 }

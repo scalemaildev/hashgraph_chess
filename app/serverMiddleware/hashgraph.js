@@ -46,7 +46,6 @@ async function createNewTopic() {
 	return {
 	    result: 'SUCCESS',
 	    responseMessage: 'Created new topic ' + newTopicId,
-	    topicReceipt: topicReceipt,
 	    newTopicId: newTopicId
 	};
     } catch (error) {

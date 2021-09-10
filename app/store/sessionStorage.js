@@ -12,8 +12,7 @@ export const mutations = {
 	state.CLIENT_EXISTS = bool;
     },
     CREATE_MATCH_OBJECT(state, newMatchData) {
-	state.MATCHES.newMatchData.newTopicId = {
-	    'topicData': newMatchData.topicReceipt,
+	state.MATCHES[newMatchData.topicId] = {
 	    'player1': newMatchData.player1,
 	    'player2': newMatchData.player2,
 	    messages: [],
@@ -54,7 +53,7 @@ export const actions = {
 	});
     },
 
-    async CREATE_NEW_TOPIC({ commit }, context) {
+    async CREATE_NEW_TOPIC() {
 	let response = this.dispatch('ASYNC_EMIT', {
 	    'eventName': 'createNewTopic'
 	});
@@ -62,13 +61,12 @@ export const actions = {
     },
 
     async CREATE_MATCH({ commit }, context) {
-	const response = await this.dispatch('sessionStorage/CREATE_NEW_TOPIC', {});
+	const response = await this.dispatch('sessionStorage/CREATE_NEW_TOPIC');
 
 	if (response.result == 'SUCCESS') {
 	    let newMatchData = {
 		'messageType': 'matchCreation',
 		'topicId': response.newTopicId,
-		//'topicReceipt': resp.topicReceipt,
 		'player1': context.player1,
 		'player2': context.player2,
 	    };
@@ -77,6 +75,7 @@ export const actions = {
 		'eventName': 'sendHCSMessage',
 		'context': newMatchData
 	    }).then(resp => {
+		commit('CREATE_MATCH_OBJECT', newMatchData);
 		return resp;
 	    });
 	}

@@ -49,8 +49,7 @@ export default {
 
     created() {
 	if (this.clientSet) {
-	    //console.log('Subscribing to topic ' + this.topicIDString + '...');
-	    //this.subscribeToTopic()
+	    console.log(this.$store.state.sessionStorage.MATCHES[this.topicIdString]);
 	}
     },
     
