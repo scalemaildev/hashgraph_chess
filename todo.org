@@ -1,18 +1,13 @@
 * NOW
-** TODO If player inits their client on the match page it should subscribe to the topic afterwards
+** TODO Match page _slug should sub to the topic and then mount components
 ** TODO Build out matchCreation message handling
-*** TODO Match creation should create the object in topic subs
-**** Set the players to the account id's
+*** Match creation should create the object in topic subs
+*** Set the players to the account id's
+* FUTURE
 ** TODO Build out the Chatmessage handling
 *** Messages means chat messages? Find a better term
-*** TODO Messages should be pushed to the messages array
-**** Needs a validation that the message came from a player
-* FUTURE
-** TODO Each match page should async load the topic messages from HCS
-*** TODO Needs a loading spinner for initial load
-*** TODO Needs a method for subscribing to the topic
-*** TODO Needs a method for handling new messages from the topic
-*** TODO Needs a method for parsing the topic's init message
+*** Messages should be pushed to the messages array
+*** Needs a validation that the message came from a player
 ** TODO Get a chat window and message text field into the game page
 *** TODO Only accept messages from players
 ** TODO Get a chessboard.js with chess.js rules into the game page
