@@ -55,14 +55,16 @@ export default {
     },
     
     mounted() {
-        this.SUBSCRIBE_TO_TOPIC(this.topicIdString);
     },
     
     created() {
     },
     
     methods: {
-        ...mapActions('sessionStorage', ['SUBSCRIBE_TO_TOPIC'])
+        ...mapActions('sessionStorage', ['SUBSCRIBE_TO_TOPIC']),
+        subscribeToTopic() {
+            this.SUBSCRIBE_TO_TOPIC(this.topicIdString);
+        }
     },
 }
 </script>

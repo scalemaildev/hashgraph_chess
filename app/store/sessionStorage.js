@@ -21,11 +21,13 @@ export const mutations = {
     },
     CREATE_MATCH_OBJECT(state, newMatchData) {
         state.MATCHES[newMatchData.topicId] = {
+            init: true,
             player1: newMatchData.player1,
             player2: newMatchData.player2,
             messages: [],
             moves: []
         };
+        console.log(state.MATCHES[newMatchData.topicId]);
     },
     PUSH_MESSAGE(state, topicId, message) {
         state.MATCHES.topicId.messages.append(message);
@@ -102,6 +104,12 @@ export const actions = {
     PROCESS_MESSAGE({ commit }, data) {
         let message = JSON.parse(data.contents);
 
-        console.log(message.messageType);
+        switch(message.messageType) {
+        case 'matchCreation':
+            commit('CREATE_MATCH_OBJECT', message);
+            break;
+        default:
+            console.log('Got unknown message type: ' + message.messageType);
+        }
     },
 };

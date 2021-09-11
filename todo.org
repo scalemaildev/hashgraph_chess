@@ -1,4 +1,6 @@
 * NOW
+** TODO Find a better way to init the socket
+*** Make sure subscribe function happens only after the socket is ready
 ** TODO Build out matchCreation message handling
 *** Match creation should create the object in topic subs
 *** Set the players to the account id's
