@@ -49,7 +49,6 @@ async function createNewTopic() {
 	    newTopicId: newTopicId
 	};
     } catch (error) {
-	console.log(error);
 	return {
 	    result: 'FAILURE',
 	    responseMessage: 'Failed to create a new topic',
@@ -87,7 +86,7 @@ async function subscribeToTopic(io, topicId) {
 	    .subscribe(HederaClient, res => {
 		let contents = new TextDecoder("utf-8").decode(res.contents);
 		io.emit('processMessage', {
-		    'contents': contents
+		    contents: contents
 		});
 	    });
     } catch (error) {

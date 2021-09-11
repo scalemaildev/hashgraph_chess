@@ -91,7 +91,9 @@ export default {
     },
     
     methods: {
-	...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL']),
+	...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL',
+					   'TOGGLE_LOCK_BUTTON']),
+	...mapActions('sessionStorage', ['INIT_HASHGRAPH_CLIENT']),
 	submit () {
 	    this.$v.$touch();
 	    if (!this.$v.$invalid) {
@@ -101,16 +103,19 @@ export default {
 	async initHashgraphClient () {
 	    this.clientError = false;
 	    
-	    const response = await this.$store.dispatch('sessionStorage/INIT_HASHGRAPH_CLIENT', {
+	    const response = await this.INIT_HASHGRAPH_CLIENT({
 		'accountId': this.accountId,
 		'privateKey': this.privateKey
-	    })
+	    });
 	    
 	    if (response.result == 'SUCCESS') {
+		this.accountId = "";
+		this.privateKey = "";
 		this.SET_ACTIVE_PANEL('accountPanel');
-		this.$store.commit('sessionStorage/TOGGLE_LOCK_BUTTON', true);
+		this.TOGGLE_LOCK_BUTTON(true);
 		console.log(response.responseMessage);
 	    } else {
+		this.privateKey = "";
 		console.log(response.responseMessage);
 		this.clientError = true;
 	    }

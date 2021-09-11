@@ -1,6 +1,5 @@
 * NOW
 ** TODO If player inits their client on the match page it should subscribe to the topic afterwards
-** TODO Add Join Match Panel
 ** TODO Build out matchCreation message handling
 *** TODO Match creation should create the object in topic subs
 **** Set the players to the account id's

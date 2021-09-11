@@ -12,7 +12,7 @@
       </v-btn>
     </v-col>
     <v-col cols="12" align="center" justify="center">
-      <v-btn block>
+      <v-btn block @click="joinMatch">
 	Join Match
       </v-btn>
     </v-col>
@@ -33,6 +33,9 @@ export default {
 	createNewMatch() {
 	    this.SET_ACTIVE_PANEL('newMatchPanel');
 	},
+	joinMatch() {
+	    this.SET_ACTIVE_PANEL('joinMatchPanel');
+	}
     },
 }
 </script>

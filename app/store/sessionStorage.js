@@ -21,13 +21,11 @@ export const mutations = {
     },
     CREATE_MATCH_OBJECT(state, newMatchData) {
 	state.MATCHES[newMatchData.topicId] = {
-	    'player1': newMatchData.player1,
-	    'player2': newMatchData.player2,
+	    player1: newMatchData.player1,
+	    player2: newMatchData.player2,
 	    messages: [],
 	    moves: []
 	};
-
-	console.log(state.MATCHES);
     },
     PUSH_MESSAGE(state, topicId, message) {
 	state.MATCHES.topicId.messages.append(message);
@@ -38,9 +36,9 @@ export const actions = {
     async INIT_HASHGRAPH_CLIENT({ commit }, context) {
 	const response = await this.dispatch(
 	    'ASYNC_EMIT', {
-		'eventName': 'initHashgraphClient',
-		'accountId': context.accountId,
-		'privateKey': context.privateKey
+		eventName: 'initHashgraphClient',
+		accountId: context.accountId,
+		privateKey: context.privateKey
 	    });
 
 	if (response.result == 'SUCCESS') {
@@ -65,7 +63,7 @@ export const actions = {
 
     async CREATE_NEW_TOPIC() {
 	let response = this.dispatch('ASYNC_EMIT', {
-	    'eventName': 'createNewTopic'
+	    eventName: 'createNewTopic'
 	});
 	return response;
     },
@@ -75,17 +73,16 @@ export const actions = {
 
 	if (response.result == 'SUCCESS') {
 	    let newMatchData = {
-		'messageType': 'matchCreation',
-		'topicId': response.newTopicId,
-		'player1': context.player1,
-		'player2': context.player2,
+		messageType: 'matchCreation',
+		topicId: response.newTopicId,
+		player1: context.player1,
+		player2: context.player2,
 	    };
 	    
 	    this.dispatch('ASYNC_EMIT', {
-		'eventName': 'sendHCSMessage',
-		'context': newMatchData
+		eventName: 'sendHCSMessage',
+		context: newMatchData
 	    }).then(resp => {
-		commit('CREATE_MATCH_OBJECT', newMatchData);
 		return resp;
 	    });
 	}
@@ -96,7 +93,7 @@ export const actions = {
 
     async SUBSCRIBE_TO_TOPIC() {
 	this.$root.mainSocket.emit('subscribeToTopic', {
-	    'topicId': this.topicId
+	    topicId: this.topicId
 	});
     },
 
@@ -105,6 +102,7 @@ export const actions = {
 	switch(message.messageType) {
 	case 'matchCreation':
 	    console.log('matchCreation');
+	    console.log(message);
 	case 'chatMessage':
 	    console.log('chat');
 	case 'chessMove':

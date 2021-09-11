@@ -45,7 +45,7 @@
     <v-row align="center" justify="center">
       <v-col cols="12" align="center" justify="center">
 	<span style="color: red;"><h3>An error occurred creating the match:</h3></span>
-	<p style="color: red;">Double check your <strong>TESTNET</strong> Account ID and Private Key.</p>
+	<p style="color: red;">Check the console log for potential details.</p>
       </v-col>
     </v-row>
   </div>
@@ -104,6 +104,7 @@ export default {
 					   'TOGGLE_LOCK_BUTTON']),
 	...mapActions('sessionStorage', ['CREATE_MATCH']),
 	returnToAccountPanel () {
+	    this.opponentAccountId = "";
 	    this.SET_ACTIVE_PANEL('accountPanel');
 	},
 	submit () {
@@ -123,10 +124,12 @@ export default {
 
 	    if (response.result == 'SUCCESS') {
 		let newTopicId = response.newTopicId;
+		this.opponentAccountId = "";
 		console.log('Created new topic: ' + newTopicId);
 		let newMatchUrl = "/matches/" + newTopicId;
 		this.$router.push(newMatchUrl);
 	    } else {
+		console.error(response.errorMessage);
 		this.matchCreationError = true;
 		this.creatingMatch = false;
 	    }
