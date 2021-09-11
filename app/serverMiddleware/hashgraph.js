@@ -34,8 +34,18 @@ function initHashgraphClient(incAccountId, incPrivateKey) {
 }
 
 function unsetClient() {
-    HederaClient = "";
-    return "Hashgraph client has been unset";
+    try {
+        HederaClient = "";
+        return {
+            result: 'SUCCESS',
+            responseMessage: 'Hedera Hashgraph client has been unset'
+        };
+    } catch (error) {
+        return {
+            result: 'FAILURE',
+            responseMessage: 'Failed to unset Hedera Hashgraph client'
+        };
+    }
 }
 
 async function createNewTopic() {

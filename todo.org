@@ -18,3 +18,6 @@
 ** TODO Modify chessboard to send and receive moves over HCS
 ** TODO Add a resume game feature to connect to an existing topic id
 ** TODO Limit moves and chat messages to valid account id's
+*** Use the submit key feature for the topic messages
+*** Will need to have another screen where player 1 is given the submit key to copy
+*** Will need a panel on the game screen to enter the submit key

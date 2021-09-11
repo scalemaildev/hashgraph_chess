@@ -49,16 +49,20 @@ export const actions = {
         return response;
     },
 
-    UNSET_CLIENT({ commit }) {
-        commit('SET_ACCOUNT_ID', "");
-        commit('TOGGLE_CLIENT_EXISTS', false);
-        commit('TOGGLE_LOCK_BUTTON', false);
-        commit('SET_ACTIVE_PANEL', 'startPanel');
-
+    async UNSET_CLIENT({ commit }) {
         // dispatch a method to clear the client server-side
-        this.dispatch('ASYNC_EMIT', {
+        const response = await this.dispatch('ASYNC_EMIT', {
             'eventName': 'unsetClient'
         });
+
+        if (response.result == 'SUCCESS') {
+            commit('SET_ACCOUNT_ID', "");
+            commit('TOGGLE_CLIENT_EXISTS', false);
+            commit('TOGGLE_LOCK_BUTTON', false);
+            commit('SET_ACTIVE_PANEL', 'startPanel');
+        } else {
+            console.error(response.responseMessage);
+        }
     },
 
     async CREATE_NEW_TOPIC() {
