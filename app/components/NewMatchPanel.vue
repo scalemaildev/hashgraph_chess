@@ -124,9 +124,9 @@ export default {
 
             if (response.result == 'SUCCESS') {
                 this.opponentAccountId = "";
-                let topicIdString = response.newTopicId;
-                console.log('Created new topic: ' + topicIdString);
-                let newMatchUrl = "/matches/" + topicIdString;
+                let topicId = response.newTopicId;
+                console.log(response.responseMessage);
+                let newMatchUrl = "/matches/" + topicId;
                 this.$router.push(newMatchUrl);
             } else {
                 console.error(response.errorMessage);

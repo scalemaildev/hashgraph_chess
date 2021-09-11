@@ -66,7 +66,7 @@ export const actions = {
     },
 
     async CREATE_NEW_TOPIC() {
-        let response = this.dispatch('ASYNC_EMIT', {
+        let response = await this.dispatch('ASYNC_EMIT', {
             eventName: 'createNewTopic'
         });
         return response;
@@ -89,7 +89,7 @@ export const actions = {
             });
         }
 
-        // return bad response from topic creation otherwise
+        // always return the response
         return response;
     },
 
