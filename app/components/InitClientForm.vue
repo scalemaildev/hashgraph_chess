@@ -5,37 +5,37 @@
     <v-row>
       <v-spacer />
       <v-col cols="8" align="center" justify="center">
-	<v-text-field
-	  v-model="accountId"
-	  :error-messages="accountIdErrors"
-	  required
-	  @input="$v.accountId.$touch()"
-	  @blur="$v.accountId.$touch()"
-	  label="Account ID"/>
+        <v-text-field
+          v-model="accountId"
+          :error-messages="accountIdErrors"
+          required
+          @input="$v.accountId.$touch()"
+          @blur="$v.accountId.$touch()"
+          label="Account ID"/>
       </v-col>    
       <v-spacer />
     </v-row>
     <v-row>
       <v-spacer />
       <v-col cols="8" align="center" justify="center">
-	<v-text-field
-	  v-model="privateKey"
-	  :error-messages="privateKeyErrors"
-	  type="password"
-	  required
-	  @input="$v.privateKey.$touch()"
-	  @blur="$v.privateKey.$touch()"
-	  label="Private Key"/>
+        <v-text-field
+          v-model="privateKey"
+          :error-messages="privateKeyErrors"
+          type="password"
+          required
+          @input="$v.privateKey.$touch()"
+          @blur="$v.privateKey.$touch()"
+          label="Private Key"/>
       </v-col>
       <v-spacer />
     </v-row>
     <v-row>
       <v-spacer />
       <v-col cols="8" align="center" justify="center">
-	<v-btn
-	  type="submit">
-	  Initialize Client
-	</v-btn>
+        <v-btn
+          type="submit">
+          Initialize Client
+        </v-btn>
       </v-col>
       <v-spacer />
     </v-row>    
@@ -43,8 +43,8 @@
   <div v-if="clientError" class="content-spaced-small">
     <v-row align="center" justify="center">
       <v-col cols="12" align="center" justify="center">
-	<span style="color: red;"><h3>An error occurred initializing the client:</h3></span>
-	<p style="color: red;">Double check your <strong>TESTNET</strong> Account ID and Private Key.</p>
+        <span style="color: red;"><h3>An error occurred initializing the client:</h3></span>
+        <p style="color: red;">Double check your <strong>TESTNET</strong> Account ID and Private Key.</p>
       </v-col>
     </v-row>
   </div>
@@ -62,64 +62,64 @@ export default {
     mixins: [validationMixin],
     
     validations: {
-	accountId: { required, accountIdRegex },
-	privateKey: { required },
+        accountId: { required, accountIdRegex },
+        privateKey: { required },
     },
     
     data () {
-	return {
-	    accountId: "",
-	    privateKey: "",
-	    clientError: false,
-	}
+        return {
+            accountId: "",
+            privateKey: "",
+            clientError: false,
+        }
     },
     
     computed: {
-	accountIdErrors () {
-	    const errors = [];
-	    if (!this.$v.accountId.$dirty) return errors
-	    !this.$v.accountId.required && errors.push('Account ID is required.')
-	    !this.$v.accountId.accountIdRegex && errors.push('Account ID should look like 0.0.xxx.')
-	    return errors;
-	},
-	privateKeyErrors () {
-	    const errors = [];
-	    if (!this.$v.privateKey.$dirty) return errors
-	    !this.$v.privateKey.required && errors.push('Private Key is required.')
-	    return errors;
-	}
+        accountIdErrors () {
+            const errors = [];
+            if (!this.$v.accountId.$dirty) return errors
+            !this.$v.accountId.required && errors.push('Account ID is required.')
+            !this.$v.accountId.accountIdRegex && errors.push('Account ID should look like 0.0.xxx.')
+            return errors;
+        },
+        privateKeyErrors () {
+            const errors = [];
+            if (!this.$v.privateKey.$dirty) return errors
+            !this.$v.privateKey.required && errors.push('Private Key is required.')
+            return errors;
+        }
     },
     
     methods: {
-	...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL',
-					   'TOGGLE_LOCK_BUTTON']),
-	...mapActions('sessionStorage', ['INIT_HASHGRAPH_CLIENT']),
-	submit () {
-	    this.$v.$touch();
-	    if (!this.$v.$invalid) {
-		this.initHashgraphClient();
-	    }
-	},
-	async initHashgraphClient () {
-	    this.clientError = false;
-	    
-	    const response = await this.INIT_HASHGRAPH_CLIENT({
-		'accountId': this.accountId,
-		'privateKey': this.privateKey
-	    });
-	    
-	    if (response.result == 'SUCCESS') {
-		this.accountId = "";
-		this.privateKey = "";
-		this.SET_ACTIVE_PANEL('accountPanel');
-		this.TOGGLE_LOCK_BUTTON(true);
-		console.log(response.responseMessage);
-	    } else {
-		this.privateKey = "";
-		console.log(response.responseMessage);
-		this.clientError = true;
-	    }
-	},
+        ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL',
+                                           'TOGGLE_LOCK_BUTTON']),
+        ...mapActions('sessionStorage', ['INIT_HASHGRAPH_CLIENT']),
+        submit () {
+            this.$v.$touch();
+            if (!this.$v.$invalid) {
+                this.initHashgraphClient();
+            }
+        },
+        async initHashgraphClient () {
+            this.clientError = false;
+            
+            const response = await this.INIT_HASHGRAPH_CLIENT({
+                'accountId': this.accountId,
+                'privateKey': this.privateKey
+            });
+            
+            if (response.result == 'SUCCESS') {
+                this.accountId = "";
+                this.privateKey = "";
+                this.SET_ACTIVE_PANEL('accountPanel');
+                this.TOGGLE_LOCK_BUTTON(true);
+                console.log(response.responseMessage);
+            } else {
+                this.privateKey = "";
+                console.log(response.responseMessage);
+                this.clientError = true;
+            }
+        },
     }
 }
 </script>

@@ -14,26 +14,26 @@ io.on('connection', socket => {
     console.log('New socket connection ...');
 
     socket.on('initHashgraphClient', (context) => {
-	let response = hashgraph.initHashgraphClient(context.accountId, context.privateKey);
-	io.emit('initHashgraphClient', response);
+        let response = hashgraph.initHashgraphClient(context.accountId, context.privateKey);
+        io.emit('initHashgraphClient', response);
     });
 
     socket.on('unsetClient', () => {
-	let response = hashgraph.unsetClient();
-	io.emit('unsetClient', response);
+        let response = hashgraph.unsetClient();
+        io.emit('unsetClient', response);
     });
 
     socket.on('createNewTopic', async (context) => {
-	let response = await hashgraph.createNewTopic();
-	io.emit('createNewTopic', response);
+        let response = await hashgraph.createNewTopic();
+        io.emit('createNewTopic', response);
     });
 
     socket.on('sendHCSMessage', async (context) => {
-	hashgraph.sendHCSMessage(context);
+        hashgraph.sendHCSMessage(context);
     });
 
     socket.on('subscribeToTopic', async (context) => {
-	hashgraph.subscribeToTopic(io, context.topicId);
+        hashgraph.subscribeToTopic(io, context.topicId);
     });
     
 });

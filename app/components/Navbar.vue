@@ -15,15 +15,15 @@ import { mapState, mapActions } from 'vuex';
   
 export default {
     computed: {
-	...mapState('sessionStorage', ['CLIENT_EXISTS']),
+        ...mapState('sessionStorage', ['CLIENT_EXISTS']),
     },
     
     methods: {
-	...mapActions('sessionStorage', ['UNSET_CLIENT']),
-	unsetClient() {
-	    this.UNSET_CLIENT();
-	    this.$router.push('/');
-	}
+        ...mapActions('sessionStorage', ['UNSET_CLIENT']),
+        unsetClient() {
+            this.UNSET_CLIENT();
+            this.$router.push('/');
+        }
     },
 }
 </script>

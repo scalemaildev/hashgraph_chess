@@ -12,30 +12,30 @@
     <v-form
       @submit.prevent="submit">
       <v-row
-	no-gutters
-	style="flex-wrap: nowrap;"
-	class="pb-2">
-	<v-col class="flex-grow-1 flex-shrink-0">
-	  <v-text-field
-	    v-model="topicId"
-	    :error-messages="topicIdErrors"
-	    required
-	    @input="$v.topicId.$touch()"
-	    @blur="$v.topicId.$touch()"
-	    label="Topic ID"/>
-	</v-col>
-	<v-col class="flex-grow-0 flex-shrink-1 pa-2">
-	  <v-btn type="submit">
-	    Join Match
-	  </v-btn>
-	</v-col>
+        no-gutters
+        style="flex-wrap: nowrap;"
+        class="pb-2">
+        <v-col class="flex-grow-1 flex-shrink-0">
+          <v-text-field
+            v-model="topicId"
+            :error-messages="topicIdErrors"
+            required
+            @input="$v.topicId.$touch()"
+            @blur="$v.topicId.$touch()"
+            label="Topic ID"/>
+        </v-col>
+        <v-col class="flex-grow-0 flex-shrink-1 pa-2">
+          <v-btn type="submit">
+            Join Match
+          </v-btn>
+        </v-col>
       </v-row>
     </v-form>
     <v-row>
       <v-col cols="12" align="center" justify="center">
-	<v-btn block @click="returnToAccountPanel">
-	  Return
-	</v-btn>
+        <v-btn block @click="returnToAccountPanel">
+          Return
+        </v-btn>
       </v-col>
     </v-row>    
   </div>
@@ -54,46 +54,46 @@ export default {
     mixins: [validationMixin],
     
     validations: {
-	topicId: { required, topicIdRegex },
+        topicId: { required, topicIdRegex },
     },
     
     data () {
-	return {
-	    topicId: ""
-	}
+        return {
+            topicId: ""
+        }
     },
     
     computed: {
-	...mapState('sessionStorage', ['ACCOUNT_ID']),
-	topicIdErrors () {
-	    const errors = [];
-	    if (!this.$v.topicId.$dirty) return errors
-	    !this.$v.topicId.required && errors.push("A Topic ID is required.")
-	    !this.$v.topicId.topicIdRegex && errors.push('Topic ID should look like 0.0.xxx.')
-	    return errors;
-	},
+        ...mapState('sessionStorage', ['ACCOUNT_ID']),
+        topicIdErrors () {
+            const errors = [];
+            if (!this.$v.topicId.$dirty) return errors
+            !this.$v.topicId.required && errors.push("A Topic ID is required.")
+            !this.$v.topicId.topicIdRegex && errors.push('Topic ID should look like 0.0.xxx.')
+            return errors;
+        },
     },
     
     methods: {
-	...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL',
-					   'TOGGLE_LOCK_BUTTON']),
-	...mapActions('sessionStorage', ['CREATE_MATCH']),
-	returnToAccountPanel () {
-	    this.topicId = "";
-	    this.SET_ACTIVE_PANEL('accountPanel');
-	},
-	submit () {
-	    this.$v.$touch();
-	    if (!this.$v.$invalid) {
-		this.joinMatch();
-	    }
-	},
-	async joinMatch() {
-	    this.matchCreationError = false;
-	    this.creatingMatch = true;
-	    let newMatchUrl = "/matches/" + this.topicId;
-	    this.$router.push(newMatchUrl);
-	}
+        ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL',
+                                           'TOGGLE_LOCK_BUTTON']),
+        ...mapActions('sessionStorage', ['CREATE_MATCH']),
+        returnToAccountPanel () {
+            this.topicId = "";
+            this.SET_ACTIVE_PANEL('accountPanel');
+        },
+        submit () {
+            this.$v.$touch();
+            if (!this.$v.$invalid) {
+                this.joinMatch();
+            }
+        },
+        async joinMatch() {
+            this.matchCreationError = false;
+            this.creatingMatch = true;
+            let newMatchUrl = "/matches/" + this.topicId;
+            this.$router.push(newMatchUrl);
+        }
     },
 }
 </script>

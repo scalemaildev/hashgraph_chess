@@ -14,38 +14,38 @@
     <v-form
       @submit.prevent="submit">
       <v-row
-	no-gutters
-	style="flex-wrap: nowrap;"
-	class="pb-2">
-	<v-col class="flex-grow-1 flex-shrink-0">
-	  <v-text-field
-	    v-model="opponentAccountId"
-	    :error-messages="opponentAccountIdErrors"
-	    required
-	    @input="$v.opponentAccountId.$touch()"
-	    @blur="$v.opponentAccountId.$touch()"
-	    label="Opponent's ID"/>
-	</v-col>
-	<v-col class="flex-grow-0 flex-shrink-1 pa-2">
-	  <v-btn type="submit">
-	    Create Match
-	  </v-btn>
-	</v-col>
+        no-gutters
+        style="flex-wrap: nowrap;"
+        class="pb-2">
+        <v-col class="flex-grow-1 flex-shrink-0">
+          <v-text-field
+            v-model="opponentAccountId"
+            :error-messages="opponentAccountIdErrors"
+            required
+            @input="$v.opponentAccountId.$touch()"
+            @blur="$v.opponentAccountId.$touch()"
+            label="Opponent's ID"/>
+        </v-col>
+        <v-col class="flex-grow-0 flex-shrink-1 pa-2">
+          <v-btn type="submit">
+            Create Match
+          </v-btn>
+        </v-col>
       </v-row>
     </v-form>
     <v-row>
       <v-col cols="12" align="center" justify="center">
-	<v-btn block @click="returnToAccountPanel">
-	  Return
-	</v-btn>
+        <v-btn block @click="returnToAccountPanel">
+          Return
+        </v-btn>
       </v-col>
     </v-row>    
   </div>
   <div v-if="matchCreationError" class="content-spaced-small">
     <v-row align="center" justify="center">
       <v-col cols="12" align="center" justify="center">
-	<span style="color: red;"><h3>An error occurred creating the match:</h3></span>
-	<p style="color: red;">Check the console log for potential details.</p>
+        <span style="color: red;"><h3>An error occurred creating the match:</h3></span>
+        <p style="color: red;">Check the console log for potential details.</p>
       </v-col>
     </v-row>
   </div>
@@ -53,12 +53,12 @@
   <div v-if="creatingMatch" class="content-spaced-small">
     <v-row>
       <v-col cols="12" align="center" justify="center">
-	<v-progress-circular
-	  indeterminate
-	  />
+        <v-progress-circular
+          indeterminate
+          />
       </v-col>
       <v-col cols="12" align="center" justify="center">
-	... Creating Match ...
+        ... Creating Match ...
       </v-col>
     </v-row>
   </div>
@@ -77,63 +77,63 @@ export default {
     mixins: [validationMixin],
     
     validations: {
-	opponentAccountId: { required, accountIdRegex },
+        opponentAccountId: { required, accountIdRegex },
     },
     
     data () {
-	return {
-	    opponentAccountId: "",
-	    matchCreationError: false,
-	    creatingMatch: false
-	}
+        return {
+            opponentAccountId: "",
+            matchCreationError: false,
+            creatingMatch: false
+        }
     },
     
     computed: {
-	...mapState('sessionStorage', ['ACCOUNT_ID']),
-	opponentAccountIdErrors () {
-	    const errors = [];
-	    if (!this.$v.opponentAccountId.$dirty) return errors
-	    !this.$v.opponentAccountId.required && errors.push("An Opponent's Account ID is required.")
-	    !this.$v.opponentAccountId.accountIdRegex && errors.push('Account ID should look like 0.0.xxx.')
-	    return errors;
-	},
+        ...mapState('sessionStorage', ['ACCOUNT_ID']),
+        opponentAccountIdErrors () {
+            const errors = [];
+            if (!this.$v.opponentAccountId.$dirty) return errors
+            !this.$v.opponentAccountId.required && errors.push("An Opponent's Account ID is required.")
+            !this.$v.opponentAccountId.accountIdRegex && errors.push('Account ID should look like 0.0.xxx.')
+            return errors;
+        },
     },
     
     methods: {
-	...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL',
-					   'TOGGLE_LOCK_BUTTON']),
-	...mapActions('sessionStorage', ['CREATE_MATCH']),
-	returnToAccountPanel () {
-	    this.opponentAccountId = "";
-	    this.SET_ACTIVE_PANEL('accountPanel');
-	},
-	submit () {
-	    this.$v.$touch();
-	    if (!this.$v.$invalid) {
-		this.createMatch();
-	    }
-	},
-	async createMatch() {
-	    this.matchCreationError = false;
-	    this.creatingMatch = true;
-	    
-	    const response = await this.CREATE_MATCH({
-		'player1': this.ACCOUNT_ID,
-		'player2': this.opponentAccountId
-	    })
+        ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL',
+                                           'TOGGLE_LOCK_BUTTON']),
+        ...mapActions('sessionStorage', ['CREATE_MATCH']),
+        returnToAccountPanel () {
+            this.opponentAccountId = "";
+            this.SET_ACTIVE_PANEL('accountPanel');
+        },
+        submit () {
+            this.$v.$touch();
+            if (!this.$v.$invalid) {
+                this.createMatch();
+            }
+        },
+        async createMatch() {
+            this.matchCreationError = false;
+            this.creatingMatch = true;
+            
+            const response = await this.CREATE_MATCH({
+                'player1': this.ACCOUNT_ID,
+                'player2': this.opponentAccountId
+            })
 
-	    if (response.result == 'SUCCESS') {
-		this.opponentAccountId = "";
-		let topicIdString = response.newTopicId;
-		console.log('Created new topic: ' + topicIdString);
-		let newMatchUrl = "/matches/" + topicIdString;
-		this.$router.push(newMatchUrl);
-	    } else {
-		console.error(response.errorMessage);
-		this.matchCreationError = true;
-		this.creatingMatch = false;
-	    }
-	}
+            if (response.result == 'SUCCESS') {
+                this.opponentAccountId = "";
+                let topicIdString = response.newTopicId;
+                console.log('Created new topic: ' + topicIdString);
+                let newMatchUrl = "/matches/" + topicIdString;
+                this.$router.push(newMatchUrl);
+            } else {
+                console.error(response.errorMessage);
+                this.matchCreationError = true;
+                this.creatingMatch = false;
+            }
+        }
     },
 }
 </script>
