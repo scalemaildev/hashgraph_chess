@@ -1,10 +1,8 @@
 * NOW
-** TODO Match page _slug should sub to the topic and then mount components
-*** The topic is being created and the message is being submitted
-*** The socket probably isnt processing the messages because the nuxt.config socket isn't matching up with mainSocket
 ** TODO Build out matchCreation message handling
 *** Match creation should create the object in topic subs
 *** Set the players to the account id's
+*** Then init the match components
 * FUTURE
 ** TODO Build out the Chatmessage handling
 *** Messages means chat messages? Find a better term

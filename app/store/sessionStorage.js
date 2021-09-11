@@ -96,18 +96,8 @@ export const actions = {
     },
 
     PROCESS_MESSAGE({ commit }, data) {
-	console.log(data);
 	let message = JSON.parse(data.contents);
-	switch(message.messageType) {
-	case 'matchCreation':
-	    console.log('matchCreation');
-	    console.log(message);
-	case 'chatMessage':
-	    console.log('chat');
-	case 'chessMove':
-	    console.log('move');
-	default:
-	    console.log('Got unknown message type');
-	}
+
+	console.log(message.messageType);
     },
 };

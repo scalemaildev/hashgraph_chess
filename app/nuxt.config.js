@@ -49,7 +49,9 @@ export default {
 	    default: true,
 	    name: 'mainSocket',
 	    url: 'http://localhost:3001',
-	    actions: [{ newHCSMessage: 'sessionStorage/PROCESS_MESSAGE' }]
+	    vuex: {
+		actions: [{ newHCSMessage: 'sessionStorage/PROCESS_MESSAGE' }]
+	    }
 	}],
     },
 
