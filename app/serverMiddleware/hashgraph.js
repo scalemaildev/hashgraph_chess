@@ -9,7 +9,7 @@ const {
     TopicId,
     TopicCreateTransaction,
     TopicMessageQuery,
-    TopicMessageSubmitTransaction
+    TopicMessageSubmitTransaction,
 } = require("@hashgraph/sdk");
 
 var HederaClient = "";
@@ -46,7 +46,7 @@ async function createNewTopic() {
 	return {
 	    result: 'SUCCESS',
 	    responseMessage: 'Created new topic ' + newTopicId,
-	    newTopicId: newTopicId
+	    newTopicId: newTopicId,
 	};
     } catch (error) {
 	return {
@@ -58,13 +58,16 @@ async function createNewTopic() {
 }
 
 async function sendHCSMessage(data) {
-    let messagePayload = JSON.stringify(data);
+    let messagePayload = JSON.stringify(data.context);
     
     try {
 	let response = await new TopicMessageSubmitTransaction({
-	    topicId: data.topicId,
+	    topicId: TopicId.fromString(data.context.topicId),
 	    message: messagePayload})
 	    .execute(HederaClient);
+
+	// need to see if that response actually comes back
+	
 	return {
 	    result: 'SUCCESS',
 	    responseMessage: 'Sent message to HCS',
@@ -78,7 +81,9 @@ async function sendHCSMessage(data) {
     }
 }
 
-async function subscribeToTopic(io, topicId) {
+async function subscribeToTopic(io, topicIdString) {
+    const topicId = TopicId.fromString(topicIdString);
+    
     try {
 	new TopicMessageQuery()
 	    .setTopicId(topicId)

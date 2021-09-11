@@ -49,7 +49,7 @@ export default {
 	    default: true,
 	    name: 'main', 
 	    url: 'http://localhost:3001',
-	    actions: [{ processMessage: 'sessionStorage/PROCESS_MESSAGE' }]
+	    actions: [{ sendHCSMessage: 'sessionStorage/PROCESS_MESSAGE' }]
 	}],
     },
 

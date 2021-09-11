@@ -55,13 +55,14 @@ export default {
     },
     
     mounted() {
-	console.log(this.topicIdString);
+	this.SUBSCRIBE_TO_TOPIC(this.topicIdString);
     },
     
     created() {
     },
     
     methods: {
+	...mapActions('sessionStorage', ['SUBSCRIBE_TO_TOPIC'])
     },
 }
 </script>

@@ -82,8 +82,6 @@ export const actions = {
 	    this.dispatch('ASYNC_EMIT', {
 		eventName: 'sendHCSMessage',
 		context: newMatchData
-	    }).then(resp => {
-		return resp;
 	    });
 	}
 
@@ -91,9 +89,9 @@ export const actions = {
 	return response;
     },
 
-    async SUBSCRIBE_TO_TOPIC() {
-	this.$root.mainSocket.emit('subscribeToTopic', {
-	    topicId: this.topicId
+    async SUBSCRIBE_TO_TOPIC({ commit }, topicId) {
+	window.$nuxt.$root.mainSocket.emit('subscribeToTopic', {
+	    topicId: topicId
 	});
     },
 
