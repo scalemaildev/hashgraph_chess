@@ -44,15 +44,14 @@ export default {
     data () {
 	return {
 	    subscribed: false,
-	    subscriptionError: false,
-	    topicData: {}
+	    subscriptionError: false
 	}
     },
     
     computed: {
 	...mapState('sessionStorage', ['CLIENT_EXISTS',
 				       'ACCOUNT_ID',
-				      'MATCHES']),
+				       'MATCHES']),
     },
     
     mounted() {
