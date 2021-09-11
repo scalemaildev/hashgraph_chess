@@ -90,7 +90,7 @@ async function subscribeToTopic(io, topicIdString) {
 	    .setStartTime(0)
 	    .subscribe(HederaClient, res => {
 		let contents = new TextDecoder("utf-8").decode(res.contents);
-		io.emit('processMessage', {
+		io.emit('newHCSMessage', {
 		    contents: contents
 		});
 	    });

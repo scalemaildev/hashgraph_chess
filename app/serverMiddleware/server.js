@@ -29,8 +29,7 @@ io.on('connection', socket => {
     });
 
     socket.on('sendHCSMessage', async (context) => {
-	let response = await hashgraph.sendHCSMessage(context);
-	io.emit('sendHCSMessage', response);
+	hashgraph.sendHCSMessage(context);
     });
 
     socket.on('subscribeToTopic', async (context) => {

@@ -47,9 +47,9 @@ export default {
     io: {
 	sockets: [{     
 	    default: true,
-	    name: 'main', 
+	    name: 'mainSocket',
 	    url: 'http://localhost:3001',
-	    actions: [{ sendHCSMessage: 'sessionStorage/PROCESS_MESSAGE' }]
+	    actions: [{ newHCSMessage: 'sessionStorage/PROCESS_MESSAGE' }]
 	}],
     },
 
