@@ -1,5 +1,7 @@
 * NOW
 ** TODO Find out if client exists on match page before doing anything
+** TODO Subscription should find out if a sub already exists
+*** This is probably why there were double messages in the chat app
 ** TODO Build out matchCreation message handling
 *** Match creation should create the object in topic subs
 *** Set the players to the account id's

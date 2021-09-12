@@ -80,7 +80,7 @@ export default {
         ...mapActions('sessionStorage', ['CREATE_MATCH']),
         returnToAccountPanel () {
             this.topicId = "";
-            this.SET_ACTIVE_PANEL('accountPanel');
+            this.SET_ACTIVE_PANEL('clientPanel');
         },
         submit () {
             this.$v.$touch();

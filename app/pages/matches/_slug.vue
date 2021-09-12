@@ -1,5 +1,5 @@
 <template>
-<div>  
+<div>
   <v-row>
     <v-col cols="12" align="center" justify="center">
       <v-container fluid class="match-header">
@@ -7,26 +7,14 @@
       </v-container>
     </v-col>
   </v-row>
-  <div v-show="subscribing" class="content-spaced-mid">
-    <v-row>
-      <v-col cols="12" align="center" justify="center">
-        <v-progress-circular indeterminate />
-      </v-col>
-      <v-col cols="12" align="center" justify="center">
-        <p>... SUBSCRIBING TO TOPIC ...</p>
-      </v-col>
-    </v-row>
+  <div v-show="ACTIVE_PANEL == 'loadingPanel'" class="content-spaced-mid">
+    <LoadingPanel />
   </div>
-  <div v-show="subscriptionError" class="content-spaced-mid">    
-    <v-row align="center" justify="center">
-      <v-col cols="12" align="center" justify="center">
-        <span style="color: red;"><h3>An error occurred subscribing to this topic</h3></span>
-        <p style="color: red;">Double check the Topic ID and see the console log for potential details.</p>
-      </v-col>
-    </v-row>
+  <div v-show="ACTIVE_PANEL == 'matchStartPanel'">
+    <MatchStartPanel />
   </div>
-  <div v-show="!subscribing">
-    Subscribed!
+  <div v-show="ACTIVE_PANEL == 'clientPanel'">
+    client panel
   </div>
 </div>
 </template>
@@ -50,25 +38,36 @@ export default {
     
     computed: {
         ...mapState('sessionStorage', ['CLIENT_EXISTS',
+                                       'ACTIVE_PANEL',
                                        'ACCOUNT_ID',
                                        'MATCHES']),
         topicData () {
             return this.MATCHES[this.topicIdString];
         },
     },
+
+    created() {
+        this.SET_ACTIVE_PANEL('loadingPanel');
+    },
     
     mounted() {
-        if (this.CLIENT_EXISTS) {
-            this.$nextTick(function () {
-                this.SUBSCRIBE_TO_TOPIC(this.topicIdString)
-            })
-        } else {
-            console.log('No Hedera Hashgraph client found...');
-        }
+        this.startup();
     },
     
     methods: {
+        ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL',
+                                           'TOGGLE_LOCK_BUTTON']),
         ...mapActions('sessionStorage', ['SUBSCRIBE_TO_TOPIC']),
+        startup() {
+            if (!this.CLIENT_EXISTS) {
+                this.SET_ACTIVE_PANEL('matchStartPanel')
+            } else {
+                this.$nextTick(function () {
+                    this.SUBSCRIBE_TO_TOPIC(this.topicIdString)
+                })
+                this.TOGGLE_LOCK_BUTTON(true);
+            }
+        },
     },
 }
 </script>
