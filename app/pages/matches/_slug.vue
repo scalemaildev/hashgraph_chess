@@ -7,20 +7,20 @@
       </v-container>
     </v-col>
   </v-row>
-  <div v-show="ACTIVE_PANEL == 'loadingPanel'" class="content-spaced-mid">
+  <div v-if="ACTIVE_PANEL == 'loadingPanel'" class="content-spaced-mid">
     <LoadingPanel />
   </div>
-  <div v-show="ACTIVE_PANEL == 'matchStartPanel'">
+  <div v-else-if="ACTIVE_PANEL == 'matchStartPanel'">
     <MatchStartPanel />
   </div>
-  <div v-show="ACTIVE_PANEL == 'clientPanel'">
-    <MatchComponentsGroup />
+  <div v-else-if="ACTIVE_PANEL == 'clientPanel'">
+    <MatchComponentsGroup :topicId='topicIdString' />
   </div>
 </div>
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
     async asyncData({ params }) {
@@ -29,45 +29,27 @@ export default {
         return { topicIdString }
     },
     
-    data () {
-        return {
-            subscribing: true,
-            subscriptionError: false
-        }
-    },
-    
     computed: {
         ...mapState('sessionStorage', ['CLIENT_EXISTS',
-                                       'ACTIVE_PANEL',
-                                       'ACCOUNT_ID',
-                                       'MATCHES']),
-        topicData () {
-            return this.MATCHES[this.topicIdString];
-        },
+                                       'ACTIVE_PANEL'])
     },
-
+    
     created() {
         this.SET_ACTIVE_PANEL('loadingPanel');
     },
     
     mounted() {
-        this.startup();
+        if (!this.CLIENT_EXISTS) {
+            this.SET_ACTIVE_PANEL('matchStartPanel')
+        } else {
+            this.SET_ACTIVE_PANEL('clientPanel')
+            this.TOGGLE_LOCK_BUTTON(true);
+        }
     },
     
     methods: {
         ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL',
-                                           'TOGGLE_LOCK_BUTTON']),
-        ...mapActions('sessionStorage', ['SUBSCRIBE_TO_TOPIC']),
-        startup() {
-            if (!this.CLIENT_EXISTS) {
-                this.SET_ACTIVE_PANEL('matchStartPanel')
-            } else {
-                this.$nextTick(function () {
-                    this.SUBSCRIBE_TO_TOPIC(this.topicIdString)
-                })
-                this.TOGGLE_LOCK_BUTTON(true);
-            }
-        },
-    },
+                                           'TOGGLE_LOCK_BUTTON'])
+    }
 }
 </script>
