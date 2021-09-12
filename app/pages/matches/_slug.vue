@@ -58,6 +58,7 @@ export default {
     },
     
     created() {
+        this.subscribeToTopic();
     },
     
     methods: {
