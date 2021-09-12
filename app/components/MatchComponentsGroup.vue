@@ -20,11 +20,12 @@
       </v-col>
     </v-row>
   </div>
+  {{ MATCHES }}
 </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
     props: ['topicId'],
@@ -33,6 +34,10 @@ export default {
         return {
             subscribing: true
         }
+    },
+
+    computed: {
+        ...mapState('sessionStorage', ['MATCHES'])
     },
     
     mounted() {
