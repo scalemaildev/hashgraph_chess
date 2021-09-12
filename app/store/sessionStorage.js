@@ -27,6 +27,7 @@ export const mutations = {
             messages: [],
             moves: []
         };
+
         console.log(state.MATCHES[newMatchData.topicId]);
     },
     PUSH_MESSAGE(state, topicId, message) {

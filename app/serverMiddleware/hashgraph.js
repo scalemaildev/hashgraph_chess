@@ -93,7 +93,6 @@ async function sendHCSMessage(data) {
 
 async function subscribeToTopic(io, topicIdString) {
     const topicId = TopicId.fromString(topicIdString);
-    
     try {
         new TopicMessageQuery()
             .setTopicId(topicId)
@@ -105,7 +104,7 @@ async function subscribeToTopic(io, topicIdString) {
                 });
             });
     } catch (error) {
-// we never return values from this method
+        // we never return values from this method
         console.error(error);
     }
 }

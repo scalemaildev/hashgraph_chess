@@ -7,7 +7,7 @@
       </v-container>
     </v-col>
   </v-row>
-  <div v-show="!subscribed" class="content-spaced-mid">
+  <div v-show="subscribing" class="content-spaced-mid">
     <v-row>
       <v-col cols="12" align="center" justify="center">
         <v-progress-circular indeterminate />
@@ -25,7 +25,7 @@
       </v-col>
     </v-row>
   </div>
-  <div v-show="subscribed">
+  <div v-show="!subscribing">
     Subscribed!
   </div>
 </div>
@@ -43,7 +43,7 @@ export default {
     
     data () {
         return {
-            subscribed: false,
+            subscribing: true,
             subscriptionError: false
         }
     },
@@ -52,20 +52,17 @@ export default {
         ...mapState('sessionStorage', ['CLIENT_EXISTS',
                                        'ACCOUNT_ID',
                                        'MATCHES']),
+        topicData () {
+            return this.MATCHES[this.topicIdString];
+        },
     },
     
     mounted() {
-    },
-    
-    created() {
-        this.subscribeToTopic();
+        window.addEventListener('load', this.SUBSCRIBE_TO_TOPIC(this.topicIdString))
     },
     
     methods: {
         ...mapActions('sessionStorage', ['SUBSCRIBE_TO_TOPIC']),
-        subscribeToTopic() {
-            this.SUBSCRIBE_TO_TOPIC(this.topicIdString);
-        }
     },
 }
 </script>
