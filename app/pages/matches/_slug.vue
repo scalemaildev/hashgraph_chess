@@ -58,9 +58,13 @@ export default {
     },
     
     mounted() {
-        this.$nextTick(function () {
-            this.SUBSCRIBE_TO_TOPIC(this.topicIdString)
-        })
+        if (this.CLIENT_EXISTS) {
+            this.$nextTick(function () {
+                this.SUBSCRIBE_TO_TOPIC(this.topicIdString)
+            })
+        } else {
+            console.log('No Hedera Hashgraph client found...');
+        }
     },
     
     methods: {
