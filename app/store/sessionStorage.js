@@ -29,6 +29,9 @@ export const mutations = {
 
         console.log(state.MATCHES[newMatchData.topicId]);
     },
+    CLEAR_MATCH_OBJECT(state, topicId) {
+        state.MATCHES[topicId] = {};
+    },
     PUSH_MESSAGE(state, topicId, message) {
         state.MATCHES.topicId.messages.append(message);
     },    
@@ -96,6 +99,7 @@ export const actions = {
     },
 
     async SUBSCRIBE_TO_TOPIC({ commit }, topicId) {
+        commit('CLEAR_MATCH_OBJECT', topicId);
         window.$nuxt.$root.mainSocket.emit('subscribeToTopic', {
             topicId: topicId
         });

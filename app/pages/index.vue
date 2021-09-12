@@ -30,21 +30,18 @@ export default {
         this.SET_ACTIVE_PANEL('loadingPanel');
     },
     
-    mounted() {
-        this.startup();
+    mounted() {        
+        if (!this.CLIENT_EXISTS) {
+            this.SET_ACTIVE_PANEL('startPanel');
+        } else {
+            this.SET_ACTIVE_PANEL('clientPanel');
+            this.TOGGLE_LOCK_BUTTON(true);
+        }
     },
     
     methods: {
         ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL',
-                                           'TOGGLE_LOCK_BUTTON']),
-        startup() {
-            if (!this.CLIENT_EXISTS) {
-                this.SET_ACTIVE_PANEL('startPanel');
-            } else {
-                this.SET_ACTIVE_PANEL('clientPanel');
-                this.TOGGLE_LOCK_BUTTON(true);
-            }
-        },
+                                           'TOGGLE_LOCK_BUTTON'])
     },
 };
 </script>
