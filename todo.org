@@ -1,4 +1,5 @@
 * NOW
+** TODO Pre-sub need to find out if client still exists on match page
 ** TODO Subscription should find out if a sub already exists
 *** This is probably why there were double messages in the chat app
 *** Perhaps move the sub method to the match components group so that it will only begin if the client is already initialized

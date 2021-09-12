@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div v-if="subscribing" class="content-spaced-mid">
+  <div v-if="!matchLoaded" class="content-spaced-mid">
     <v-row>
       <v-col cols="12" align="center" justify="center">
         <v-progress-circular indeterminate />
@@ -20,32 +20,38 @@
       </v-col>
     </v-row>
   </div>
-  {{ MATCHES }}
+  {{ GET_MATCHES }}
 </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 
 export default {
     props: ['topicId'],
-    
-    data () {
-        return {
-            subscribing: true
-        }
-    },
 
     computed: {
-        ...mapState('sessionStorage', ['MATCHES'])
+        ...mapState('sessionStorage', ['CLIENT_EXISTS']),
+        ...mapGetters('sessionStorage', ['GET_MATCHES']),
+        matchData () {
+            return this.GET_MATCHES[this.topicId];
+        },
+        matchLoaded() {
+            return false;
+        },
     },
     
     mounted() {
-        this.SUBSCRIBE_TO_TOPIC(this.topicId);
+        if (this.CLIENT_EXISTS) {
+            this.SUBSCRIBE_TO_TOPIC(this.topicId);
+        } else {
+            this.SET_ACTIVE_PANEL('matchStartPanel');
+        }
     },
     
     methods: {
-        ...mapActions('sessionStorage', ['SUBSCRIBE_TO_TOPIC'])
+        ...mapActions('sessionStorage', ['SET_ACTIVE_PANEL',
+                                         'SUBSCRIBE_TO_TOPIC'])
     }
 }
 </script>

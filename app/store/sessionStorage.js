@@ -1,3 +1,6 @@
+const hashgraph = require('../serverMiddleware/hashgraph');
+
+/* State */
 export const state = () => ({
     ACTIVE_PANEL: 'loadingPanel',
     LOCK_BUTTON: false,
@@ -6,6 +9,7 @@ export const state = () => ({
     MATCHES: {},
 });
 
+/* MUTATIONS */
 export const mutations = {
     TOGGLE_LOCK_BUTTON(state, bool) {
         state.LOCK_BUTTON = bool;
@@ -37,6 +41,7 @@ export const mutations = {
     },    
 };
 
+/* Actions */
 export const actions = {
     async INIT_HASHGRAPH_CLIENT({ commit }, context) {
         const response = await this.dispatch(
@@ -116,4 +121,11 @@ export const actions = {
             console.log('Got unknown message type: ' + message.messageType);
         }
     },
+};
+
+/* GETTERS */
+export const getters = {
+    GET_MATCHES: (state) => {
+        return state.MATCHES;
+    }
 };

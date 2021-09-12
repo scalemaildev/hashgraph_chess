@@ -104,14 +104,12 @@ async function subscribeToTopic(io, topicIdString) {
                 });
             });
     } catch (error) {
-        return {
-            result: 'FAILURE',
-            responseMessage: 'Failed to subscribe to the topic'
-        };
+        console.log(error);
     }
 }
 
 module.exports = {
+    HederaClient,
     initHashgraphClient,
     unsetClient,
     createNewTopic,
