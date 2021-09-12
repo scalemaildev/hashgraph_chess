@@ -21,7 +21,6 @@ export const mutations = {
     },
     CREATE_MATCH_OBJECT(state, newMatchData) {
         state.MATCHES[newMatchData.topicId] = {
-            init: true,
             player1: newMatchData.player1,
             player2: newMatchData.player2,
             messages: [],

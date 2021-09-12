@@ -41,7 +41,7 @@ export default {
             if (!this.CLIENT_EXISTS) {
                 this.SET_ACTIVE_PANEL('startPanel');
             } else {
-                this.SET_ACTIVE_PANEL('accountPanel');
+                this.SET_ACTIVE_PANEL('clientPanel');
                 this.TOGGLE_LOCK_BUTTON(true);
             }
         },
