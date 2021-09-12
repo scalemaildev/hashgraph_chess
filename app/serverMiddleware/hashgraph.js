@@ -104,8 +104,10 @@ async function subscribeToTopic(io, topicIdString) {
                 });
             });
     } catch (error) {
-        // we never return values from this method
-        console.error(error);
+        return {
+            result: 'FAILURE',
+            responseMessage: 'Failed to subscribe to the topic'
+        };
     }
 }
 

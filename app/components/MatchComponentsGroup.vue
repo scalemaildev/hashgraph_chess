@@ -36,9 +36,7 @@ export default {
     },
     
     mounted() {
-        this.$nextTick(function () {
-            this.SUBSCRIBE_TO_TOPIC(this.topicId)
-        })
+        this.SUBSCRIBE_TO_TOPIC(this.topicId);
     },
     
     methods: {
