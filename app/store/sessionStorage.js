@@ -5,7 +5,6 @@ export const state = () => ({
     ACTIVE_PANEL: 'loadingPanel',
     LOCK_BUTTON: false,
     ACCOUNT_ID: "",
-    CLIENT_EXISTS: false,
     MATCHES: {},
 });
 
@@ -127,5 +126,9 @@ export const actions = {
 export const getters = {
     GET_MATCHES: (state) => {
         return state.MATCHES;
-    }
+    },
+    
+    CLIENT_EXISTS: (state) => {
+        return hashgraph.HederaClient != '';
+    },
 };
