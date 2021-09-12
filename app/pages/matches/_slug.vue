@@ -14,7 +14,7 @@
     <MatchStartPanel />
   </div>
   <div v-show="ACTIVE_PANEL == 'clientPanel'">
-    client panel
+    <MatchComponentsGroup />
   </div>
 </div>
 </template>
