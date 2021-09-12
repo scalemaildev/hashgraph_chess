@@ -58,7 +58,9 @@ export default {
     },
     
     mounted() {
-        window.addEventListener('load', this.SUBSCRIBE_TO_TOPIC(this.topicIdString))
+        this.$nextTick(function () {
+            this.SUBSCRIBE_TO_TOPIC(this.topicIdString)
+        })
     },
     
     methods: {
