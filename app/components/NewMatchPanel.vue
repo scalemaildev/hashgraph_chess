@@ -100,8 +100,7 @@ export default {
     },
     
     methods: {
-        ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL',
-                                           'TOGGLE_LOCK_BUTTON']),
+        ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL']),
         ...mapActions('sessionStorage', ['CREATE_MATCH']),
         returnToAccountPanel () {
             this.opponentAccountId = "";

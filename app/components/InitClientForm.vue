@@ -112,13 +112,12 @@ export default {
                 this.accountId = "";
                 this.privateKey = "";
                 this.SET_ACTIVE_PANEL('clientPanel');
-                this.TOGGLE_LOCK_BUTTON(true);
-                console.log(response.responseMessage);
             } else {
                 this.privateKey = "";
-                console.log(response.responseMessage);
                 this.clientError = true;
             }
+            
+            console.log(response.responseMessage);
         },
     }
 }

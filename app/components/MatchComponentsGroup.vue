@@ -31,7 +31,6 @@ export default {
     props: ['topicId'],
 
     computed: {
-        ...mapState('sessionStorage', ['CLIENT_EXISTS']),
         ...mapGetters('sessionStorage', ['GET_MATCHES']),
         matchData () {
             return this.GET_MATCHES[this.topicId];
@@ -42,11 +41,9 @@ export default {
     },
     
     mounted() {
-        if (this.CLIENT_EXISTS) {
+        this.$nextTick(() => {
             this.SUBSCRIBE_TO_TOPIC(this.topicId);
-        } else {
-            this.SET_ACTIVE_PANEL('matchStartPanel');
-        }
+        });
     },
     
     methods: {

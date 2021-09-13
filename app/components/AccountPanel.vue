@@ -7,6 +7,11 @@
   </v-row>
   <v-row>
     <v-col cols="12" align="center" justify="center">
+      <p>From this panel you can either create a new chess match or join an existing one.</p>
+    </v-col>
+  </v-row>
+  <v-row>
+    <v-col cols="12" align="center" justify="center">
       <v-btn block @click="createNewMatch">
         New Match
       </v-btn>

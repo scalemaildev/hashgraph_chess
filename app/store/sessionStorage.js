@@ -52,7 +52,6 @@ export const actions = {
         if (response.result == 'SUCCESS') {
             commit('SET_ACCOUNT_ID', context.accountId);
             commit('SET_PRIVATE_KEY', context.privateKey);
-            commit('SET_ACTIVE_PANEL', 'clientPanel');
             commit('TOGGLE_LOCK_BUTTON', true);
         }
         
