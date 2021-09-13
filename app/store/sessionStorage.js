@@ -122,7 +122,7 @@ export const actions = {
 
 /* GETTERS */
 export const getters = {
-    GET_MATCHES: (state) => {
+    MATCH_DATA: (state) => {
         return state.MATCHES;
     },
 };

@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div v-if="!matchLoaded" class="content-spaced-mid">
+  <div v-if="!!MATCH_DATA" class="content-spaced-mid">
     <v-row>
       <v-col cols="12" align="center" justify="center">
         <v-progress-circular indeterminate />
@@ -30,18 +30,12 @@ export default {
     props: ['topicId'],
 
     computed: {
-        ...mapGetters('sessionStorage', ['GET_MATCHES']),
-        matchData () {
-            return this.GET_MATCHES[this.topicId];
-        },
-        matchLoaded() {
-            return false;
-        },
+        ...mapGetters('sessionStorage', ['MATCH_DATA']),
     },
 
     watch: {
-        matchData: function () {
-            console.log(this.matchData);
+        MATCH_DATA: function(newMatchData, oldMatchData) {
+            console.log(newMatchData);
         }
     },
     
@@ -52,8 +46,7 @@ export default {
     },
     
     methods: {
-        ...mapActions('sessionStorage', ['SET_ACTIVE_PANEL',
-                                         'SUBSCRIBE_TO_TOPIC'])
+        ...mapActions('sessionStorage', ['SUBSCRIBE_TO_TOPIC'])
     }
 }
 </script>
