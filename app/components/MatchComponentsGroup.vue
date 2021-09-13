@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
     props: ['topicId'],
@@ -35,7 +35,7 @@ export default {
 
     watch: {
         MATCH_DATA (newMatchData, oldMatchData) {
-            console.log(newMatchData);
+            console.log(newMatchData[this.topicId]);
         }
     },
     
