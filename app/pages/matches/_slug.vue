@@ -68,8 +68,6 @@ export default {
             if (response.result == 'SUCCESS') {
                 this.SET_ACTIVE_PANEL('clientPanel');
             }
-            
-            console.log(response.responseMessage);
         },
     }
 }

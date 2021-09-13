@@ -34,7 +34,7 @@ export default {
     },
 
     watch: {
-        MATCH_DATA: function(newMatchData, oldMatchData) {
+        MATCH_DATA (newMatchData, oldMatchData) {
             console.log(newMatchData);
         }
     },

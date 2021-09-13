@@ -89,7 +89,8 @@ export default {
     },
     
     computed: {
-        ...mapState('sessionStorage', ['ACCOUNT_ID']),
+        ...mapState('sessionStorage', ['ACCOUNT_ID',
+                                      'MATCHES']),
         opponentAccountIdErrors () {
             const errors = [];
             if (!this.$v.opponentAccountId.$dirty) return errors

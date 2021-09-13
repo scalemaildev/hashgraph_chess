@@ -53,8 +53,6 @@ export default {
                 accountId: this.ACCOUNT_ID,
                 privateKey: this.PRIVATE_KEY
             });
-            
-            console.log(response.responseMessage);
         }
     },
 };
