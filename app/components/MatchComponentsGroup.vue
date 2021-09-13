@@ -31,11 +31,19 @@ export default {
 
     computed: {
         ...mapGetters('sessionStorage', ['MATCH_DATA']),
+        matchData () {
+            return this.MATCH_DATA(this.topicId);
+        },
     },
 
     watch: {
-        MATCH_DATA (newMatchData, oldMatchData) {
-            console.log(newMatchData[this.topicId]);
+        matchData (newMatchData, oldMatchData) {
+            if (!newMatchData.created) {
+                console.log('empty object here?')
+                console.log(newMatchData);
+            } else {
+                console.log(newMatchData);
+            }
         }
     },
     

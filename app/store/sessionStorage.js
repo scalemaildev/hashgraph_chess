@@ -23,14 +23,15 @@ export const mutations = {
     },
     CREATE_MATCH_OBJECT(state, newMatchData) {
         this._vm.$set(state.MATCHES, newMatchData.topicId, {
+            created: true,
             player1: newMatchData.player1,
             player2: newMatchData.player2,
             messages: [],
             moves: []
         });
     },
-    SEE_MATCHES(state) {
-        console.log(state.MATCHES);
+    CLEAR_MATCH_OBJECT(state, topicId) {
+        this._vm.$set(state.MATCHES, topicId, {});
     },
     PUSH_MESSAGE(state, context) {
         state.MATCHES[context.topicId].messages.append(context.message);
@@ -101,6 +102,7 @@ export const actions = {
     },
 
     async SUBSCRIBE_TO_TOPIC({ commit }, topicId) {
+        commit('CLEAR_MATCH_OBJECT', topicId);
         window.$nuxt.$root.mainSocket.emit('subscribeToTopic', {
             topicId: topicId
         });
@@ -122,6 +124,8 @@ export const actions = {
 /* GETTERS */
 export const getters = {
     MATCH_DATA: (state) => {
-        return state.MATCHES;
-    },
+        return topicId => {
+            return state.MATCHES[topicId];
+        };
+    }
 };
