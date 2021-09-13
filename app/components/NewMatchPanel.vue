@@ -119,7 +119,7 @@ export default {
             const response = await this.CREATE_MATCH({
                 'player1': this.ACCOUNT_ID,
                 'player2': this.opponentAccountId
-            })
+            });
 
             if (response.result == 'SUCCESS') {
                 this.opponentAccountId = "";

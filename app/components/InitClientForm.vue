@@ -91,8 +91,7 @@ export default {
     },
     
     methods: {
-        ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL',
-                                           'TOGGLE_LOCK_BUTTON']),
+        ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL']),
         ...mapActions('sessionStorage', ['INIT_HASHGRAPH_CLIENT']),
         submit () {
             this.$v.$touch();

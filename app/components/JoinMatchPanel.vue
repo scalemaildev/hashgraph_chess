@@ -64,7 +64,6 @@ export default {
     },
     
     computed: {
-        ...mapState('sessionStorage', ['ACCOUNT_ID']),
         topicIdErrors () {
             const errors = [];
             if (!this.$v.topicId.$dirty) return errors
@@ -76,7 +75,6 @@ export default {
     
     methods: {
         ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL']),
-        ...mapActions('sessionStorage', ['CREATE_MATCH']),
         returnToAccountPanel () {
             this.topicId = "";
             this.SET_ACTIVE_PANEL('clientPanel');
