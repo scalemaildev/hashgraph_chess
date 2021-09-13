@@ -26,7 +26,9 @@ export const mutations = {
             created: true,
             player1: newMatchData.player1,
             player2: newMatchData.player2,
-            messages: [],
+            messages: [{
+                'server': "Started a new match between " + newMatchData.player1 + " and " + newMatchData.player2 + "."
+            }],
             moves: []
         });
     },
@@ -127,5 +129,15 @@ export const getters = {
         return topicId => {
             return state.MATCHES[topicId];
         };
-    }
+    },
+    MATCH_MESSAGES: (state) => {
+        return topicId => {
+            return state.MATCHES[topicId].messages;
+        };
+    },
+    MATCH_MOVES: (state) => {
+        return topicId => {
+            return state.MATCHES[topicId].moves;
+        };
+    },
 };

@@ -13,10 +13,10 @@
   <div v-else class="content-spaced-small">
     <v-row>
       <v-col xs="12" sm="12" md="6" lg="6" xl="6" align="center" justify="center">
-        <GamePanel />
+        <GamePanel :topicId="topicId" />
       </v-col>
       <v-col xs="12" sm="12" md="6" lg="6" xl="6">
-        <ChatPanel />
+        <ChatPanel :topicId="topicId" />
       </v-col>
     </v-row>
   </div>
