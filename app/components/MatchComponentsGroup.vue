@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div v-if="!!MATCH_DATA" class="content-spaced-mid">
+  <div v-if="!matchDataLoaded" class="content-spaced-mid">
     <v-row>
       <v-col cols="12" align="center" justify="center">
         <v-progress-circular indeterminate />
@@ -28,6 +28,12 @@ import { mapGetters, mapActions } from 'vuex';
 
 export default {
     props: ['topicId'],
+    
+    data () {
+        return {
+            matchDataLoaded: false
+        }
+    },
 
     computed: {
         ...mapGetters('sessionStorage', ['MATCH_DATA']),
@@ -39,10 +45,9 @@ export default {
     watch: {
         matchData (newMatchData, oldMatchData) {
             if (!newMatchData.created) {
-                console.log('empty object here?')
-                console.log(newMatchData);
+                this.matchDataLoaded = false;
             } else {
-                console.log(newMatchData);
+                this.matchDataLoaded = true;
             }
         }
     },
