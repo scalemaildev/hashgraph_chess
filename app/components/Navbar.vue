@@ -4,7 +4,7 @@
     <h2 style="display: inline">♄ashgraph Chess</h2> <sup>Pre-Beta</sup>
   </v-toolbar-title>
   <v-spacer />
-  <v-btn v-show="CLIENT_EXISTS" @click="unsetClient">
+  <v-btn v-show="LOCK_BUTTON" @click="unsetClient">
     Lock
   </v-btn>
 </v-toolbar>
@@ -15,7 +15,7 @@ import { mapState, mapActions } from 'vuex';
   
 export default {
     computed: {
-        ...mapState('sessionStorage', ['CLIENT_EXISTS']),
+        ...mapState('sessionStorage', ['LOCK_BUTTON'])
     },
     
     methods: {

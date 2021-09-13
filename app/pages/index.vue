@@ -19,29 +19,36 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 
 export default {
     computed: {
-        ...mapState('sessionStorage', ['CLIENT_EXISTS', 'ACTIVE_PANEL']),
+        ...mapState('sessionStorage', ['ACTIVE_PANEL',
+                                       'ACCOUNT_ID',
+                                       'PRIVATE_KEY'])
     },
-    
-    created() {
-        this.SET_ACTIVE_PANEL('loadingPanel');
-    },
-    
-    mounted() {        
-        if (!this.CLIENT_EXISTS) {
-            this.SET_ACTIVE_PANEL('startPanel');
+
+    mounted() {
+        if (!!this.ACCOUNT_ID && !!this.PRIVATE_KEY) {
+            this.$nextTick(() => {
+                this.restoreClient();
+            });
         } else {
-            this.SET_ACTIVE_PANEL('clientPanel');
-            this.TOGGLE_LOCK_BUTTON(true);
+            this.SET_ACTIVE_PANEL('startPanel');
         }
     },
     
     methods: {
         ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL',
-                                           'TOGGLE_LOCK_BUTTON'])
+                                           'TOGGLE_LOCK_BUTTON']),
+        ...mapActions('sessionStorage', ['INIT_HASHGRAPH_CLIENT']),
+        async restoreClient() {
+            const response = await this.INIT_HASHGRAPH_CLIENT({
+                accountId: this.ACCOUNT_ID,
+                privateKey: this.PRIVATE_KEY
+            });
+            console.log(response.responseMessage);
+        },
     },
 };
 </script>

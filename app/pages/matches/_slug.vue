@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 
 export default {
     async asyncData({ params }) {
@@ -30,8 +30,7 @@ export default {
     },
     
     computed: {
-        ...mapState('sessionStorage', ['CLIENT_EXISTS',
-                                       'ACTIVE_PANEL'])
+        ...mapState('sessionStorage', ['ACTIVE_PANEL']),
     },
     
     created() {
@@ -39,17 +38,18 @@ export default {
     },
     
     mounted() {
-        if (!this.CLIENT_EXISTS) {
-            this.SET_ACTIVE_PANEL('matchStartPanel')
-        } else {
-            this.SET_ACTIVE_PANEL('clientPanel')
-            this.TOGGLE_LOCK_BUTTON(true);
-        }
+        //if (!this.CLIENT_EXISTS) {
+            //this.SET_ACTIVE_PANEL('matchStartPanel')
+        //} else {
+            //this.SET_ACTIVE_PANEL('clientPanel')
+            //this.TOGGLE_LOCK_BUTTON(true);
+        //}
     },
     
     methods: {
         ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL',
-                                           'TOGGLE_LOCK_BUTTON'])
+                                           'TOGGLE_LOCK_BUTTON']),
+        ...mapActions(['CHECK_CLIENT']),
     }
 }
 </script>

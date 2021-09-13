@@ -12,7 +12,7 @@ const {
     TopicMessageSubmitTransaction,
 } = require("@hashgraph/sdk");
 
-var HederaClient = "";
+var HederaClient;
 
 // Testnet only as for right now. Can add Mainnet later
 function initHashgraphClient(incAccountId, incPrivateKey) {

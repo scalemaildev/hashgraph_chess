@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import { mapState, mapMutations, mapActions } from 'vuex';
+  
 export default {
     mounted () {
         this.$root.mainSocket = this.$nuxtSocket({

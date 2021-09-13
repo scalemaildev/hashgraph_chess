@@ -1,26 +1,25 @@
-const hashgraph = require('../serverMiddleware/hashgraph');
-
 /* State */
 export const state = () => ({
+    ACCOUNT_ID: '',
+    PRIVATE_KEY: '',
     ACTIVE_PANEL: 'loadingPanel',
     LOCK_BUTTON: false,
-    ACCOUNT_ID: "",
     MATCHES: {},
 });
 
 /* MUTATIONS */
 export const mutations = {
+    SET_ACCOUNT_ID(state, accountId) {
+        state.ACCOUNT_ID = accountId;
+    },
+    SET_PRIVATE_KEY(state, privateKey) {
+        state.PRIVATE_KEY = privateKey;
+    },
     TOGGLE_LOCK_BUTTON(state, bool) {
         state.LOCK_BUTTON = bool;
     },
     SET_ACTIVE_PANEL(state, newPanel) {
         state.ACTIVE_PANEL = newPanel;
-    },
-    SET_ACCOUNT_ID(state, accountId) {
-        state.ACCOUNT_ID = accountId;
-    },
-    TOGGLE_CLIENT_EXISTS(state, bool) {
-        state.CLIENT_EXISTS = bool;
     },
     CREATE_MATCH_OBJECT(state, newMatchData) {
         state.MATCHES[newMatchData.topicId] = {
@@ -35,8 +34,8 @@ export const mutations = {
     CLEAR_MATCH_OBJECT(state, topicId) {
         state.MATCHES[topicId] = {};
     },
-    PUSH_MESSAGE(state, topicId, message) {
-        state.MATCHES.topicId.messages.append(message);
+    PUSH_MESSAGE(state, context) {
+        state.MATCHES[context.topicId].messages.append(context.message);
     },    
 };
 
@@ -52,7 +51,9 @@ export const actions = {
 
         if (response.result == 'SUCCESS') {
             commit('SET_ACCOUNT_ID', context.accountId);
-            commit('TOGGLE_CLIENT_EXISTS', true);
+            commit('SET_PRIVATE_KEY', context.privateKey);
+            commit('SET_ACTIVE_PANEL', 'clientPanel');
+            commit('TOGGLE_LOCK_BUTTON', true);
         }
         
         return response;
@@ -65,8 +66,8 @@ export const actions = {
         });
 
         if (response.result == 'SUCCESS') {
-            commit('SET_ACCOUNT_ID', "");
-            commit('TOGGLE_CLIENT_EXISTS', false);
+            commit('SET_ACCOUNT_ID', '');
+            commit('SET_PRIVATE_KEY', '');
             commit('TOGGLE_LOCK_BUTTON', false);
             commit('SET_ACTIVE_PANEL', 'startPanel');
         } else {
@@ -126,9 +127,5 @@ export const actions = {
 export const getters = {
     GET_MATCHES: (state) => {
         return state.MATCHES;
-    },
-    
-    CLIENT_EXISTS: (state) => {
-        return hashgraph.HederaClient != '';
     },
 };
