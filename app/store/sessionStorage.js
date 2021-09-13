@@ -21,19 +21,25 @@ export const mutations = {
     SET_ACTIVE_PANEL(state, newPanel) {
         state.ACTIVE_PANEL = newPanel;
     },
-    CREATE_MATCH_OBJECT(state, newMatchData) {
-        this._vm.$set(state.MATCHES, newMatchData.topicId, {
+    CREATE_MATCH_OBJECT(state, messageData) {
+        this._vm.$set(state.MATCHES, messageData.topicId, {
             created: true,
-            player1: newMatchData.player1,
-            player2: newMatchData.player2,
+            player1: messageData.player1,
+            player2: messageData.player2,
             messages: [{
-                'server': "Started a new match between " + newMatchData.player1 + " and " + newMatchData.player2 + "."
+                'account': 'Server',
+                'message': "Started a new match between " + messageData.player1 + " and " + messageData.player2 + "..."
             }],
             moves: []
         });
     },
     CLEAR_MATCH_OBJECT(state, topicId) {
         this._vm.$set(state.MATCHES, topicId, {});
+    },
+    PROCESS_CHAT_MESSAGE(state, messageData) {
+        console.log(messageData);
+        // check if it's one of the players and reject if not
+        // otherwise use PUSH_MESSAGE
     },
     PUSH_MESSAGE(state, context) {
         state.MATCHES[context.topicId].messages.append(context.message);
@@ -111,14 +117,17 @@ export const actions = {
     },
 
     PROCESS_MESSAGE({ commit }, data) {
-        let message = JSON.parse(data.contents);
+        let messageData = JSON.parse(data.contents);
 
-        switch(message.messageType) {
+        switch(messageData.messageType) {
         case 'matchCreation':
-            commit('CREATE_MATCH_OBJECT', message);
+            commit('CREATE_MATCH_OBJECT', messageData);
+            break;
+        case 'chatMessage':
+            commit('PROCESS_CHAT_MESSAGE', messageData);
             break;
         default:
-            console.log('Got unknown message type: ' + message.messageType);
+            console.log('Got unknown message type: ' + messageData.messageType);
         }
     },
 };
