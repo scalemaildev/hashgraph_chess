@@ -1,6 +1,7 @@
 <template>
 <v-container fluid class="content-body-right">
-  <ChatWindow :topicId="topicId" />
+  <MessagesWindow :topicId="topicId" />
+  <MessageBox :topicId="topicId" />
 </v-container>
 </template>
 
