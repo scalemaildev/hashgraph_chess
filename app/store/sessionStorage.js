@@ -28,8 +28,6 @@ export const mutations = {
             messages: [],
             moves: []
         };
-
-        console.log(state.MATCHES[newMatchData.topicId]);
     },
     CLEAR_MATCH_OBJECT(state, topicId) {
         state.MATCHES[topicId] = {};

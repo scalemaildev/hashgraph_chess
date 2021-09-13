@@ -20,7 +20,6 @@
       </v-col>
     </v-row>
   </div>
-  {{ GET_MATCHES }}
 </div>
 </template>
 
@@ -38,6 +37,12 @@ export default {
         matchLoaded() {
             return false;
         },
+    },
+
+    watch: {
+        matchData: function () {
+            console.log(this.matchData);
+        }
     },
     
     mounted() {
