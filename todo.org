@@ -1,10 +1,4 @@
 * NOW
-** TODO Build out the Chatmessage handling
-*** Messages means chat messages? Find a better term
-*** Messages should be pushed to the messages array
-*** Needs a validation that the message came from a player
-** TODO Get a chat window and message text field into the game page
-*** TODO Only accept messages from players
 ** TODO Fix chat window flexboxes and get window to scroll on max messages
 * FUTURE
 ** TODO Get a chessboard.js with chess.js rules into the game page
