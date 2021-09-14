@@ -22,13 +22,17 @@ export const mutations = {
         state.ACTIVE_PANEL = newPanel;
     },
     CREATE_MATCH_OBJECT(state, messageData) {
-        this._vm.$set(state.MATCHES, messageData.topicId, {
+        let topicId = messageData.topicId;
+        let player1 = messageData.player1;
+        let player2 = messageData.player2;
+        
+        this._vm.$set(state.MATCHES, topicId, {
             created: true,
-            player1: messageData.player1,
-            player2: messageData.player2,
+            player1: player1,
+            player2: player2,
             messages: [{
                 account: 'Server',
-                message: "Started a new match between " + messageData.player1 + " and " + messageData.player2 + "..."
+                message: "Started a new match between " + player1 + " and " + player2 + "..."
             }],
             moves: []
         });
@@ -37,9 +41,13 @@ export const mutations = {
         this._vm.$set(state.MATCHES, topicId, {});
     },
     PROCESS_CHAT_MESSAGE(state, messageData) {
-        state.MATCHES[messageData.topicId].messages.push({
-            account: 'operator',
-            message: messageData.message
+        let topicId = messageData.topicId;
+        let message = messageData.message;
+        let operator = messageData.operator;
+        
+        state.MATCHES[topicId].messages.push({
+            account: operator,
+            message: message
         });
     },
 };
@@ -86,7 +94,7 @@ export const actions = {
         return response;
     },
 
-    async CREATE_MATCH({}, context) {
+    async CREATE_MATCH({ state }, context) {
         const response = await this.dispatch('sessionStorage/CREATE_NEW_TOPIC');
 
         if (response.result == 'SUCCESS') {
@@ -99,6 +107,7 @@ export const actions = {
             
             this.dispatch('ASYNC_EMIT', {
                 eventName: 'sendHCSMessage',
+                operator: state.ACCOUNT_ID,
                 context: newMatchData
             });
         }
@@ -114,10 +123,11 @@ export const actions = {
         });
     },
 
-    SEND_MESSAGE({}, messagePayload) {
+    SEND_MESSAGE({ state }, messagePayload) {
         this.dispatch('ASYNC_EMIT', {
-                eventName: 'sendHCSMessage',
-                context: messagePayload
+            eventName: 'sendHCSMessage',
+            operator: state.ACCOUNT_ID,
+            context: messagePayload
         });
     },
 

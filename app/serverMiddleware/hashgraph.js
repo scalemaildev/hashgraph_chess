@@ -10,6 +10,7 @@ const {
     TopicCreateTransaction,
     TopicMessageQuery,
     TopicMessageSubmitTransaction,
+    TransactionId,
 } = require("@hashgraph/sdk");
 
 var HederaClient;
@@ -68,7 +69,9 @@ async function createNewTopic() {
 }
 
 async function sendHCSMessage(data) {
-    let messagePayload = JSON.stringify(data.context);
+    let messageObject = data.context;
+    messageObject['operator'] = data.operator;
+    let messagePayload = JSON.stringify(messageObject);
     
     try {
         let response = await new TopicMessageSubmitTransaction({
@@ -108,7 +111,6 @@ async function subscribeToTopic(io, topicIdString) {
 }
 
 module.exports = {
-    HederaClient,
     initHashgraphClient,
     unsetClient,
     createNewTopic,
