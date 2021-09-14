@@ -75,8 +75,6 @@ async function sendHCSMessage(data) {
             topicId: TopicId.fromString(data.context.topicId),
             message: messagePayload})
             .execute(HederaClient);
-
-        // need to see if that response actually comes back
         
         return {
             result: 'SUCCESS',
@@ -100,6 +98,7 @@ async function subscribeToTopic(io, topicIdString) {
             .subscribe(HederaClient, res => {
                 let contents = new TextDecoder("utf-8").decode(res.contents);
                 io.emit('newHCSMessage', {
+                    res: res,
                     contents: contents
                 });
             });

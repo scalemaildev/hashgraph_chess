@@ -27,8 +27,8 @@ export const mutations = {
             player1: messageData.player1,
             player2: messageData.player2,
             messages: [{
-                'account': 'Server',
-                'message': "Started a new match between " + messageData.player1 + " and " + messageData.player2 + "..."
+                account: 'Server',
+                message: "Started a new match between " + messageData.player1 + " and " + messageData.player2 + "..."
             }],
             moves: []
         });
@@ -37,13 +37,11 @@ export const mutations = {
         this._vm.$set(state.MATCHES, topicId, {});
     },
     PROCESS_CHAT_MESSAGE(state, messageData) {
-        console.log(messageData);
-        // check if it's one of the players and reject if not
-        // otherwise use PUSH_MESSAGE
+        state.MATCHES[messageData.topicId].messages.push({
+            account: 'operator',
+            message: messageData.message
+        });
     },
-    PUSH_MESSAGE(state, context) {
-        state.MATCHES[context.topicId].messages.append(context.message);
-    },    
 };
 
 /* Actions */
@@ -88,7 +86,7 @@ export const actions = {
         return response;
     },
 
-    async CREATE_MATCH({ commit }, context) {
+    async CREATE_MATCH({}, context) {
         const response = await this.dispatch('sessionStorage/CREATE_NEW_TOPIC');
 
         if (response.result == 'SUCCESS') {
@@ -116,8 +114,15 @@ export const actions = {
         });
     },
 
-    PROCESS_MESSAGE({ commit }, data) {
-        let messageData = JSON.parse(data.contents);
+    SEND_MESSAGE({}, messagePayload) {
+        this.dispatch('ASYNC_EMIT', {
+                eventName: 'sendHCSMessage',
+                context: messagePayload
+        });
+    },
+
+    PROCESS_MESSAGE({ commit }, messageResponse) {
+        let messageData = JSON.parse(messageResponse.contents);
 
         switch(messageData.messageType) {
         case 'matchCreation':
