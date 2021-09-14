@@ -44,11 +44,16 @@ export const mutations = {
         let topicId = messageData.topicId;
         let message = messageData.message;
         let operator = messageData.operator;
-        
-        state.MATCHES[topicId].messages.push({
-            account: operator,
-            message: message
-        });
+        let topicPlayers = [state.MATCHES[topicId].player1, state.MATCHES[topicId].player2];
+
+        if (!topicPlayers.includes(operator)) {
+            console.log('Rejected a chat message from: ' + operator);
+        } else {
+            state.MATCHES[topicId].messages.push({
+                account: operator,
+                message: message
+            });
+        }
     },
 };
 

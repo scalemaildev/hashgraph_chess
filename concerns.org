@@ -1,0 +1,17 @@
+* Handling spoofed account id's
+** There is no way(?) to pull the operator account id from a topic message itself
+** The client relies on the account id found in the context of the hcs message (human input)
+** Someone could use a modified client to send messages to a topic with a spoofed account id in the hcs message context
+** Since this project is FOSS a modified client would be easy to create
+** Need to either be able to 'sign' a topic message with the operator account id or have some method of locking down a topic to certain accounts. Need to be able to ensure we know who a message is from
+
+* Handling client init
+** Client needs persistance to allow users to refresh the app page without having to put in their credentials again
+** Can also persist the account id and private key in session storage but this is vulnerable
+** Currently using above method to re-initialize client on page reloads
+** Could also persist the client server-side and use client-side methods to detect whether it's still there
+** Fav solution would be to have some metamask-like browser extension that the app can read without having to handle hedera's auth client-side
+
+* Hashgraph error handling
+** Need to come up with best practices for how to handle hasgraph error responses client-side
+** Do not just log the errors. Put them somewhere conspicuous to the user
