@@ -1,19 +1,11 @@
 * NOW
-** TODO Subscription should find out if a sub already exists
-*** This is probably why there were double messages in the chat app
-*** Perhaps move the sub method to the match components group so that it will only begin if the client is already initialized
-*** If that doesn't work add a sub button to the match components group page
-** TODO Build out matchCreation message handling
-*** Match creation should create the object in topic subs
-*** Set the players to the account id's
-*** Then init the match components
-* FUTURE
 ** TODO Build out the Chatmessage handling
 *** Messages means chat messages? Find a better term
 *** Messages should be pushed to the messages array
 *** Needs a validation that the message came from a player
 ** TODO Get a chat window and message text field into the game page
 *** TODO Only accept messages from players
+* FUTURE
 ** TODO Get a chessboard.js with chess.js rules into the game page
 ** TODO Chess moves go to the chess moves array
 **** Needs a validation that the move came from the current player(?)
