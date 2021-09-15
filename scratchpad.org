@@ -1,2 +1,61 @@
 * Topic with a large number of chat messages:
 - http://localhost:3000/matches/0.0.2522891
+
+* Slug
+  <v-row>
+    <v-col cols="12" align="center" justify="center">
+      <v-container fluid class="match-header">
+        <h1>Match ID: {{ this.topicId }}</h1>
+      </v-container>
+    </v-col>
+  </v-row>
+  <div v-if="ACTIVE_PANEL == 'loadingPanel'" class="content-spaced-mid">
+    <v-row>
+      <v-col cols="12" align="center" justify="center">
+        <v-progress-circular indeterminate />
+      </v-col>
+      <v-col cols="12" align="center" justify="center">
+        <p>... LOADING ...</p>
+      </v-col>
+    </v-row>
+  </div>
+  <div v-else-if="ACTIVE_PANEL == 'startPanel'">
+    <MatchStartPanel />
+  </div>
+  <div v-else-if="ACTIVE_PANEL == 'clientPanel'">
+    <MatchComponentsGroup :topicId='topicId' />
+  </div>
+
+* Match Components
+<div>
+  <div v-if="!matchDataLoaded" class="content-spaced-mid">
+    <v-row>
+      <v-col cols="12" align="center" justify="center">
+        <v-progress-circular indeterminate />
+      </v-col>
+      <v-col cols="12" align="center" justify="center">
+        <p>... SUBSCRIBING ...</p>
+      </v-col>
+    </v-row>
+  </div>
+    <v-container v-else class="content-spaced-small">
+      <v-row>
+        <v-col xs="12" sm="12" md="6" lg="6" xl="6" align="center" justify="center">
+          <GamePanel :topicId="topicId" />
+        </v-col>
+        <v-col xs="12" sm="12" md="6" lg="6" xl="6">
+          <ChatPanel :topicId="topicId" />
+        </v-col>
+      </v-row>
+    </v-container>
+</div>
+
+* Message Box
+<div>
+      <div class="d-flex flex-row align-center">
+        <v-text-field v-model="chatMessage" placeholder="Enter text here..." @keypress.enter="sendMessage()"></v-text-field>
+        <v-btn class="ml-4" @click="sendMessage()">Send</v-btn>
+      </div>
+</div>
+
+* Message Window

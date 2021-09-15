@@ -1,14 +1,7 @@
 <template>
-<div>
-  <v-row no-gutters>
-    <v-col>
-      <div class="d-flex flex-row align-center">
-        <v-text-field v-model="chatMessage" placeholder="Enter text here..." @keypress.enter="sendMessage()"></v-text-field>
-        <v-btn class="ml-4" @click="sendMessage()">Send</v-btn>
-      </div>
-    </v-col>
-  </v-row>
-</div>
+<v-container>
+  Message Box
+</v-container>
 </template>
 
 <script>
