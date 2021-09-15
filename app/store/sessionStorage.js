@@ -138,7 +138,7 @@ export const actions = {
     },
 
     PROCESS_MESSAGE({ commit }, messageResponse) {
-        let messageData = JSON.parse(messageResponse.contents);
+        let messageData = JSON.parse(messageResponse);
         
         switch(messageData.messageType) {
         case 'matchCreation':

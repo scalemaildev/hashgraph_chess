@@ -1,4 +1,3 @@
-const dotenv = require('dotenv').config();
 const hashgraph = require('./hashgraph');
 
 // Socket

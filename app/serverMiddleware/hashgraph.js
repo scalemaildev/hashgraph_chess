@@ -10,11 +10,9 @@ const {
     TopicCreateTransaction,
     TopicMessageQuery,
     TopicMessageSubmitTransaction,
-    TransactionId,
 } = require("@hashgraph/sdk");
 
 var HederaClient;
-var topicSubscriptions = {};
 
 // Testnet only as for right now. Can add Mainnet later
 function initHashgraphClient(incAccountId, incPrivateKey) {
@@ -93,19 +91,16 @@ async function sendHCSMessage(data) {
     }
 }
 
-async function subscribeToTopic(io, topicIdString) {
+function subscribeToTopic(io, topicIdString) {
     const topicId = TopicId.fromString(topicIdString);
-    
+
     try {
         new TopicMessageQuery()
             .setTopicId(topicId)
             .setStartTime(0)
             .subscribe(HederaClient, res => {
                 let contents = new TextDecoder("utf-8").decode(res.contents);
-                io.emit('newHCSMessage', {
-                    res: res,
-                    contents: contents
-                });
+                io.emit('newHCSMessage', contents);
             });
     } catch (error) {
         console.log(error);
