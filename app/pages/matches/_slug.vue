@@ -1,5 +1,12 @@
 <template>
 <div>
+  <v-row>
+    <v-col cols="12" align="center" justify="center">
+      <v-container fluid class="match-header">
+        <h1>Match ID: {{ this.topicId }}</h1>
+      </v-container>
+    </v-col>
+  </v-row>
   <div v-if="ACTIVE_PANEL == 'loadingPanel'" class="content-spaced-mid">
     <v-row>
       <v-col cols="12" align="center" justify="center">
