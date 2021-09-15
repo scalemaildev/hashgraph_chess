@@ -1,7 +1,7 @@
 <template>
 <div>
   <div v-show="ACTIVE_PANEL == 'loadingPanel'" class="content-spaced-mid">
-    <LoadingPanel :loadingText='... LOADING ...' />
+    <LoadingPanel loadingText='LOADING' />
     </v-row>
   </div>
   <div v-show="ACTIVE_PANEL == 'startPanel'">

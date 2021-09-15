@@ -8,14 +8,14 @@
     </v-col>
   </v-row>
   <div v-if="ACTIVE_PANEL == 'loadingPanel'" class="content-spaced-mid">
-    <LoadingPanel :loadingText='... LOADING ...' />
+    <LoadingPanel loadingText="LOADING" />
   </div>
   <div v-else-if="ACTIVE_PANEL == 'startPanel'">
     <MatchStartPanel />
   </div>
   <div v-else-if="ACTIVE_PANEL == 'clientPanel'">
     <div v-if="!matchDataLoaded" class="content-spaced-mid">
-      <LoadingPanel :loadingText='... SUBSCRIBING ...' />
+      <LoadingPanel loadingText="SUBSCRIBING" />
     </div>
     <div v-else-if="matchDataLoaded">
       <v-container>
@@ -45,7 +45,7 @@ export default {
     
     data () {
         return {
-            matchDataLoaded: false
+            matchDataLoaded: false,
         }
     },
     

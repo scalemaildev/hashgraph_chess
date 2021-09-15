@@ -5,7 +5,7 @@
         <v-progress-circular indeterminate />
       </v-col>
       <v-col cols="12" align="center" justify="center">
-        <p>... {{ loadingText }} ...</p>
+        <h2>... {{ loadingText }} ...</h2>
       </v-col>
     </v-row>
   </div>
