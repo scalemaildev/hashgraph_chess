@@ -1,5 +1,7 @@
 * NOW
 ** TODO Fix chat window flexboxes and get window to scroll on max messages
+*** It isn't the slug page -> up
+*** It's probably the match components page
 * FUTURE
 ** TODO Get a chessboard.js with chess.js rules into the game page
 ** TODO Chess moves go to the chess moves array
