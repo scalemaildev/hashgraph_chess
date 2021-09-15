@@ -57,6 +57,9 @@ export default {
         matchData () {
             return this.MATCH_DATA(this.topicId);
         },
+        clientReady () {
+            return this.ACTIVE_PANEL == 'clientPanel';
+        }
     },
 
     watch: {
@@ -65,6 +68,11 @@ export default {
                 this.matchDataLoaded = false;
             } else {
                 this.matchDataLoaded = true;
+            }
+        },
+        clientReady (newValue, oldValue) {
+            if (newValue) {
+                this.SUBSCRIBE_TO_TOPIC(this.topicId);
             }
         }
     },
@@ -77,7 +85,6 @@ export default {
         if (!!this.ACCOUNT_ID && !!this.PRIVATE_KEY) {
             this.$nextTick(() => {
                 this.restoreClient();
-                this.SUBSCRIBE_TO_TOPIC(this.topicId);
             });
         } else {
             this.SET_ACTIVE_PANEL('startPanel');
