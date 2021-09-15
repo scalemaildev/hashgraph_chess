@@ -21,7 +21,7 @@
 
 .match-header {
     margin-top: 1% !important;
-    margin-bottom: 1% !important;
+    margin-bottom: 0.5% !important;
 }
 
 .content-body {
@@ -50,20 +50,20 @@
     padding-bottom: 2.5% !important;
 }
 
-.gamePanel-body {
+.gamePanel-wrapper {
     background-color: rgba(18, 32, 59, 0.8);
     border: 1px solid #0c2547;
-    min-height: 50% !important;
+    min-height: 50vh !important;
     padding-left: 4% !important;
     padding-right: 4% !important;
     padding-top: 2.5% !important;
     padding-bottom: 2.5% !important;
 }
 
-.chatPanel-body {
+.chatPanel-wrapper {
     background-color: rgba(18, 32, 59, 0.8);
     border: 1px solid #0c2547;
-    height: 60vh !important;
+    min-height: 50vh !important;
     padding-left: 4% !important;
     padding-right: 4% !important;
     padding-top: 2.5% !important;

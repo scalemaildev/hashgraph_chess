@@ -8,26 +8,33 @@
     </v-col>
   </v-row>
   <div v-if="ACTIVE_PANEL == 'loadingPanel'" class="content-spaced-mid">
-    <v-row>
-      <v-col cols="12" align="center" justify="center">
-        <v-progress-circular indeterminate />
-      </v-col>
-      <v-col cols="12" align="center" justify="center">
-        <p>... LOADING ...</p>
-      </v-col>
-    </v-row>
+    <LoadingPanel :loadingText='... LOADING ...' />
   </div>
   <div v-else-if="ACTIVE_PANEL == 'startPanel'">
     <MatchStartPanel />
   </div>
   <div v-else-if="ACTIVE_PANEL == 'clientPanel'">
-    <MatchComponentsGroup :topicId='topicId' />
+    <div v-if="!matchDataLoaded" class="content-spaced-mid">
+      <LoadingPanel :loadingText='... SUBSCRIBING ...' />
+    </div>
+    <div v-else-if="matchDataLoaded">
+      <v-container>
+        <v-row>
+          <v-col>
+            <GamePanel :topicId="topicId" />
+          </v-col>
+          <v-col>
+            <ChatPanel :topicId="topicId" />
+          </v-col>
+        </v-row>
+      </v-container>
+    </div>
   </div>
 </div>
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
     async asyncData({ params }) {
@@ -36,10 +43,30 @@ export default {
         return { topicId }
     },
     
+    data () {
+        return {
+            matchDataLoaded: false
+        }
+    },
+    
     computed: {
         ...mapState('sessionStorage', ['ACTIVE_PANEL',
                                        'ACCOUNT_ID',
-                                       'PRIVATE_KEY'])
+                                       'PRIVATE_KEY']),
+        ...mapGetters('sessionStorage', ['MATCH_DATA']),
+        matchData () {
+            return this.MATCH_DATA(this.topicId);
+        },
+    },
+
+    watch: {
+        matchData (newMatchData, oldMatchData) {
+            if (!newMatchData.created) {
+                this.matchDataLoaded = false;
+            } else {
+                this.matchDataLoaded = true;
+            }
+        }
     },
     
     created() {
@@ -50,6 +77,7 @@ export default {
         if (!!this.ACCOUNT_ID && !!this.PRIVATE_KEY) {
             this.$nextTick(() => {
                 this.restoreClient();
+                this.SUBSCRIBE_TO_TOPIC(this.topicId);
             });
         } else {
             this.SET_ACTIVE_PANEL('startPanel');
@@ -58,7 +86,8 @@ export default {
     
     methods: {
         ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL']),
-        ...mapActions('sessionStorage', ['INIT_HASHGRAPH_CLIENT']),
+        ...mapActions('sessionStorage', ['INIT_HASHGRAPH_CLIENT',
+                                        'SUBSCRIBE_TO_TOPIC']),
         async restoreClient() {
             const response = await this.INIT_HASHGRAPH_CLIENT({
                 accountId: this.ACCOUNT_ID,

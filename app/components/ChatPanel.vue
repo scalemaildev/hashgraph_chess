@@ -1,7 +1,13 @@
 <template>
-<v-container fluid class="chatPanel-body">
-  <MessagesWindow :topicId="topicId" />
-  <MessageBox :topicId="topicId" />
+<v-container fluid class="chatPanel-wrapper">
+  <v-row>
+    <v-col cols="12">
+      <MessagesWindow :topicId="topicId" />
+    </v-col>
+    <v-col cols="12">
+      <MessageBox :topicId="topicId" />
+    </v-col>
+  </v-row>
 </v-container>
 </template>
 

@@ -1,6 +1,8 @@
 <template>
-<v-container>
-  Messages Window
+<v-container v-chat-scroll="{always: false, smooth: true}">
+    <div v-for="msg in matchMessages">
+      <strong>{{ msg.account }}:</strong> {{ msg.message }}
+    </div>
 </v-container>
 </template>
 
