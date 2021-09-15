@@ -14,6 +14,7 @@ const {
 } = require("@hashgraph/sdk");
 
 var HederaClient;
+var topicSubscriptions = {};
 
 // Testnet only as for right now. Can add Mainnet later
 function initHashgraphClient(incAccountId, incPrivateKey) {
@@ -94,6 +95,7 @@ async function sendHCSMessage(data) {
 
 async function subscribeToTopic(io, topicIdString) {
     const topicId = TopicId.fromString(topicIdString);
+    
     try {
         new TopicMessageQuery()
             .setTopicId(topicId)

@@ -123,7 +123,8 @@ export const actions = {
 
     async SUBSCRIBE_TO_TOPIC({ commit }, topicId) {
         commit('CLEAR_MATCH_OBJECT', topicId);
-        window.$nuxt.$root.mainSocket.emit('subscribeToTopic', {
+        this.dispatch('ASYNC_EMIT', {
+            eventName: 'subscribeToTopic',
             topicId: topicId
         });
     },

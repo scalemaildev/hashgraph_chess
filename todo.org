@@ -14,3 +14,6 @@
 *** Use the submit key feature for the topic messages
 *** Will need to have another screen where player 1 is given the submit key to copy
 *** Will need a panel on the game screen to enter the submit key
+* BUGS
+** TODO When refreshing the match page, the player will get an additional message from the sub for every page refresh (refreshing twice = three messages)
+- This appears to be happening at the hashgraph sub so it might be duplicated subscriptions from page refreshes
