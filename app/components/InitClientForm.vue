@@ -31,7 +31,7 @@
     </v-row>
     <v-row>
       <v-spacer />
-      <v-col cols="8" align="center" justify="center">
+      <v-col align="center" justify="center">
         <v-btn
           type="submit">
           Initialize Client

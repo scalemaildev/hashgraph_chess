@@ -1,7 +1,22 @@
 <template>
-<v-container>
-  Match Slug
-</v-container>
+<div>
+  <div v-if="ACTIVE_PANEL == 'loadingPanel'" class="content-spaced-mid">
+    <v-row>
+      <v-col cols="12" align="center" justify="center">
+        <v-progress-circular indeterminate />
+      </v-col>
+      <v-col cols="12" align="center" justify="center">
+        <p>... LOADING ...</p>
+      </v-col>
+    </v-row>
+  </div>
+  <div v-else-if="ACTIVE_PANEL == 'startPanel'">
+    <MatchStartPanel />
+  </div>
+  <div v-else-if="ACTIVE_PANEL == 'clientPanel'">
+    <MatchComponentsGroup :topicId='topicId' />
+  </div>
+</div>
 </template>
 
 <script>
