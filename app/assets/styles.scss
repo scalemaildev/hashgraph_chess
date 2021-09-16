@@ -46,7 +46,7 @@
 .gamePanel-wrapper {
     background-color: rgba(18, 32, 59, 0.8);
     border: 1px solid #0c2547;
-    min-height: 50vh !important;
+    min-height: 70vh !important;
     padding-left: 4% !important;
     padding-right: 4% !important;
     padding-top: 2.5% !important;
@@ -56,11 +56,12 @@
 .chatPanel-wrapper {
     background-color: rgba(18, 32, 59, 0.8);
     border: 1px solid #0c2547;
-    height: 60vh !important;
+    height: 70vh !important;
     padding-left: 4% !important;
     padding-right: 4% !important;
     padding-top: 2.5% !important;
     padding-bottom: 2.5% !important;
+    margin-bottom: 3% !important;
 }
 
 .chatPanel-window {
@@ -71,6 +72,7 @@
 }
 
 .chatPanel-box {
+    height: 5vh !important;
     padding-top: 0 !important;
     margin-top: 0 !important;
 }

@@ -1,7 +1,5 @@
 * NOW
-** TODO Fix chat window flexboxes and get window to scroll on max messages
-*** It isn't the slug page -> up
-*** It's probably the match components page
+** TODO Get chat window to scroll on new messages
 * FUTURE
 ** TODO Get a chessboard.js with chess.js rules into the game page
 ** TODO Chess moves go to the chess moves array
@@ -9,10 +7,7 @@
 **** Needs a validatino that the chess move was legal(?)
 **** Chess.js might take care of the above
 ** TODO Modify chessboard to send and receive moves over HCS
-** TODO Add a resume game feature to connect to an existing topic id
 ** TODO Limit moves and chat messages to valid account id's
-*** Use the submit key feature for the topic messages
-*** Will need to have another screen where player 1 is given the submit key to copy
-*** Will need a panel on the game screen to enter the submit key
-** TODO Need a timeout for topic subscription method
+*** Use the public key method from discord screens
+** TODO Need a timeout for topic subscription (and error message)
 * BUGS

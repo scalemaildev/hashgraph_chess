@@ -1,6 +1,11 @@
 <template>
 <v-container fluid class="chatPanel-wrapper">
   <v-row>
+    <v-col align="center">
+     <h3>Player Chat</h3>
+    </v-col>
+  </v-row>
+  <v-row>
     <v-col cols="12">
       <MessagesWindow :topicId="topicId" />
     </v-col>
