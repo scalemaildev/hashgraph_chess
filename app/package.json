@@ -9,9 +9,7 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
-    "@chrisoakman/chessboardjs": "^1.0.0",
     "@hashgraph/sdk": "^2.0.29",
-    "chess.js": "^0.12.0",
     "core-js": "^3.15.1",
     "nuxt": "^2.15.7",
     "nuxt-socket-io": "^1.1.22",

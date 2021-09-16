@@ -16,5 +16,7 @@
 - Display who won
 ** TODO Observer mode handling
 - Disable chat and moves for non-players
+** TODO Add footer with terms of use
+** TODO Add github link to the start page(s)
 * BUGS
 ** The chat window doesn't scroll to the bottom on new messages
