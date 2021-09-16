@@ -4,12 +4,12 @@
     <LoadingPanel loadingText="SUBSCRIBING" />
   </div>
   <div v-else>
-    <v-container>
-      <v-row>
-        <v-col>
+    <v-container fluid class="matchComponents-wrapper">
+      <v-row fluid justify='space-between'>
+        <v-col xs="12" sm="12" md="6" lg="6" xl="6">
           <GamePanel :topicId="topicId" />
         </v-col>
-        <v-col>
+        <v-col xs="12" sm="12" md="6" lg="6" xl="6">
           <ChatPanel :topicId="topicId" />
         </v-col>
       </v-row>

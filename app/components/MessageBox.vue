@@ -1,5 +1,5 @@
 <template>
-<v-container no-gutters>
+<v-container no-gutters class="chatPanel-box">
   <div class="d-flex flex-row align-center">
     <v-text-field v-model="chatMessage" placeholder="Enter text here..." @keypress.enter="sendMessage()"></v-text-field>
     <v-btn class="ml-4" @click="sendMessage()">Send</v-btn>
