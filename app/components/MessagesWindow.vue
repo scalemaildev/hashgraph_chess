@@ -1,10 +1,10 @@
 <template>
 <v-container class="chatPanel-window">
-  <div v-chat-scroll="{always: false, smooth: true}">
-    <div v-for="msg in matchMessages">
+  <ul v-chat-scroll style="list-style-type: none; padding-left: 0;">
+    <li v-for="msg in matchMessages">
       <strong>{{ msg.account }}:</strong> {{ msg.message }}
-    </div>
-  </div>
+    </li>
+  </ul>
 </v-container>
 </template>
 
