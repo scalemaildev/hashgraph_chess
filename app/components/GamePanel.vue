@@ -15,15 +15,34 @@
 
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex';
+import Chess from 'chess.js';
 
 export default {
     props: ['topicId'],
+    
+    data () {
+        return {
+            game: null
+        }
+    },
     
     computed: {
         ...mapGetters('sessionStorage', ['MATCH_MOVES']),
         matchMoves () {
             return this.MATCH_MOVES(this.topicId);
         },
+        boardState () {
+        },
+    },
+
+    created () {
+        this.game = new Chess();
+    },
+
+    mounted () {
+    },
+
+    methods: {
     },
 }
 </script>
