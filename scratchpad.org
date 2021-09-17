@@ -1,2 +1,0 @@
-* Topic with a large number of chat messages:
-- http://localhost:3000/matches/0.0.2522891
