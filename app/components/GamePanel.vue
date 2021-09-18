@@ -48,37 +48,42 @@ export default {
     
     watch: {
         gameState (newGameState, oldGameState) {
-            //this.translateGameState(newGameState);
+            this.translateGameState(newGameState);
         },
     },
     
     created () {
         this.game = new Chess();
-        //this.translateGameState(this.game.board());
+        this.translateGameState(this.game.board());
     },
     
     mounted () {
     },
     
     methods: {
-        getBaseTile(col, row) {
-            //let letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-            //return require(`~/assets/board/${letters[col]}${row + 1}.png`);
+        getTileColor(row, col) {
+            if (row % 2 == col % 2) {
+                return 'g' // tile is light
+            } else {
+                return 'b' // tile is dark
+            }
         },
         translateGameState (gameState) {
             for (let row = 0; row < gameState.length; row++) {
                 for (let col = 0; col < gameState[row].length; col++) {
+                    let tileColor = this.getTileColor(row, col);
+                    
                     if (!!gameState[row][col]) {
                         let type = gameState[row][col].type;
-                        let color = gameState[row][col].color;
+                        let pieceColor = gameState[row][col].color;
                         
-                        if (color == 'w') {
-                            // replace the piece in its  row/col
-                        } else if (color == 'b') {
-                            // upcase the piece and push to the row/col
+                        if (pieceColor == 'w') {
+                            this.translatedGameState[row][col] = type + tileColor;
+                        } else {
+                            this.translatedGameState[row][col] = type.toUpperCase() + tileColor;
                         }
                     } else {
-                        //this.translatedGameState[row][col] = this.getBaseTile(row, col);
+                        this.translatedGameState[row][col] = tileColor;
                     }
                 }
             }
