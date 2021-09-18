@@ -1,2 +1,0 @@
-white #e9f4f7
-black #30708a
