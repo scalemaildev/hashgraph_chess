@@ -1,48 +1,7 @@
 <template>
-<v-container class="gamePanel-wrapper">
-  <v-row>
-    <v-col>
-      <v-row no-gutters>
-        <div v-for="tile in Array(8).keys()" :key="tile.key" class="tile-wrapper">
-          <img :src="getBaseTile(tile,0)" class="tileImage">
-        </div>
-      </v-row>
-      <v-row no-gutters>
-        <div v-for="tile in Array(8).keys()" :key="tile.key" class="tile-wrapper">
-          <img :src="getBaseTile(tile,1)" class="tileImage">
-        </div>
-      </v-row>
-      <v-row no-gutters>
-        <div v-for="tile in Array(8).keys()" :key="tile.key" class="tile-wrapper">
-          <img :src="getBaseTile(tile,2)" class="tileImage">
-        </div>
-      </v-row>
-      <v-row no-gutters>
-        <div v-for="tile in Array(8).keys()" :key="tile.key" class="tile-wrapper">
-          <img :src="getBaseTile(tile,3)" class="tileImage">
-        </div>
-      </v-row>
-      <v-row no-gutters>
-        <div v-for="tile in Array(8).keys()" :key="tile.key" class="tile-wrapper">
-          <img :src="getBaseTile(tile,4)" class="tileImage">
-        </div>
-      </v-row>
-      <v-row no-gutters>
-        <div v-for="tile in Array(8).keys()" :key="tile.key" class="tile-wrapper">
-          <img :src="getBaseTile(tile,5)" class="tileImage">
-        </div>
-      </v-row>
-      <v-row no-gutters>
-        <div v-for="tile in Array(8).keys()" :key="tile.key" class="tile-wrapper">
-          <img :src="getBaseTile(tile,6)" class="tileImage">
-        </div>
-      </v-row>
-      <v-row no-gutters>
-        <div v-for="tile in Array(8).keys()" :key="tile.key" class="tile-wrapper">
-          <img :src="getBaseTile(tile,7)" class="tileImage">
-        </div>
-      </v-row>
-    </v-col>
+<v-container fluid class="gamePanel-wrapper">
+  <v-row no-gutters>
+    game board goes here
   </v-row>
   <v-row>
     <v-col align="center">
@@ -76,9 +35,9 @@ export default {
     },
     
     computed: {
-        ...mapGetters('sessionStorage', ['MATCH_MOVES']),
+        ...mapGetters('sessionStorage', ['MATCH_PGN']),
         matchMoves () {
-            return this.MATCH_MOVES(this.topicId);
+            return this.MATCH_PGN(this.topicId);
         },
         gameState () {
             if (!!this.game) {
@@ -89,7 +48,7 @@ export default {
     
     watch: {
         gameState (newGameState, oldGameState) {
-            this.translateGameState(newGameState);
+            //this.translateGameState(newGameState);
         },
     },
     
@@ -103,8 +62,8 @@ export default {
     
     methods: {
         getBaseTile(col, row) {
-            let letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-            return require(`~/assets/board/${letters[col]}${row + 1}.png`);
+            //let letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+            //return require(`~/assets/board/${letters[col]}${row + 1}.png`);
         },
         translateGameState (gameState) {
             for (let row = 0; row < gameState.length; row++) {
@@ -119,7 +78,7 @@ export default {
                             // upcase the piece and push to the row/col
                         }
                     } else {
-                        this.translatedGameState[row][col] = this.getBaseTile(row, col);
+                        //this.translatedGameState[row][col] = this.getBaseTile(row, col);
                     }
                 }
             }

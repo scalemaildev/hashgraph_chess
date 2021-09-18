@@ -34,7 +34,7 @@ export const mutations = {
                 account: 'Server',
                 message: "Started a new match between " + player1 + " and " + player2 + "..."
             }],
-            moves: []
+            pgn: null
         });
     },
     CLEAR_MATCH_OBJECT(state, topicId) {
@@ -165,9 +165,9 @@ export const getters = {
             return state.MATCHES[topicId].messages;
         };
     },
-    MATCH_MOVES: (state) => {
+    MATCH_PGN: (state) => {
         return topicId => {
-            return state.MATCHES[topicId].moves;
+            return state.MATCHES[topicId].pgn;
         };
     },
 };
