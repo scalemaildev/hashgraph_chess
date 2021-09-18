@@ -2,7 +2,7 @@
 <v-container class="gamePanel-wrapper">
   <v-row>
     <v-col align="center" justify="center">
-      <h3>Board Goes Here</h3>
+      {{ gameState }}
     </v-col>
   </v-row>
   <v-row>
@@ -19,10 +19,20 @@ import Chess from 'chess.js';
 
 export default {
     props: ['topicId'],
-    
+
     data () {
         return {
-            game: null
+            game: null,
+            translatedGameState: {
+                row0: ['_','_','_','_','_','_','_','_'],
+                row1: ['_','_','_','_','_','_','_','_'],
+                row2: ['_','_','_','_','_','_','_','_'],
+                row3: ['_','_','_','_','_','_','_','_'],
+                row4: ['_','_','_','_','_','_','_','_'],
+                row5: ['_','_','_','_','_','_','_','_'],
+                row6: ['_','_','_','_','_','_','_','_'],
+                row7: ['_','_','_','_','_','_','_','_']
+            },
         }
     },
     
@@ -31,8 +41,30 @@ export default {
         matchMoves () {
             return this.MATCH_MOVES(this.topicId);
         },
-        boardState () {
+        gameState () {
+            let stateArray = this.game.board();
+
+            for (let row = 0; row < stateArray.length; row++) {
+                for (let col = 0; col < stateArray[row].length; col++) {
+                    if (!!stateArray[row][col]) {
+                        let type = stateArray[row][col].type;
+                        let color = stateArray[row][col].color;
+
+                        if (color == 'w') {
+                            // push the piece to the row/col
+                        } else if (color == 'b') {
+                            // upcase the piece and push to the row/col
+                        }
+                    } else {
+                        // push a _ to the row/col
+                    }
+                }
+            }
         },
+        gameHistory () {
+            return this.game.history();
+        }
+        
     },
 
     created () {
