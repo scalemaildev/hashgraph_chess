@@ -181,7 +181,7 @@ export default {
             let letter = letters[col];
             let number = row + 1;
             
-            let baseTileImageName = '~/static/board/' + letter + number + ".png";
+            let baseTileImageName = '../static/board/' + letter + number + ".png";
             return baseTileImageName;
         },
         gameHistory () {
