@@ -2,14 +2,18 @@
 <v-container class="gamePanel-wrapper">
   <v-row>
     <v-col align="center" justify="center">
-      {{ translatedGameState['row0'][0] }}
-      {{ translatedGameState['row0'][1] }}
-      {{ translatedGameState['row0'][2] }}
-      {{ translatedGameState['row0'][3] }}
-      {{ translatedGameState['row0'][4] }}
-      {{ translatedGameState['row0'][5] }}
-      {{ translatedGameState['row0'][6] }}
-      {{ translatedGameState['row0'][7] }}
+      <v-row no-gutters>
+        <v-col>
+          {{ translatedGameState['row8'][0] }}
+          {{ translatedGameState['row8'][1] }}
+          {{ translatedGameState['row8'][2] }}
+          {{ translatedGameState['row8'][3] }}
+          {{ translatedGameState['row8'][4] }}
+          {{ translatedGameState['row8'][5] }}
+          {{ translatedGameState['row8'][6] }}
+          {{ translatedGameState['row8'][7] }}
+        </v-col>
+      </v-row>
     </v-col>
   </v-row>
   <v-row>
@@ -31,14 +35,14 @@ export default {
         return {
             game: null,
             translatedGameState: {
-                row0: ['_','_','_','_','_','_','_','_'],
-                row1: ['_','_','_','_','_','_','_','_'],
-                row2: ['_','_','_','_','_','_','_','_'],
-                row3: ['_','_','_','_','_','_','_','_'],
-                row4: ['_','_','_','_','_','_','_','_'],
-                row5: ['_','_','_','_','_','_','_','_'],
+                row8: ['_','_','_','_','_','_','_','_'],
+                row7: ['_','_','_','_','_','_','_','_'],
                 row6: ['_','_','_','_','_','_','_','_'],
-                row7: ['_','_','_','_','_','_','_','_']
+                row5: ['_','_','_','_','_','_','_','_'],
+                row4: ['_','_','_','_','_','_','_','_'],
+                row3: ['_','_','_','_','_','_','_','_'],
+                row2: ['_','_','_','_','_','_','_','_'],
+                row1: ['_','_','_','_','_','_','_','_']
             },
         }
     },
@@ -58,7 +62,7 @@ export default {
                         let color = stateArray[row][col].color;
 
                         if (color == 'w') {
-                            // push the piece to the row/col
+                            // replace the piece in its  row/col
                         } else if (color == 'b') {
                             // upcase the piece and push to the row/col
                         }
@@ -67,6 +71,12 @@ export default {
                     }
                 }
             }
+        },
+        findBaseTileColor (row, col) {
+            // find blue or white for this tile
+        },
+        findBaseTileImage (row, col) {
+            // find the image for blank tile with this row/col
         },
         gameHistory () {
             return this.game.history();
