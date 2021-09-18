@@ -2,7 +2,14 @@
 <v-container class="gamePanel-wrapper">
   <v-row>
     <v-col align="center" justify="center">
-      {{ gameState }}
+      {{ translatedGameState['row0'][0] }}
+      {{ translatedGameState['row0'][1] }}
+      {{ translatedGameState['row0'][2] }}
+      {{ translatedGameState['row0'][3] }}
+      {{ translatedGameState['row0'][4] }}
+      {{ translatedGameState['row0'][5] }}
+      {{ translatedGameState['row0'][6] }}
+      {{ translatedGameState['row0'][7] }}
     </v-col>
   </v-row>
   <v-row>
