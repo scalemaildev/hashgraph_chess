@@ -1,102 +1,46 @@
 <template>
 <v-container class="gamePanel-wrapper">
   <v-row>
-    <v-col align="center" justify="center">
+    <v-col>
       <v-row no-gutters>
-        <v-col>
-          {{ translatedGameState[0][0] }}
-          {{ translatedGameState[0][1] }}
-          {{ translatedGameState[0][2] }}
-          {{ translatedGameState[0][3] }}
-          {{ translatedGameState[0][4] }}
-          {{ translatedGameState[0][5] }}
-          {{ translatedGameState[0][6] }}
-          {{ translatedGameState[0][7] }}
-        </v-col>
+        <div v-for="tile in Array(8).keys()" :key="tile.key" class="tile-wrapper">
+          <img :src="getBaseTile(tile,0)" class="tileImage">
+        </div>
       </v-row>
       <v-row no-gutters>
-        <v-col>
-          {{ translatedGameState[1][0] }}
-          {{ translatedGameState[1][1] }}
-          {{ translatedGameState[1][2] }}
-          {{ translatedGameState[1][3] }}
-          {{ translatedGameState[1][4] }}
-          {{ translatedGameState[1][5] }}
-          {{ translatedGameState[1][6] }}
-          {{ translatedGameState[1][7] }}
-        </v-col>
+        <div v-for="tile in Array(8).keys()" :key="tile.key" class="tile-wrapper">
+          <img :src="getBaseTile(tile,1)" class="tileImage">
+        </div>
       </v-row>
       <v-row no-gutters>
-        <v-col>
-          {{ translatedGameState[2][0] }}
-          {{ translatedGameState[2][1] }}
-          {{ translatedGameState[2][2] }}
-          {{ translatedGameState[2][3] }}
-          {{ translatedGameState[2][4] }}
-          {{ translatedGameState[2][5] }}
-          {{ translatedGameState[2][6] }}
-          {{ translatedGameState[2][7] }}
-        </v-col>
+        <div v-for="tile in Array(8).keys()" :key="tile.key" class="tile-wrapper">
+          <img :src="getBaseTile(tile,2)" class="tileImage">
+        </div>
       </v-row>
       <v-row no-gutters>
-        <v-col>
-          {{ translatedGameState[3][0] }}
-          {{ translatedGameState[3][1] }}
-          {{ translatedGameState[3][2] }}
-          {{ translatedGameState[3][3] }}
-          {{ translatedGameState[3][4] }}
-          {{ translatedGameState[3][5] }}
-          {{ translatedGameState[3][6] }}
-          {{ translatedGameState[3][7] }}
-        </v-col>
+        <div v-for="tile in Array(8).keys()" :key="tile.key" class="tile-wrapper">
+          <img :src="getBaseTile(tile,3)" class="tileImage">
+        </div>
       </v-row>
       <v-row no-gutters>
-        <v-col>
-          {{ translatedGameState[4][0] }}
-          {{ translatedGameState[4][1] }}
-          {{ translatedGameState[4][2] }}
-          {{ translatedGameState[4][3] }}
-          {{ translatedGameState[4][4] }}
-          {{ translatedGameState[4][5] }}
-          {{ translatedGameState[4][6] }}
-          {{ translatedGameState[4][7] }}
-        </v-col>
+        <div v-for="tile in Array(8).keys()" :key="tile.key" class="tile-wrapper">
+          <img :src="getBaseTile(tile,4)" class="tileImage">
+        </div>
       </v-row>
       <v-row no-gutters>
-        <v-col>
-          {{ translatedGameState[5][0] }}
-          {{ translatedGameState[5][1] }}
-          {{ translatedGameState[5][2] }}
-          {{ translatedGameState[5][3] }}
-          {{ translatedGameState[5][4] }}
-          {{ translatedGameState[5][5] }}
-          {{ translatedGameState[5][6] }}
-          {{ translatedGameState[5][7] }}
-        </v-col>
+        <div v-for="tile in Array(8).keys()" :key="tile.key" class="tile-wrapper">
+          <img :src="getBaseTile(tile,5)" class="tileImage">
+        </div>
       </v-row>
       <v-row no-gutters>
-        <v-col>
-          {{ translatedGameState[6][0] }}
-          {{ translatedGameState[6][1] }}
-          {{ translatedGameState[6][2] }}
-          {{ translatedGameState[6][3] }}
-          {{ translatedGameState[6][4] }}
-          {{ translatedGameState[6][5] }}
-          {{ translatedGameState[6][6] }}
-          {{ translatedGameState[6][7] }}
-        </v-col>
+        <div v-for="tile in Array(8).keys()" :key="tile.key" class="tile-wrapper">
+          <img :src="getBaseTile(tile,6)" class="tileImage">
+        </div>
       </v-row>
       <v-row no-gutters>
-        <v-col>
-          {{ translatedGameState[7][0] }}
-          {{ translatedGameState[7][1] }}
-          {{ translatedGameState[7][2] }}
-          {{ translatedGameState[7][3] }}
-          {{ translatedGameState[7][4] }}
-          {{ translatedGameState[7][5] }}
-          {{ translatedGameState[7][6] }}
-          {{ translatedGameState[7][7] }}
-        </v-col>
+        <div v-for="tile in Array(8).keys()" :key="tile.key" class="tile-wrapper">
+          <img :src="getBaseTile(tile,7)" class="tileImage">
+        </div>
       </v-row>
     </v-col>
   </v-row>
@@ -151,13 +95,17 @@ export default {
     
     created () {
         this.game = new Chess();
-        this.translateGameState(this.game.board());
+        //this.translateGameState(this.game.board());
     },
     
     mounted () {
     },
     
     methods: {
+        getBaseTile(col, row) {
+            let letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+            return require(`~/assets/board/${letters[col]}${row + 1}.png`);
+        },
         translateGameState (gameState) {
             for (let row = 0; row < gameState.length; row++) {
                 for (let col = 0; col < gameState[row].length; col++) {
@@ -171,18 +119,10 @@ export default {
                             // upcase the piece and push to the row/col
                         }
                     } else {
-                        this.translatedGameState[row][col] = this.findBaseTileImageName(row, col);
+                        this.translatedGameState[row][col] = this.getBaseTile(row, col);
                     }
                 }
             }
-        },
-        findBaseTileImageName (row, col) {
-            let letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-            let letter = letters[col];
-            let number = row + 1;
-            
-            let baseTileImageName = '../static/board/' + letter + number + ".png";
-            return baseTileImageName;
         },
         gameHistory () {
             return this.game.history();
@@ -190,3 +130,4 @@ export default {
     }
 }
 </script>
+
