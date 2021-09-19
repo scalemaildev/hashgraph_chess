@@ -93,7 +93,9 @@
 }
 
 .gameBoard-header {
-    width: 320px;
+    width: 330px;
+    height: 10px;
+    padding-right: 10px;
 }
 
 .gameBoard-left {
@@ -101,10 +103,18 @@
     width: auto;
     height: 340px;
     left: -10px;
+    top: -10px;
 }
 
 .gameBoard-right {
     position: relative;
     width: auto;
     height: 340px;
+    top: -10px;
+}
+
+.gameBoard-footer {
+    width: 330px;
+    height: 10px;
+    padding-right: 10px;
 }

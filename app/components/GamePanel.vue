@@ -14,11 +14,11 @@
               >
               <img :src="getTile(row,col)" class="tileImage">
             </div>
-          </div>
+          </div>  
         </div>
         <img :src="require(`~/assets/game/border_right.png`)" class="gameBoard-right">
       </div>
-      <img :src="require(`~/assets/game/border_bottom_legend.png`)" class="gameBoard-header">
+      <img :src="require(`~/assets/game/border_bottom_legend.png`)" class="gameBoard-footer">
     </v-row>
     <v-row>
       <v-col align="center">
