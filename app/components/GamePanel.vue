@@ -1,9 +1,9 @@
 <template>
   <v-container fluid class="gamePanel-wrapper">
     <v-row no-gutters align="center" class="flex-column d-flex">
-      <img :src="require(`~/assets/game/border_top.png`)" class="gameBoard-header">
+      <img :src="require(`~/assets/game/border_top.png`)" class="gameBoard-horz">
       <div class="d-flex" style="position: relative">
-          <img :src="require(`~/assets/game/border_left_legend.png`)" class="gameBoard-left">
+          <img :src="require(`~/assets/game/border_left_legend.png`)" class="gameBoard-vert">
         <div v-for="col in 8" :key="col">
           <div v-for="row in 8" :key="row">
             <div
@@ -16,9 +16,9 @@
             </div>
           </div>  
         </div>
-        <img :src="require(`~/assets/game/border_right.png`)" class="gameBoard-right">
+        <img :src="require(`~/assets/game/border_right.png`)" class="gameBoard-vert">
       </div>
-      <img :src="require(`~/assets/game/border_bottom_legend.png`)" class="gameBoard-footer">
+      <img :src="require(`~/assets/game/border_bottom_legend.png`)" class="gameBoard-horz">
     </v-row>
     <v-row>
       <v-col align="center">

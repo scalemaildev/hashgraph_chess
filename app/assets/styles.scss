@@ -92,29 +92,13 @@
     padding-bottom: 0px !important;
 }
 
-.gameBoard-header {
-    width: 330px;
+.gameBoard-horz {
+    width: 340px;
     height: 10px;
-    padding-right: 10px;
 }
 
-.gameBoard-left {
-    position: absolute;
-    width: auto;
-    height: 340px;
-    left: -10px;
-    top: -10px;
-}
-
-.gameBoard-right {
+.gameBoard-vert {
     position: relative;
     width: auto;
-    height: 340px;
-    top: -10px;
-}
-
-.gameBoard-footer {
-    width: 330px;
-    height: 10px;
-    padding-right: 10px;
+    height: 320px;
 }
