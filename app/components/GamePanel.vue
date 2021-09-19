@@ -1,43 +1,10 @@
 <template>
 <v-container fluid class="gamePanel-wrapper">
   <v-row no-gutters>
-    <div v-for="tile in Array(8).keys()" :key="tile.key">
-      <img :src="getTile(0,tile)" class="tileImage">
-    </div>
-  </v-row>
-  <v-row no-gutters>
-    <div v-for="tile in Array(8).keys()" :key="tile.key">
-      <img :src="getTile(1,tile)" class="tileImage">
-    </div>
-  </v-row>
-  <v-row no-gutters>
-    <div v-for="tile in Array(8).keys()" :key="tile.key">
-      <img :src="getTile(2,tile)" class="tileImage">
-    </div>
-  </v-row>
-  <v-row no-gutters>
-    <div v-for="tile in Array(8).keys()" :key="tile.key">
-      <img :src="getTile(3,tile)" class="tileImage">
-    </div>
-  </v-row>
-  <v-row no-gutters>
-    <div v-for="tile in Array(8).keys()" :key="tile.key">
-      <img :src="getTile(4,tile)" class="tileImage">
-    </div>
-  </v-row>
-  <v-row no-gutters>
-    <div v-for="tile in Array(8).keys()" :key="tile.key">
-      <img :src="getTile(5,tile)" class="tileImage">
-    </div>
-  </v-row>
-  <v-row no-gutters>
-    <div v-for="tile in Array(8).keys()" :key="tile.key">
-      <img :src="getTile(6,tile)" class="tileImage">
-    </div>
-  </v-row>
-  <v-row no-gutters>
-    <div v-for="tile in Array(8).keys()" :key="tile.key">
-      <img :src="getTile(7,tile)" class="tileImage">
+    <div v-for="col in Array(8).keys()" :key="col.key">
+      <div v-for="row in Array(8).keys()" :key="row.key">
+        <img :src="getTile(row,col)" class="tileImage">
+      </div>
     </div>
   </v-row>
   <v-row>
