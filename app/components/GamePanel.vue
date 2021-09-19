@@ -1,7 +1,44 @@
 <template>
 <v-container fluid class="gamePanel-wrapper">
   <v-row no-gutters>
-    game board goes here
+    <div v-for="tile in Array(8).keys()" :key="tile.key">
+      <img :src="getTile(0,tile)" class="tileImage">
+    </div>
+  </v-row>
+  <v-row no-gutters>
+    <div v-for="tile in Array(8).keys()" :key="tile.key">
+      <img :src="getTile(1,tile)" class="tileImage">
+    </div>
+  </v-row>
+  <v-row no-gutters>
+    <div v-for="tile in Array(8).keys()" :key="tile.key">
+      <img :src="getTile(2,tile)" class="tileImage">
+    </div>
+  </v-row>
+  <v-row no-gutters>
+    <div v-for="tile in Array(8).keys()" :key="tile.key">
+      <img :src="getTile(3,tile)" class="tileImage">
+    </div>
+  </v-row>
+  <v-row no-gutters>
+    <div v-for="tile in Array(8).keys()" :key="tile.key">
+      <img :src="getTile(4,tile)" class="tileImage">
+    </div>
+  </v-row>
+  <v-row no-gutters>
+    <div v-for="tile in Array(8).keys()" :key="tile.key">
+      <img :src="getTile(5,tile)" class="tileImage">
+    </div>
+  </v-row>
+  <v-row no-gutters>
+    <div v-for="tile in Array(8).keys()" :key="tile.key">
+      <img :src="getTile(6,tile)" class="tileImage">
+    </div>
+  </v-row>
+  <v-row no-gutters>
+    <div v-for="tile in Array(8).keys()" :key="tile.key">
+      <img :src="getTile(7,tile)" class="tileImage">
+    </div>
   </v-row>
   <v-row>
     <v-col align="center">
@@ -61,6 +98,10 @@ export default {
     },
     
     methods: {
+        getTile(row, col) {
+            let piece = this.translatedGameState[row][col];
+            return require(`~/assets/game/${piece}.png`);
+        },
         getTileColor(row, col) {
             if (row % 2 == col % 2) {
                 return 'g' // tile is light
@@ -74,14 +115,10 @@ export default {
                     let tileColor = this.getTileColor(row, col);
                     
                     if (!!gameState[row][col]) {
-                        let type = gameState[row][col].type;
+                        let pieceType = gameState[row][col].type;
                         let pieceColor = gameState[row][col].color;
-                        
-                        if (pieceColor == 'w') {
-                            this.translatedGameState[row][col] = type + tileColor;
-                        } else {
-                            this.translatedGameState[row][col] = type.toUpperCase() + tileColor;
-                        }
+
+                        this.translatedGameState[row][col] = pieceColor + pieceType + tileColor;
                     } else {
                         this.translatedGameState[row][col] = tileColor;
                     }

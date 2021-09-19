@@ -1,5 +1,6 @@
 * NOW
 ** TODO Get a chessboard.js with chess.js rules into the game page
+*** Fix the styling and add frames
 ** TODO Chess moves go to the chess moves array
 **** Needs a validation that the move came from the current player(?)
 **** Needs a validatino that the chess move was legal(?)
