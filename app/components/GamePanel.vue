@@ -1,18 +1,31 @@
 <template>
-<v-container fluid class="gamePanel-wrapper">
-  <v-row no-gutters>
-    <div v-for="col in Array(8).keys()" :key="col.key">
-      <div v-for="row in Array(8).keys()" :key="row.key">
-        <img :src="getTile(row,col)" class="tileImage">
+  <v-container fluid class="gamePanel-wrapper">
+    <v-row no-gutters align="center" class="flex-column d-flex">
+      <img :src="require(`~/assets/game/border_top.png`)" class="gameBoard-header">
+      <div class="d-flex" style="position: relative">
+          <img :src="require(`~/assets/game/border_left_legend.png`)" class="gameBoard-left">
+        <div v-for="col in 8" :key="col">
+          <div v-for="row in 8" :key="row">
+            <div
+              :style="{
+                      width: '40px',
+                      height: '40px',
+                      }"
+              >
+              <img :src="getTile(row,col)" class="tileImage">
+            </div>
+          </div>
+        </div>
+        <img :src="require(`~/assets/game/border_right.png`)" class="gameBoard-right">
       </div>
-    </div>
-  </v-row>
-  <v-row>
-    <v-col align="center">
-      <h3>Information Goes Here</h3>
-    </v-col>
-  </v-row>
-</v-container>
+      <img :src="require(`~/assets/game/border_bottom_legend.png`)" class="gameBoard-header">
+    </v-row>
+    <v-row>
+      <v-col align="center">
+        <h3>Turn Information Goes Here</h3>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -66,7 +79,7 @@ export default {
     
     methods: {
         getTile(row, col) {
-            let piece = this.translatedGameState[row][col];
+            let piece = this.translatedGameState[row - 1][col - 1];
             return require(`~/assets/game/${piece}.png`);
         },
         getTileColor(row, col) {
