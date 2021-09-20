@@ -19,9 +19,9 @@
       <img src="/game/border_bottom_legend.png"
            :style="horzSize">
     </v-row>
-    <v-row>
-      <v-col align="center">
-        <h3>Turn Information Goes Here</h3>
+    <v-row no-gutters>
+      <v-col cols="12" align="center">
+        <h4>Turn Info Here</h4>
       </v-col>
     </v-row>
   </v-container>
@@ -58,6 +58,18 @@ export default {
         gameState () {
             if (!!this.game) {
                 return this.game.board();
+            }
+        },
+        gameTurn () {
+            if (!!this.game) {
+                let turn = this.game.turn();
+                if (turn == 'w') {
+                    return 'White to Move'
+                } else if (turn == 'b') {
+                    return 'Black to Move'
+                } else {
+                    return 'Game Over'
+                }
             }
         },
         tileSize() {
