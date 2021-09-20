@@ -21,7 +21,10 @@
     </v-row>
     <v-row no-gutters>
       <v-col cols="12" align="center">
-        <h4>Turn Info Here</h4>
+        <h4>Turn Info and Scroll Buttons Here</h4>
+      </v-col>
+      <v-col cols="12" align="center">
+        <h3>Move Input Here (hide if scrolling)</h3>
       </v-col>
     </v-row>
   </v-container>
@@ -113,6 +116,7 @@ export default {
     },
     
     mounted () {
+        console.log(this.game.pgn());
     },
     
     methods: {
