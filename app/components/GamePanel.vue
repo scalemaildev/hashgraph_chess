@@ -19,13 +19,14 @@
       <img src="/game/border_bottom_legend.png"
            :style="horzFrameSize">
     </v-row>
-    <v-row no-gutters>
+    <v-row>
       <v-col cols="12" align="center">
         <h4>Turn Info and Scroll Buttons Here</h4>
       </v-col>
       <v-col cols="12" align="center">
         <strong>It Is Your Move</strong>
-        <v-form @submit.prevent="submitMove">
+        <v-form
+          @submit.prevent="submit">
           <v-row align="center">
             <v-spacer />
             <v-col cols="2">
@@ -52,6 +53,9 @@
                 @blur="$v.targetSquare.$touch()"
                 label="Target"/>
               </v-col>
+              <v-col cols="2">
+                <v-btn type="submit">Send</v-btn>
+              </v-col>
             <v-spacer />
           </v-row>
         </v-form>
@@ -62,15 +66,27 @@
 
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex';
+import { validationMixin } from 'vuelidate';
+import { required, helpers } from 'vuelidate/lib/validators';
 import Chess from 'chess.js';
+
+const squareRegex = helpers.regex('squareRegex', /^[a-hA-H][1-8]$/);
 
 export default {
     props: ['topicId'],
+    
+    mixins: [validationMixin],
+
+    validations: {
+        activeSquare: { required, squareRegex },
+        targetSquare: { required, squareRegex },
+    },
     
     data () {
         return {
             game: null,
             activeSquare: '',
+            targetSquare: '',
             translatedGameState: {
                 0: Array(8), //row 8
                 1: Array(8),
@@ -89,6 +105,20 @@ export default {
         matchMoves () {
             return this.MATCH_PGN(this.topicId);
         },
+        activeSquareErrors () {
+            const errors = [];
+            if (!this.$v.activeSquare.$dirty) return errors
+            !this.$v.activeSquare.required && errors.push('Required');
+            !this.$v.activeSquare.squareRegex && errors.push('Should look like e4 or E4')
+            return errors;
+        },
+        targetSquareErrors () {
+            const errors = [];
+            if (!this.$v.targetSquare.$dirty) return errors
+            !this.$v.targetSquare.required && errors.push('Required');
+            !this.$v.targetSquare.squareRegex && errors.push('Should look like e4 or E4')
+            return errors;
+        },
         gameState () {
             if (!!this.game) {
                 return this.game.board();
@@ -96,14 +126,7 @@ export default {
         },
         gameTurn () {
             if (!!this.game) {
-                let turn = this.game.turn();
-                if (turn == 'w') {
-                    return 'White to Move'
-                } else if (turn == 'b') {
-                    return 'Black to Move'
-                } else {
-                    return 'No Player'
-                }
+                return this.game.turn();
             }
         },
         pieceStyle() {
@@ -182,7 +205,7 @@ export default {
         gameHistory () {
             return this.game.history();
         },
-        submitMove () {
+        submit () {
             console.log('submit move')
         }
     }
