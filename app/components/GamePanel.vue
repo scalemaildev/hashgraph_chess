@@ -1,30 +1,60 @@
 <template>
   <v-container fluid class="gamePanel-wrapper">
     <v-row no-gutters align="center" class="flex-column d-flex">
-      <nuxt-img src="/game/border_top.png" :style="horzSize"/>
+      <nuxt-img src="/game/border_top.png" :style="horzFrameSize"/>
       <div class="d-flex" style="position: relative">
           <nuxt-img src="/game/border_left_legend.png"
-                    :style="vertSize"/>
+                    :style="vertFrameSize"/>
         <div v-for="col in 8" :key="col">
           <div v-for="row in 8" :key="row">
-            <div :style="tileStyle(row, col)">
+            <div :style="getTileBgStyle(row, col)">
               <nuxt-img :src="getTile(row, col)"
                         :style="pieceStyle"/>
             </div>
           </div>  
         </div>
         <img src="/game/border_right.png"
-           :style="vertSize">
+           :style="vertFrameSize">
       </div>
       <img src="/game/border_bottom_legend.png"
-           :style="horzSize">
+           :style="horzFrameSize">
     </v-row>
     <v-row no-gutters>
       <v-col cols="12" align="center">
         <h4>Turn Info and Scroll Buttons Here</h4>
       </v-col>
       <v-col cols="12" align="center">
-        <h3>Move Input Here (hide if scrolling)</h3>
+        <strong>It Is Your Move</strong>
+        <v-form @submit.prevent="submitMove">
+          <v-row align="center">
+            <v-spacer />
+            <v-col cols="2">
+              <strong>Move</strong>
+            </v-col>
+              <v-col cols="2">
+                <v-text-field
+                v-model="activeSquare"
+                :error-messages="activeSquareErrors"
+                required
+                @input="$v.activeSquare.$touch()"
+                @blur="$v.activeSquare.$touch()"
+                label="Square"/>
+              </v-col>
+              <v-col cols="1">
+                <strong> To </strong>
+              </v-col>
+              <v-col cols="2">
+                <v-text-field
+                v-model="targetSquare"
+                :error-messages="targetSquareErrors"
+                required
+                @input="$v.targetSquare.$touch()"
+                @blur="$v.targetSquare.$touch()"
+                label="Target"/>
+              </v-col>
+            <v-spacer />
+          </v-row>
+        </v-form>
       </v-col>
     </v-row>
   </v-container>
@@ -40,6 +70,7 @@ export default {
     data () {
         return {
             game: null,
+            activeSquare: '',
             translatedGameState: {
                 0: Array(8), //row 8
                 1: Array(8),
@@ -76,15 +107,11 @@ export default {
             }
         },
         pieceStyle() {
-            switch (this.$vuetify.breakpoint.name) {
-            case 'xs': return { width: '20px', height: '20px' }
-            case 'sm': return { width: '30px', height: '30px' }
-            case 'md': return { width: '40px', height: '40px' }
-            case 'lg': return { width: '45px', height: '45px' }
-            case 'xl': return { width: '60px', height: '60px' } // TODO
-            }
+            let edge = this.getTileEdge();
+
+            return { width: edge, height: edge };
         },
-        horzSize() {
+        horzFrameSize() {
             switch (this.$vuetify.breakpoint.name) {
             case 'xs': return { width: '180px', height: '10px' }
             case 'sm': return { width: '260px', height: '10px' }
@@ -93,7 +120,7 @@ export default {
             case 'xl': return { width: '60px', height: '10px' } // TODO
             }
         },
-        vertSize() {
+        vertFrameSize() {
             switch (this.$vuetify.breakpoint.name) {
             case 'xs': return { width: '10px', height: '160px' }
             case 'sm': return { width: '10px', height: '240px' }
@@ -123,15 +150,19 @@ export default {
             let piece = this.translatedGameState[row - 1][col - 1];
             return `/game/${piece}.png`;
         },
-        tileStyle(row, col) {
+        getTileBgStyle(row, col) {
             let bg = (col + row) % 2 === 0 ? "url('/game/b.png')" : "url('/game/g.png')";
-            
+            let edge = this.getTileEdge();
+
+            return { width: edge, height: edge, background: bg };
+        },
+        getTileEdge() {
             switch (this.$vuetify.breakpoint.name) {
-            case 'xs': return { width: '20px', height: '20px', background: bg }
-            case 'sm': return { width: '30px', height: '30px', background: bg }
-            case 'md': return { width: '40px', height: '40px', background: bg }
-            case 'lg': return { width: '45px', height: '45px', background: bg }
-            case 'xl': return { width: '60px', height: '60px', background: bg } // TODO
+            case 'xs': return '20px'
+            case 'sm': return '30px'
+            case 'md': return '40px'
+            case 'lg': return '45px'
+            case 'xl': return '60px' // TODO
             }
         },
         translateGameState (gameState) {
@@ -151,6 +182,9 @@ export default {
         gameHistory () {
             return this.game.history();
         },
+        submitMove () {
+            console.log('submit move')
+        }
     }
 }
 </script>
