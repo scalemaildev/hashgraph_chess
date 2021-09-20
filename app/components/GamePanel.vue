@@ -7,9 +7,9 @@
                     :style="vertSize"/>
         <div v-for="col in 8" :key="col">
           <div v-for="row in 8" :key="row">
-            <div :style="tileSize">
-              <nuxt-img :src="getTile(row,col)"
-                        :style="tileSize"/>
+            <div :style="tileStyle(row, col)">
+              <nuxt-img :src="getTile(row, col)"
+                        :style="pieceStyle"/>
             </div>
           </div>  
         </div>
@@ -71,11 +71,11 @@ export default {
                 } else if (turn == 'b') {
                     return 'Black to Move'
                 } else {
-                    return 'Game Over'
+                    return 'No Player'
                 }
             }
         },
-        tileSize(row, col) {
+        pieceStyle() {
             switch (this.$vuetify.breakpoint.name) {
             case 'xs': return { width: '20px', height: '20px' }
             case 'sm': return { width: '30px', height: '30px' }
@@ -122,6 +122,17 @@ export default {
         getTile(row, col) {
             let piece = this.translatedGameState[row - 1][col - 1];
             return `/game/${piece}.png`;
+        },
+        tileStyle(row, col) {
+            let bg = (col + row) % 2 === 0 ? "url('/game/b.png')" : "url('/game/g.png')";
+            
+            switch (this.$vuetify.breakpoint.name) {
+            case 'xs': return { width: '20px', height: '20px', background: bg }
+            case 'sm': return { width: '30px', height: '30px', background: bg }
+            case 'md': return { width: '40px', height: '40px', background: bg }
+            case 'lg': return { width: '45px', height: '45px', background: bg }
+            case 'xl': return { width: '60px', height: '60px', background: bg } // TODO
+            }
         },
         translateGameState (gameState) {
             for (let row = 0; row < gameState.length; row++) {
