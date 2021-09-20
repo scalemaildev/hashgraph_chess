@@ -23,16 +23,16 @@ export const mutations = {
     },
     CREATE_MATCH_OBJECT(state, messageData) {
         let topicId = messageData.topicId;
-        let player1 = messageData.player1;
-        let player2 = messageData.player2;
+        let playerWhite = messageData.playerWhite;
+        let playerBlack = messageData.playerBlack;
         
         this._vm.$set(state.MATCHES, topicId, {
             created: true,
-            player1: player1,
-            player2: player2,
+            playerWhite: playerWhite,
+            playerBlack: playerBlack,
             messages: [{
                 account: 'Server',
-                message: "Started a new match between " + player1 + " and " + player2 + "..."
+                message: "Started a new match between " + playerWhite + " and " + playerBlack + "..."
             }],
             pgn: null
         });
@@ -44,7 +44,7 @@ export const mutations = {
         let topicId = messageData.topicId;
         let message = messageData.message;
         let operator = messageData.operator;
-        let topicPlayers = [state.MATCHES[topicId].player1, state.MATCHES[topicId].player2];
+        let topicPlayers = [state.MATCHES[topicId].playerWhite, state.MATCHES[topicId].playerBlack];
 
         if (!topicPlayers.includes(operator)) {
             console.log('Rejected a chat message from: ' + operator);
@@ -106,8 +106,8 @@ export const actions = {
             let newMatchData = {
                 messageType: 'matchCreation',
                 topicId: response.newTopicId,
-                player1: context.player1,
-                player2: context.player2,
+                playerWhite: context.playerWhite,
+                playerBlack: context.playerBlack,
             };
             
             this.dispatch('ASYNC_EMIT', {

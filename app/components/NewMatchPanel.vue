@@ -118,8 +118,8 @@ export default {
             this.creatingMatch = true;
             
             const response = await this.CREATE_MATCH({
-                'player1': this.ACCOUNT_ID,
-                'player2': this.opponentAccountId
+                'playerWhite': this.ACCOUNT_ID,
+                'playerBlack': this.opponentAccountId
             });
 
             if (response.result == 'SUCCESS') {

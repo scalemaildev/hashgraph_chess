@@ -7,7 +7,7 @@
                     :style="vertFrameSize"/>
         <div v-for="col in 8" :key="col">
           <div v-for="row in 8" :key="row">
-            <div :style="getTileBgStyle(row, col)">
+            <div :style="getTileBg(row, col)">
               <nuxt-img :src="getTile(row, col)"
                         :style="pieceStyle"/>
             </div>
@@ -26,7 +26,7 @@
       <v-col cols="12" align="center">
         <strong>It Is Your Move</strong>
         <v-form
-          @submit.prevent="submit">
+          @submit.prevent="submitMove">
           <v-row align="center">
             <v-spacer />
             <v-col cols="2">
@@ -54,7 +54,7 @@
                 label="Target"/>
               </v-col>
               <v-col cols="2">
-                <v-btn type="submit">Send</v-btn>
+                <v-btn type="submitMove">Send</v-btn>
               </v-col>
             <v-spacer />
           </v-row>
@@ -76,7 +76,7 @@ export default {
     props: ['topicId'],
     
     mixins: [validationMixin],
-
+    
     validations: {
         activeSquare: { required, squareRegex },
         targetSquare: { required, squareRegex },
@@ -85,8 +85,11 @@ export default {
     data () {
         return {
             game: null,
+            submittingMove: false,
             activeSquare: '',
             targetSquare: '',
+            playerWhite: '',
+            playerBlack: '',
             translatedGameState: {
                 0: Array(8), //row 8
                 1: Array(8),
@@ -101,7 +104,7 @@ export default {
     },
     
     computed: {
-        ...mapGetters('sessionStorage', ['MATCH_PGN']),
+        ...mapGetters('sessionStorage', ['MATCH_PGN', 'MATCH_DATA']),
         matchMoves () {
             return this.MATCH_PGN(this.topicId);
         },
@@ -131,10 +134,10 @@ export default {
         },
         pieceStyle() {
             let edge = this.getTileEdge();
-
+            
             return { width: edge, height: edge };
         },
-        horzFrameSize() {
+        horzFrameSize() { // TODO: fix heights for scale
             switch (this.$vuetify.breakpoint.name) {
             case 'xs': return { width: '180px', height: '10px' }
             case 'sm': return { width: '260px', height: '10px' }
@@ -143,7 +146,7 @@ export default {
             case 'xl': return { width: '60px', height: '10px' } // TODO
             }
         },
-        vertFrameSize() {
+        vertFrameSize() { // TODO: fix widths for scale
             switch (this.$vuetify.breakpoint.name) {
             case 'xs': return { width: '10px', height: '160px' }
             case 'sm': return { width: '10px', height: '240px' }
@@ -163,6 +166,7 @@ export default {
     created () {
         this.game = new Chess();
         this.translateGameState(this.game.board());
+        this.assignPlayerColors();
     },
     
     mounted () {
@@ -173,10 +177,10 @@ export default {
             let piece = this.translatedGameState[row - 1][col - 1];
             return `/game/${piece}.png`;
         },
-        getTileBgStyle(row, col) {
+        getTileBg(row, col) {
             let bg = (col + row) % 2 === 0 ? "url('/game/b.png')" : "url('/game/g.png')";
             let edge = this.getTileEdge();
-
+            
             return { width: edge, height: edge, background: bg };
         },
         getTileEdge() {
@@ -188,13 +192,19 @@ export default {
             case 'xl': return '60px' // TODO
             }
         },
+        assignPlayerColors() {
+            this.playerWhite = this.MATCH_DATA(this.topicId).playerWhite;
+            this.playerBlack = this.MATCH_DATA(this.topicId).playerBlack;
+            console.log(this.playerWhite);
+            console.log(this.playerBlack);
+        },
         translateGameState (gameState) {
             for (let row = 0; row < gameState.length; row++) {
                 for (let col = 0; col < gameState[row].length; col++) {
                     if (!!gameState[row][col]) {
                         let pieceType = gameState[row][col].type;
                         let pieceColor = gameState[row][col].color;
-
+                        
                         this.translatedGameState[row][col] = pieceColor + pieceType;
                     } else {
                         this.translatedGameState[row][col] = 'blank';
@@ -205,8 +215,15 @@ export default {
         gameHistory () {
             return this.game.history();
         },
-        submit () {
-            console.log('submit move')
+        submitMove () {
+            this.$v.$touch();
+            if (!this.$v.$invalid) {
+                this.submittingMove = true;
+                console.log('Moving ' + this.activeSquare + 'to ' + this.targetSquare);
+                this.activeSquare = '';
+                this.targetSquare = '';
+                this.submittingMove = false;
+            }
         }
     }
 }
