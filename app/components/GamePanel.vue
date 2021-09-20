@@ -3,7 +3,7 @@
     <v-row no-gutters align="center" class="flex-column d-flex">
       <nuxt-img src="/game/border_top.png" :style="horzSize"/>
       <div class="d-flex" style="position: relative">
-          <nuxt-img src="/game/border_left_legend.png" 
+          <nuxt-img src="/game/border_left_legend.png"
                     :style="vertSize"/>
         <div v-for="col in 8" :key="col">
           <div v-for="row in 8" :key="row">
@@ -41,14 +41,14 @@ export default {
         return {
             game: null,
             translatedGameState: {
-                0: ['','','','','','','',''], //row 8
-                1: ['','','','','','','',''],
-                2: ['','','','','','','',''],
-                3: ['','','','','','','',''],
-                4: ['','','','','','','',''],
-                5: ['','','','','','','',''],
-                6: ['','','','','','','',''],
-                7: ['','','','','','','',''] // row 1
+                0: Array(8), //row 8
+                1: Array(8),
+                2: Array(8),
+                3: Array(8),
+                4: Array(8),
+                5: Array(8),
+                6: Array(8),
+                7: Array(8) // row 1
             }
         }
     },
@@ -75,7 +75,7 @@ export default {
                 }
             }
         },
-        tileSize() {
+        tileSize(row, col) {
             switch (this.$vuetify.breakpoint.name) {
             case 'xs': return { width: '20px', height: '20px' }
             case 'sm': return { width: '30px', height: '30px' }
@@ -116,7 +116,6 @@ export default {
     },
     
     mounted () {
-        console.log(this.game.pgn());
     },
     
     methods: {
@@ -124,25 +123,16 @@ export default {
             let piece = this.translatedGameState[row - 1][col - 1];
             return `/game/${piece}.png`;
         },
-        getTileColor(row, col) {
-            if (row % 2 == col % 2) {
-                return 'g' // tile is light
-            } else {
-                return 'b' // tile is dark
-            }
-        },
         translateGameState (gameState) {
             for (let row = 0; row < gameState.length; row++) {
                 for (let col = 0; col < gameState[row].length; col++) {
-                    let tileColor = this.getTileColor(row, col);
-                    
                     if (!!gameState[row][col]) {
                         let pieceType = gameState[row][col].type;
                         let pieceColor = gameState[row][col].color;
 
-                        this.translatedGameState[row][col] = pieceColor + pieceType + tileColor;
+                        this.translatedGameState[row][col] = pieceColor + pieceType;
                     } else {
-                        this.translatedGameState[row][col] = tileColor;
+                        this.translatedGameState[row][col] = 'blank';
                     }
                 }
             }

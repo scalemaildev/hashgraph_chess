@@ -1,5 +1,1 @@
-
-    <div v-for="tile in Array(8).keys()" :key="tile.key">
-      <img :src="getBaseTile(tile,0)" class="tileImage">
-    </div>
-
+Daniela De Lena - artist

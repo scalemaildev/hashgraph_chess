@@ -1,4 +1,5 @@
 * NOW
+** TODO Replace sprite mess with the background method from codeplay
 ** TODO Chess move input field
 *** Validate that it's the current player's turn
 *** Text input field for square and another for move
