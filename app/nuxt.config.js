@@ -37,13 +37,13 @@ export default {
     buildModules: [
         // https://go.nuxtjs.dev/vuetify
         '@nuxtjs/vuetify',
-        '@nuxt/image'
     ],
 
     // Modules: https://go.nuxtjs.dev/config-modules
     modules: [
         'nuxt-socket-io',
-        'nuxt-vuex-localstorage'
+        'nuxt-vuex-localstorage',
+        '@nuxt/image'
     ],
 
     io: {

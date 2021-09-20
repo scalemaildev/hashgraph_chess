@@ -1,24 +1,23 @@
 <template>
   <v-container fluid class="gamePanel-wrapper">
     <v-row no-gutters align="center" class="flex-column d-flex">
-      <img :src="require(`~/assets/game/border_top.png`)" class="gameBoard-horz">
+      <nuxt-img src="/game/border_top.png" :style="horzSize"/>
       <div class="d-flex" style="position: relative">
-          <img :src="require(`~/assets/game/border_left_legend.png`)" class="gameBoard-vert">
+          <nuxt-img src="/game/border_left_legend.png" 
+                    :style="vertSize"/>
         <div v-for="col in 8" :key="col">
           <div v-for="row in 8" :key="row">
-            <div
-              :style="{
-                      width: '40px',
-                      height: '40px',
-                      }"
-              >
-              <img :src="getTile(row,col)" class="tileImage">
+            <div :style="tileSize">
+              <nuxt-img :src="getTile(row,col)"
+                        :style="tileSize"/>
             </div>
           </div>  
         </div>
-        <img :src="require(`~/assets/game/border_right.png`)" class="gameBoard-vert">
+        <img src="/game/border_right.png"
+           :style="vertSize">
       </div>
-      <img :src="require(`~/assets/game/border_bottom_legend.png`)" class="gameBoard-horz">
+      <img src="/game/border_bottom_legend.png"
+           :style="horzSize">
     </v-row>
     <v-row>
       <v-col align="center">
@@ -61,6 +60,33 @@ export default {
                 return this.game.board();
             }
         },
+        tileSize() {
+            switch (this.$vuetify.breakpoint.name) {
+            case 'xs': return { width: '20px', height: '20px' }
+            case 'sm': return { width: '30px', height: '30px' }
+            case 'md': return { width: '40px', height: '40px' }
+            case 'lg': return { width: '45px', height: '45px' }
+            case 'xl': return { width: '60px', height: '60px' } // TODO
+            }
+        },
+        horzSize() {
+            switch (this.$vuetify.breakpoint.name) {
+            case 'xs': return { width: '180px', height: '10px' }
+            case 'sm': return { width: '260px', height: '10px' }
+            case 'md': return { width: '340px', height: '10px' }
+            case 'lg': return { width: '380px', height: '10px' }
+            case 'xl': return { width: '60px', height: '10px' } // TODO
+            }
+        },
+        vertSize() {
+            switch (this.$vuetify.breakpoint.name) {
+            case 'xs': return { width: '10px', height: '160px' }
+            case 'sm': return { width: '10px', height: '240px' }
+            case 'md': return { width: '10px', height: '320px' }
+            case 'lg': return { width: '10px', height: '360px' }
+            case 'xl': return { width: '10px', height: '60px' } // TODO
+            }
+        }
     },
     
     watch: {
@@ -80,7 +106,7 @@ export default {
     methods: {
         getTile(row, col) {
             let piece = this.translatedGameState[row - 1][col - 1];
-            return require(`~/assets/game/${piece}.png`);
+            return `/game/${piece}.png`;
         },
         getTileColor(row, col) {
             if (row % 2 == col % 2) {

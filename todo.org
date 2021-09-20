@@ -1,23 +1,24 @@
 * NOW
 ** TODO Get a chessboard.js with chess.js rules into the game page
 *** Fix the styling and add frames
+*** Add nuxt-image scaling for visual breakpoints
 ** TODO Chess moves go to the chess moves array
 **** Needs a validation that the move came from the current player(?)
 **** Needs a validatino that the chess move was legal(?)
 **** Chess.js might take care of the above
 ** TODO Modify chessboard to send and receive moves over HCS
 * FUTURE
-** TODO Limit moves and chat messages to valid account id's
-*** Use the public key method from discord screens
-** TODO Need a timeout for topic subbing (and visible error message)
 ** TODO Step forward/back through chess moves history
 ** TODO Who's turn is it? On game panel
+** TODO Do xl breakpoints and check everything on big monitor
+** TODO Observer mode handling
+- Disable chat and moves for non-players
 ** TODO Game over handling
 - Don't accept any more moves
 - Display who won
-** TODO Observer mode handling
-- Disable chat and moves for non-players
-** TODO Add footer with terms of use
-** TODO Add github link to the start page(s)
+** TODO Add footer with terms of use, github link, and credits to start page(s)
+** TODO Need a timeout for topic subbing (and visible error message)
+** TODO Limit moves and chat messages to valid account id's
+*** Use the public key method from discord screens
 * BUGS
 ** The chat window doesn't scroll to the bottom on new messages
