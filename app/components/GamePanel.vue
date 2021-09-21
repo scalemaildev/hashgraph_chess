@@ -65,12 +65,14 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required, helpers } from 'vuelidate/lib/validators';
 import Chess from 'chess.js';
 
 const squareRegex = helpers.regex('squareRegex', /^[a-hA-H][1-8]$/);
+const legalActiveSquare = (square, vm) => vm.getLegalMoves(square).length() > 0;
+const legalTargetSquare = (values, vm) => vm.getLegalMoves(values.activeSquare).includes(values.targetSquare);
 
 export default {
     props: ['topicId'],
@@ -86,6 +88,7 @@ export default {
         return {
             game: null,
             submittingMove: false,
+            submitError: false,
             activeSquare: '',
             targetSquare: '',
             playerWhite: '',
@@ -113,6 +116,7 @@ export default {
             if (!this.$v.activeSquare.$dirty) return errors
             !this.$v.activeSquare.required && errors.push('Required');
             !this.$v.activeSquare.squareRegex && errors.push('Should look like e4 or E4')
+            !this.$v.activeSquare.legalActiveSquare && errors.push('No legal moves for this square')
             return errors;
         },
         targetSquareErrors () {
@@ -120,6 +124,7 @@ export default {
             if (!this.$v.targetSquare.$dirty) return errors
             !this.$v.targetSquare.required && errors.push('Required');
             !this.$v.targetSquare.squareRegex && errors.push('Should look like e4 or E4')
+            !this.$v.targetSquare.legalTargetSquare && errors.push('Illegal move')
             return errors;
         },
         gameState () {
@@ -173,6 +178,7 @@ export default {
     },
     
     methods: {
+        ...mapActions('sessionStorage', ['SEND_MESSAGE']),
         getTile(row, col) {
             let piece = this.translatedGameState[row - 1][col - 1];
             return `/game/${piece}.png`;
@@ -216,14 +222,28 @@ export default {
         getLegalMoves (square) {
             return this.game.moves({ square: square });
         },
-        submitMove () {
+        async submitMove () {
             this.$v.$touch();
             if (!this.$v.$invalid) {
                 this.submittingMove = true;
-                console.log('Moving ' + this.activeSquare + 'to ' + this.targetSquare);
-                this.activeSquare = '';
-                this.targetSquare = '';
-                this.submittingMove = false;
+                
+                let messagePayload = {
+	            messageType: 'chessMove',
+                    topicId: this.topicId,
+                    activeSquare: this.activeSquare,
+                    targetSquare: this.targetSquare
+                };
+                
+                const response = await this.SEND_MESSAGE(messagePayload);
+
+                if (response.result == 'SUCCESS') {
+                    this.activeSquare = '';
+                    this.targetSquare = '';
+                    this.submittingMove = false;
+                } else {
+                    this.submittingMove = false;
+                    this.submitError = true;
+                }
             }
         }
     }

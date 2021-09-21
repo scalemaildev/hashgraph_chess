@@ -10,6 +10,7 @@
 **** Needs a validation that the chess move was legal(?)
 **** Chess.js might take care of the above
 ** TODO Modify chessboard to send and receive moves over HCS
+** TODO Add vuelidate to message box to prevent blank messages
 ** TODO Add pgn info for current displayed position
 ** TODO Step forward/back through chess moves history
 ** TODO Who's turn is it? On game panel
