@@ -34,7 +34,7 @@ export const mutations = {
                 account: 'Server',
                 message: "Started a new match between " + playerWhite + " and " + playerBlack + "..."
             }],
-            pgn: null
+            moves: []
         });
     },
     CLEAR_MATCH_OBJECT(state, topicId) {
@@ -52,6 +52,23 @@ export const mutations = {
             state.MATCHES[topicId].messages.push({
                 account: operator,
                 message: message
+            });
+        }
+    },
+    PROCESS_CHESS_MOVE(state, messageData) {
+        let topicId = messageData.topicId;
+        let activeSquare = messageData.activeSquare;
+        let targetSquare = messageData.targetSquare;
+        let operator = messageData.operator;
+        let topicPlayers = [state.MATCHES[topicId].playerWhite, state.MATCHES[topicId].playerBlack];
+
+        if (!topicPlayers.includes(operator)) {
+            console.log('Rejected a chess move from: ' + operator);
+        } else {
+            state.MATCHES[topicId].moves.push({
+                operator: operator,
+                activeSquare: activeSquare,
+                targetSquare: targetSquare
             });
         }
     },
@@ -148,8 +165,7 @@ export const actions = {
             commit('PROCESS_CHAT_MESSAGE', messageData);
             break;
         case 'chessMove':
-            // commit the move to the game's pgn
-            console.log(messageData);
+            commit('PROCESS_CHESS_MOVE', messageData);
             break;
         default:
             console.log('Got unknown message type: ' + messageData.messageType);
@@ -169,9 +185,9 @@ export const getters = {
             return state.MATCHES[topicId].messages;
         };
     },
-    MATCH_PGN: (state) => {
+    MATCH_MOVES: (state) => {
         return topicId => {
-            return state.MATCHES[topicId].pgn;
+            return state.MATCHES[topicId].moves;
         };
     },
 };
