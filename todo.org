@@ -1,10 +1,9 @@
 * NOW
 ** TODO Chess move input field
-*** Text input field for square and another for move
-*** Send button as well as form with enter key
-*** Fix form submitting with invalid entries
-*** Use pgn validation to validate the moves for the square (vuelidate)
-*** Test with console.log() first
+*** DONE Text input field for square and another for move
+*** DONE Send button as well as form with enter key
+*** TODO Use pgn validation to validate the moves for the square (vuelidate)
+*** TODO Test with console.log() first
 * FUTURE
 ** TODO Chess moves go to the chess moves array
 **** Needs a validation that the move came from the current player(?)
@@ -14,7 +13,8 @@
 ** TODO Add pgn info for current displayed position
 ** TODO Step forward/back through chess moves history
 ** TODO Who's turn is it? On game panel
-*** v-show for whose turn on game panel
+*** White To Move, Black To Move, or Game Over
+*** v-show for if its the current player's turn
 ** TODO Do xl breakpoints and check everything on big monitor
 ** TODO Observer mode handling
 - Disable chat and moves for non-players
@@ -25,6 +25,7 @@
 ** TODO Need a timeout for topic subbing (and visible error message)
 ** TODO Limit moves and chat messages to valid account id's
 *** Use the public key method from discord screens
+** TODO Resign button (with client-side validation like a move)
 * BUGS
 ** The chat window doesn't scroll to the bottom on new messages
 ** Fix styling on move input form between breakpoints

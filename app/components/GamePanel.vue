@@ -78,8 +78,8 @@ export default {
     mixins: [validationMixin],
     
     validations: {
-        activeSquare: { required, squareRegex },
-        targetSquare: { required, squareRegex },
+        activeSquare: { required, squareRegex, legalActiveSquare },
+        targetSquare: { required, squareRegex, legalTargetSquare },
     },
     
     data () {
@@ -195,8 +195,6 @@ export default {
         assignPlayerColors() {
             this.playerWhite = this.MATCH_DATA(this.topicId).playerWhite;
             this.playerBlack = this.MATCH_DATA(this.topicId).playerBlack;
-            console.log(this.playerWhite);
-            console.log(this.playerBlack);
         },
         translateGameState (gameState) {
             for (let row = 0; row < gameState.length; row++) {
@@ -214,6 +212,9 @@ export default {
         },
         gameHistory () {
             return this.game.history();
+        },
+        getLegalMoves (square) {
+            return this.game.moves({ square: square });
         },
         submitMove () {
             this.$v.$touch();
