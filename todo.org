@@ -1,32 +1,35 @@
 * NOW
-** TODO Chess move input field
+** TODO Chess move input
 *** DONE Text input field for square and another for move
 *** DONE Send button as well as form with enter key
 *** TODO Use pgn validation to validate the moves for the square (vuelidate)
-*** TODO Test with console.log() first
+*** TODO Fix up the emit stuff
+*** TODO Pass the moves to match data, handle the player validation in vuex and the turn validation in game panel -- use computed/watched to actually perform the moves in order from match data
+*** TODO Game board should auto display a new move that comes in
+*** TODO Might need to make the move verbose to capture stuff like promotions
 * FUTURE
-** TODO Chess moves go to the chess moves array
-**** Needs a validation that the move came from the current player(?)
-**** Needs a validation that the chess move was legal(?)
-**** Chess.js might take care of the above
-** TODO Modify chessboard to send and receive moves over HCS
-** TODO Add vuelidate to message box to prevent blank messages
-** TODO Add pgn info for current displayed position
+** TODO Add pgn info for current displayed position beneath board
 ** TODO Step forward/back through chess moves history
 ** TODO Who's turn is it? On game panel
 *** White To Move, Black To Move, or Game Over
 *** v-show for if its the current player's turn
-** TODO Do xl breakpoints and check everything on big monitor
+** TODO Add vuelidate to message box to prevent blank messages
+** TODO Do a big runthrough of stylings for each monitor breakpoint
+*** Use both the big computer and laptop for each breakpoint
+*** Use big computer for XL
+*** Style the arrows, frames, and tiles
+*** Remember the frames are undersized and should be scaled out
+*** Fix styling on move input form between breakpoints as well
 ** TODO Observer mode handling
 - Disable chat and moves for non-players
 ** TODO Game over handling
 - Don't accept any more moves
 - Display who won
 ** TODO Add footer with terms of use, github link, and credits to start page(s)
-** TODO Need a timeout for topic subbing (and visible error message)
-** TODO Limit moves and chat messages to valid account id's
-*** Use the public key method from discord screens
+** TODO Change player validation to use public key method
 ** TODO Resign button (with client-side validation like a move)
+** TODO Need a timeout for topic subbing (and visible error message)
+** TODO Error handling for when move submit fails (revert to original state)
+*** Should only fail if there's a loss of connection?
 * BUGS
 ** The chat window doesn't scroll to the bottom on new messages
-** Fix styling on move input form between breakpoints
