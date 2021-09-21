@@ -147,6 +147,10 @@ export const actions = {
         case 'chatMessage':
             commit('PROCESS_CHAT_MESSAGE', messageData);
             break;
+        case 'chessMove':
+            // commit the move to the game's pgn
+            console.log(messageData);
+            break;
         default:
             console.log('Got unknown message type: ' + messageData.messageType);
         }

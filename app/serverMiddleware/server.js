@@ -22,13 +22,14 @@ io.on('connection', socket => {
         io.emit('unsetClient', response);
     });
 
-    socket.on('createNewTopic', async (context) => {
+    socket.on('createNewTopic', async () => {
         let response = await hashgraph.createNewTopic();
         io.emit('createNewTopic', response);
     });
 
     socket.on('sendHCSMessage', async (context) => {
-        hashgraph.sendHCSMessage(context);
+        let response = await hashgraph.sendHCSMessage(context);
+        io.emit('sendHCSMessage', response);
     });
 
     socket.on('subscribeToTopic', async (context) => {
