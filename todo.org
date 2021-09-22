@@ -2,10 +2,17 @@
 ** TODO Chess move input
 *** DONE Text input field for square and another for move
 *** DONE Send button as well as form with enter key
+*** TODO Get the index of the hcs message from hcs and add it to the move for filtering
 *** TODO Use pgn validation to validate the moves for the square (vuelidate)
 *** TODO Fix up the emit stuff
 *** TODO Pass the moves to match data, handle the player validation in vuex and the turn validation in game panel -- use computed/watched to actually perform the moves in order from match data
+**** game moves as a watched getter from MATCHES
+**** when a new move comes in, validate it, then call the move on game()
+**** update the pgn with the game's current pgn (scrolling will use it)
 *** TODO Game board should auto display a new move that comes in
+*** TODO Move the game board to a new component?
+**** Game board should just take the pgn and arrange itself to display it
+**** Take the styling functions into the new component
 *** TODO Might need to make the move verbose to capture stuff like promotions
 * FUTURE
 ** TODO Add pgn info for current displayed position beneath board
@@ -26,6 +33,9 @@
 - Don't accept any more moves
 - Display who won
 ** TODO Add footer with terms of use, github link, and credits to start page(s)
+*** Artist for sprites was Daniela De Lena
+*** Mention hedera discord and stack overflow
+*** And modules like nuxt-socket-io and chess.js
 ** TODO Change player validation to use public key method
 ** TODO Resign button (with client-side validation like a move)
 ** TODO Need a timeout for topic subbing (and visible error message)

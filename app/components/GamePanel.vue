@@ -71,8 +71,8 @@ import { required, helpers } from 'vuelidate/lib/validators';
 import Chess from 'chess.js';
 
 const squareRegex = helpers.regex('squareRegex', /^[a-hA-H][1-8]$/);
-const legalActiveSquare = (square, vm) => vm.getLegalMoves(square).length() > 0;
-const legalTargetSquare = (values, vm) => vm.getLegalMoves(values.activeSquare).includes(values.targetSquare);
+var legalActiveSquare = (value, vm) => { return vm.getLegalMoves(vm.activeSquare).length > 0 };
+var legalTargetSquare = (value, vm) => { return vm.getLegalMoves(vm.activeSquare).includes(vm.targetSquare) };
 
 export default {
     props: ['topicId'],
@@ -87,29 +87,21 @@ export default {
     data () {
         return {
             game: null,
+            pgn: '',
             submittingMove: false,
             submitError: false,
             activeSquare: '',
             targetSquare: '',
             playerWhite: '',
             playerBlack: '',
-            translatedGameState: {
-                0: Array(8), //row 8
-                1: Array(8),
-                2: Array(8),
-                3: Array(8),
-                4: Array(8),
-                5: Array(8),
-                6: Array(8),
-                7: Array(8) // row 1
-            }
+            translatedGameState: {}
         }
     },
     
     computed: {
-        ...mapGetters('sessionStorage', ['MATCH_PGN', 'MATCH_DATA']),
+        ...mapGetters('sessionStorage', ['MATCH_DATA', 'MATCH_MOVES']),
         matchMoves () {
-            return this.MATCH_PGN(this.topicId);
+            return this.MATCH_MOVES(this.topicId);
         },
         activeSquareErrors () {
             const errors = [];
@@ -166,12 +158,21 @@ export default {
         gameState (newGameState, oldGameState) {
             this.translateGameState(newGameState);
         },
+        matchMoves (newMatchMoves, oldMatchMoves) {
+            // finds all the elements of arr2 that are not in arr1
+            //let newMoves = newMatchMoves.filter( 
+                //val => !oldMatchMoves.find( move => move.from === val)
+            //); // outputs "newValue"
+
+            console.log(newMatchMoves);
+        }
     },
     
     created () {
+        this.setupTranslatedGameState();
+        this.assignPlayerColors();
         this.game = new Chess();
         this.translateGameState(this.game.board());
-        this.assignPlayerColors();
     },
     
     mounted () {
@@ -201,6 +202,10 @@ export default {
         assignPlayerColors() {
             this.playerWhite = this.MATCH_DATA(this.topicId).playerWhite;
             this.playerBlack = this.MATCH_DATA(this.topicId).playerBlack;
+        },
+        setupTranslatedGameState () {
+            for (let i = 0; i <= 7; i++)
+            this.translatedGameState[i] = Array(8);
         },
         translateGameState (gameState) {
             for (let row = 0; row < gameState.length; row++) {

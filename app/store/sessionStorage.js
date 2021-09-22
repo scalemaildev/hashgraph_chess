@@ -67,6 +67,7 @@ export const mutations = {
         } else {
             state.MATCHES[topicId].moves.push({
                 operator: operator,
+                moveIndex: '', // get the index from hcs
                 activeSquare: activeSquare,
                 targetSquare: targetSquare
             });
