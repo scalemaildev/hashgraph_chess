@@ -34,7 +34,7 @@ export const mutations = {
                 account: 'Server',
                 message: "Started a new match between " + playerWhite + " and " + playerBlack + "..."
             }],
-            moves: []
+            pgns: []
         });
     },
     CLEAR_MATCH_OBJECT(state, topicId) {
@@ -43,6 +43,7 @@ export const mutations = {
     PROCESS_CHAT_MESSAGE(state, messageData) {
         let topicId = messageData.topicId;
         let message = messageData.message;
+        let messageIndex = messageData.messageIndex;
         let operator = messageData.operator;
         let topicPlayers = [state.MATCHES[topicId].playerWhite, state.MATCHES[topicId].playerBlack];
 
@@ -51,25 +52,25 @@ export const mutations = {
         } else {
             state.MATCHES[topicId].messages.push({
                 account: operator,
+                messageIndex: messageIndex,
                 message: message
             });
         }
     },
     PROCESS_CHESS_MOVE(state, messageData) {
         let topicId = messageData.topicId;
-        let activeSquare = messageData.activeSquare;
-        let targetSquare = messageData.targetSquare;
+        let messageIndex = messageData.sequenceNumber;
+        let newPgn = messageData.newPgn;
         let operator = messageData.operator;
         let topicPlayers = [state.MATCHES[topicId].playerWhite, state.MATCHES[topicId].playerBlack];
 
         if (!topicPlayers.includes(operator)) {
             console.log('Rejected a chess move from: ' + operator);
         } else {
-            state.MATCHES[topicId].moves.push({
+            state.MATCHES[topicId].pgns.push({
                 operator: operator,
-                moveIndex: '', // get the index from hcs
-                activeSquare: activeSquare,
-                targetSquare: targetSquare
+                messageIndex: messageIndex,
+                newPgn: newPgn
             });
         }
     },
@@ -187,9 +188,9 @@ export const getters = {
             return state.MATCHES[topicId].messages;
         };
     },
-    MATCH_MOVES: (state) => {
+    MATCH_PGNS: (state) => {
         return topicId => {
-            return state.MATCHES[topicId].moves;
+            return state.MATCHES[topicId].pgns;
         };
     },
 };

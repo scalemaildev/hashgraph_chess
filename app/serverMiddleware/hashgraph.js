@@ -105,7 +105,10 @@ function subscribeToTopic(io, topicIdString) {
             .setStartTime(0)
             .subscribe(HederaClient, res => {
                 let contents = new TextDecoder("utf-8").decode(res.contents);
-                io.emit('newHCSMessage', contents);
+                let contentsPayload = JSON.parse(contents);
+                contentsPayload['sequenceNumber'] = res.sequenceNumber.toString();
+                
+                io.emit('newHCSMessage', JSON.stringify(contentsPayload));
             });
         subscriptions[topicIdString] = sub;
     } catch (error) {

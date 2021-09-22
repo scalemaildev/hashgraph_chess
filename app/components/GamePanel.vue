@@ -72,7 +72,7 @@ import { validationMixin } from 'vuelidate';
 import { required, helpers } from 'vuelidate/lib/validators';
 import Chess from 'chess.js';
 
-const squareRegex = helpers.regex('squareRegex', /^[a-hA-H][1-8]$/);
+const squareRegex = helpers.regex('squareRegex', /^[a-h][1-8]$/);
 var legalActiveSquare = (value, vm) => { return vm.getLegalMoves(vm.activeSquare).length > 0 };
 var legalTargetSquare = (value, vm) => { return vm.getLegalMoves(vm.activeSquare).includes(vm.targetSquare) };
 
@@ -89,27 +89,29 @@ export default {
     data () {
         return {
             game: null,
-            pgn: '',
+            dummyGame: null,
             submittingMove: false,
             submitError: false,
             activeSquare: '',
             targetSquare: '',
+            promotion: '',
             playerWhite: '',
             playerBlack: '',
-            translatedGameState: {}
+            translatedGameState: {},
+            currentTurn: ''
         }
     },
     
     computed: {
-        ...mapGetters('sessionStorage', ['MATCH_DATA', 'MATCH_MOVES']),
-        matchMoves () {
-            return this.MATCH_MOVES(this.topicId);
+        ...mapGetters('sessionStorage', ['MATCH_DATA', 'MATCH_PGNS']),
+        matchPGNs () {
+            return this.MATCH_PGNS(this.topicId);
         },
         activeSquareErrors () {
             const errors = [];
             if (!this.$v.activeSquare.$dirty) return errors
             !this.$v.activeSquare.required && errors.push('Required');
-            !this.$v.activeSquare.squareRegex && errors.push('Should look like e4 or E4')
+            !this.$v.activeSquare.squareRegex && errors.push('Should look like e4, h1, etc')
             !this.$v.activeSquare.legalActiveSquare && errors.push('No legal moves for this square')
             return errors;
         },
@@ -159,13 +161,12 @@ export default {
         gameState (newGameState, oldGameState) {
             this.translateGameState(newGameState);
         },
-        matchMoves (newMatchMoves, oldMatchMoves) {
-            // finds all the elements of arr2 that are not in arr1
-            //let newMoves = newMatchMoves.filter( 
-            //val => !oldMatchMoves.find( move => move.from === val)
-            //); // outputs "newValue"
-            
-            console.log(newMatchMoves);
+        matchPGNs (newMatchPGNs, oldMatchPGNs) {
+            // need to filter the incoming topic messages here
+            // player in-game is already filtered in sessionData
+            // filter for double moves here (turn order)
+            // load the latest pgn and set the current turn
+            console.log(newMatchPGNs);
         }
     },
     
@@ -232,14 +233,25 @@ export default {
             this.$v.$touch();
             if (!this.$v.$invalid) {
                 this.submittingMove = true;
+
+                // give the dummy game current game state
+                let currentGameState = this.game.pgn();
+                this.dummyGame = new Chess();
+                this.dummyGame.load_pgn(currentGameState);
+
+                // make the move on the dummy board and grab the pgn
+                // TODO: add promotion handling (if statement)
+                this.dummyGame.move({ from: this.activeSquare, to: this.targetSquare });
+                let newPgn = this.dummyGame.pgn();
                 
                 let messagePayload = {
 	            messageType: 'chessMove',
                     topicId: this.topicId,
-                    activeSquare: this.activeSquare,
-                    targetSquare: this.targetSquare
+                    newPgn: newPgn
                 };
-                
+
+                // reset the dummy board and send the move
+                this.dummyGame = null;
                 const response = await this.SEND_MESSAGE(messagePayload);
                 
                 if (response.result == 'SUCCESS') {

@@ -5,16 +5,18 @@
 *** DONE Replace target square with a dropdown
 *** DONE Use pgn validation to validate the moves for the square (vuelidate)
 *** DONE Fix up the emit stuff
-*** TODO Get the index of the hcs message from hcs and add it to the move for filtering?
-*** TODO Pass the moves to match data, handle the player validation in vuex and the turn validation in game panel -- use computed/watched to actually perform the moves in order from match data
-**** game moves as a watched getter from MATCHES
-**** when a new move comes in, validate it, then call the move on game()
-**** update the pgn with the game's current pgn (scrolling will use it)
-*** TODO Game board should auto display a new move that comes in
+*** DONE Get the index of the hcs message from hcs and add it to the move for filtering?
+*** TODO Create a dummy chess game in gamePanel for generating the pgn
+*** TODO If a move is legal, load pgn into the dummy chess game and make the move there
+*** TODO Then get the pgn from the dummy chess game and send that over hcs
+*** TODO Whenever the matchData changes get the latest pgn and load that into the real chess game
+*** TODO Game board should jump to any new move that comes in
 *** TODO Move the game board to a new component?
 **** Game board should just take the pgn and arrange itself to display it
 **** Take the styling functions into the new component
 *** TODO Might need to make the move verbose to capture stuff like promotions
+*** TODO Need to add support for handling promotions
+**** users suggest a modal window with an extra menu option for promo
 * FUTURE
 ** TODO Add pgn info for current displayed position beneath board
 ** TODO Step forward/back through chess moves history
