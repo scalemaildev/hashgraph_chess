@@ -34,7 +34,7 @@ export const mutations = {
                 account: 'Server',
                 message: "Started a new match between " + playerWhite + " and " + playerBlack + "..."
             }],
-            pgns: []
+            pgns: ['']
         });
     },
     CLEAR_MATCH_OBJECT(state, topicId) {
@@ -206,9 +206,9 @@ export const getters = {
             return state.MATCHES[topicId].messages;
         };
     },
-    MATCH_PGNS: (state) => {
+    MATCH_PGN_LATEST: (state) => {
         return topicId => {
-            return state.MATCHES[topicId].pgns;
+            return state.MATCHES[topicId].pgns.at(-1).newPgn;
         };
     },
 };

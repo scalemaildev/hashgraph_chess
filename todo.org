@@ -1,17 +1,5 @@
 * NOW
 ** TODO Chess move input
-*** DONE Text input field for square and another for move
-*** DONE Send button as well as form with enter key
-*** DONE Replace target square with a dropdown
-*** DONE Use pgn validation to validate the moves for the square (vuelidate)
-*** DONE Fix up the emit stuff
-*** DONE Get the index of the hcs message from hcs and add it to the move for filtering?
-*** DONE Create a dummy chess game in gamePanel for generating the pgn
-*** DONE If a move is legal, load pgn into the dummy chess game and make the move there
-*** DONE Then get the pgn from the dummy chess game and send that over hcs
-*** DONE Whenever the matchData changes get the latest pgn and load that into the real chess game
-*** DONE The game board now needs to react to this.game.pgn()
-*** DONE Game board should jump to any new move that comes in
 *** TODO Currently the game updates but the board does not updated upon receiving a new move
 **** Fix the watch/computed properties
 **** Plan for a new, blank board as well as incoming moves
@@ -23,12 +11,12 @@
 *** TODO Need to add support for handling promotions
 **** users suggest a modal window with an extra menu option for promo
 * FUTURE
-** TODO Add pgn info for current displayed position beneath board
+** TODO Add displayed turn # for current displayed position beneath board
 ** TODO Step forward/back through chess moves history
 ** TODO Who's turn is it? On game panel
 *** White To Move, Black To Move, or Game Over
 *** v-show for if its the current player's turn
-** TODO Add vuelidate to message box to prevent blank messages
+** TODO Left and Right alignment for player 1/2 in the messages window
 ** TODO Do a big runthrough of stylings for each monitor breakpoint
 *** Use both the big computer and laptop for each breakpoint
 *** Use big computer for XL

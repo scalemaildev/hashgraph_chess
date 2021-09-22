@@ -89,6 +89,7 @@ export default {
     data () {
         return {
             game: new Chess(),
+            pgn: '',
             dummyGame: null,
             submittingMove: false,
             submitError: false,
@@ -97,16 +98,13 @@ export default {
             promotion: '',
             playerWhite: '',
             playerBlack: '',
-            translatedGameState: {},
-            currentTurn: ''
+            currentTurn: '',
+            translatedGameState: {}
         }
     },
     
     computed: {
-        ...mapGetters('sessionStorage', ['MATCH_DATA', 'MATCH_PGNS']),
-        matchPGNs () {
-            return this.MATCH_PGNS(this.topicId);
-        },
+        ...mapGetters('sessionStorage', ['MATCH_DATA', 'MATCH_PGN_LATEST']),
         activeSquareErrors () {
             const errors = [];
             if (!this.$v.activeSquare.$dirty) return errors
@@ -148,17 +146,15 @@ export default {
     },
     
     watch: {
-        matchPGNs (newMatchPGNs, oldMatchPGNs) {
-            let latestPGN = newMatchPGNs.at(-1).newPgn;
-            this.game.load_pgn(latestPGN);
-            this.translateGameState(this.game.board());
-        }
+        //gamePGN (newPGN, oldPGN) {
+        //console.log("the game's pgn was updated to" + newPGN);
+        //this.game.load_pgn(newPGN);
+        //this.translateGameState(this.game.board());
+        //},
     },
     
     created () {
-        this.setupTranslatedGameState();
-        this.assignPlayerColors();
-        this.translateGameState(this.game.board());
+        this.setupGameState();
     },
     
     mounted () {
@@ -189,9 +185,31 @@ export default {
             this.playerWhite = this.MATCH_DATA(this.topicId).playerWhite;
             this.playerBlack = this.MATCH_DATA(this.topicId).playerBlack;
         },
-        setupTranslatedGameState () {
-            for (let i = 0; i <= 7; i++)
-                this.translatedGameState[i] = Array(8);
+        initTranslatedGameState() {
+            for (let i = 0; i <= 7; i++) {
+                this.translatedGameState[i] = Array(8).fill('blank');
+            }
+        },
+        setupGameState () {
+            this.assignPlayerColors();
+
+            // set board to a bunch of empty tiles
+            this.initTranslatedGameState();
+
+            // load current pgn if it exists in session storage
+            if (!this.isNewMatch()) {
+                console.log('existing match pgn found'); //TODO remove me
+                this.pgn = this.MATCH_PGN_LATEST(this.topicId);
+                this.game.load_pgn(this.pgn);
+            } else {
+                console.log('this is a new match'); //TODO remove me
+            }
+
+            // translate pgn into the game board
+            this.translateGameState(this.game.board());
+        },
+        isNewMatch () {
+            return !this.MATCH_PGN_LATEST(this.topicId);
         },
         translateGameState (gameState) {
             for (let row = 0; row < gameState.length; row++) {
@@ -206,9 +224,6 @@ export default {
                     }
                 }
             }
-        },
-        gameHistory () {
-            return this.game.history();
         },
         getLegalMoves (square) {
             return this.game.moves({ square: square });
@@ -235,13 +250,14 @@ export default {
                     newPgn: newPgn
                 };
 
-                // reset the dummy board and send the move
+                // reset the dummy board/inputs and send the move
                 this.dummyGame = null;
+                this.activeSquare = '';
+                this.targetSquare = '';
+                this.promotion = '';
                 const response = await this.SEND_MESSAGE(messagePayload);
                 
                 if (response.result == 'SUCCESS') {
-                    this.activeSquare = '';
-                    this.targetSquare = '';
                     this.submittingMove = false;
                 } else {
                     this.submittingMove = false;
