@@ -148,11 +148,12 @@ export const actions = {
     },
 
     SEND_MESSAGE({ state }, messagePayload) {
-        this.dispatch('ASYNC_EMIT', {
+        let response = this.dispatch('ASYNC_EMIT', {
             eventName: 'sendHCSMessage',
             operator: state.ACCOUNT_ID,
             context: messagePayload
         });
+        return response;
     },
 
     PROCESS_MESSAGE({ commit }, messageResponse) {
@@ -166,8 +167,7 @@ export const actions = {
             commit('PROCESS_CHAT_MESSAGE', messageData);
             break;
         case 'chessMove':
-            console.log(messageData);
-            //commit('PROCESS_CHESS_MOVE', messageData);
+            commit('PROCESS_CHESS_MOVE', messageData);
             break;
         default:
             console.log('Got unknown message type: ' + messageData.messageType);

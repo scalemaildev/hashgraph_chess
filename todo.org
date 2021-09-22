@@ -3,9 +3,9 @@
 *** DONE Text input field for square and another for move
 *** DONE Send button as well as form with enter key
 *** DONE Replace target square with a dropdown
-*** TODO Get the index of the hcs message from hcs and add it to the move for filtering
 *** DONE Use pgn validation to validate the moves for the square (vuelidate)
 *** DONE Fix up the emit stuff
+*** TODO Get the index of the hcs message from hcs and add it to the move for filtering?
 *** TODO Pass the moves to match data, handle the player validation in vuex and the turn validation in game panel -- use computed/watched to actually perform the moves in order from match data
 **** game moves as a watched getter from MATCHES
 **** when a new move comes in, validate it, then call the move on game()

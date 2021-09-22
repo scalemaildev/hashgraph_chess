@@ -34,12 +34,13 @@
             </v-col>
               <v-col cols="2">
                 <v-text-field
-                v-model="activeSquare"
-                :error-messages="activeSquareErrors"
-                required
-                @input="$v.activeSquare.$touch()"
-                @blur="$v.activeSquare.$touch()"
-                label="Square"/>
+                  v-model="activeSquare"
+                  :error-messages="activeSquareErrors"
+                  required
+                  autocomplete="off"
+                  @input="$v.activeSquare.$touch()"
+                  @blur="$v.activeSquare.$touch()"
+                  label="Square"/>
               </v-col>
               <v-col cols="1">
                 <strong> To </strong>
@@ -161,9 +162,9 @@ export default {
         matchMoves (newMatchMoves, oldMatchMoves) {
             // finds all the elements of arr2 that are not in arr1
             //let newMoves = newMatchMoves.filter( 
-                //val => !oldMatchMoves.find( move => move.from === val)
+            //val => !oldMatchMoves.find( move => move.from === val)
             //); // outputs "newValue"
-
+            
             console.log(newMatchMoves);
         }
     },
@@ -205,7 +206,7 @@ export default {
         },
         setupTranslatedGameState () {
             for (let i = 0; i <= 7; i++)
-            this.translatedGameState[i] = Array(8);
+                this.translatedGameState[i] = Array(8);
         },
         translateGameState (gameState) {
             for (let row = 0; row < gameState.length; row++) {
@@ -240,7 +241,7 @@ export default {
                 };
                 
                 const response = await this.SEND_MESSAGE(messagePayload);
-
+                
                 if (response.result == 'SUCCESS') {
                     this.activeSquare = '';
                     this.targetSquare = '';
