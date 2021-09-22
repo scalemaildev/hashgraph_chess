@@ -10,8 +10,12 @@
 *** DONE If a move is legal, load pgn into the dummy chess game and make the move there
 *** DONE Then get the pgn from the dummy chess game and send that over hcs
 *** DONE Whenever the matchData changes get the latest pgn and load that into the real chess game
-*** TODO The game board now needs to react to this.game.pgn()
-*** TODO Game board should jump to any new move that comes in
+*** DONE The game board now needs to react to this.game.pgn()
+*** DONE Game board should jump to any new move that comes in
+*** TODO Currently the game updates but the board does not updated upon receiving a new move
+**** Fix the watch/computed properties
+**** Plan for a new, blank board as well as incoming moves
+**** Add some sort of blip when a new move comes in (method?)
 *** TODO Move the game board to a new component?
 **** Game board should just take the pgn and arrange itself to display it
 **** Take the styling functions into the new component
