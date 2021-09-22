@@ -166,7 +166,8 @@ export const actions = {
             commit('PROCESS_CHAT_MESSAGE', messageData);
             break;
         case 'chessMove':
-            commit('PROCESS_CHESS_MOVE', messageData);
+            console.log(messageData);
+            //commit('PROCESS_CHESS_MOVE', messageData);
             break;
         default:
             console.log('Got unknown message type: ' + messageData.messageType);

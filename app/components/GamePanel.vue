@@ -44,14 +44,15 @@
               <v-col cols="1">
                 <strong> To </strong>
               </v-col>
-              <v-col cols="2">
-                <v-text-field
-                v-model="targetSquare"
-                :error-messages="targetSquareErrors"
-                required
-                @input="$v.targetSquare.$touch()"
-                @blur="$v.targetSquare.$touch()"
-                label="Target"/>
+              <v-col cols="3">
+                <v-select
+                  v-model="targetSquare"
+                  :items="getLegalMoves(this.activeSquare)"
+                  :error-messages="targetSquareErrors"
+                  required
+                  @input="$v.targetSquare.$touch()"
+                  @blur="$v.targetSquare.$touch()"
+                  label="Target"/>
               </v-col>
               <v-col cols="2">
                 <v-btn type="submitMove">Send</v-btn>
@@ -81,7 +82,7 @@ export default {
     
     validations: {
         activeSquare: { required, squareRegex, legalActiveSquare },
-        targetSquare: { required, squareRegex, legalTargetSquare },
+        targetSquare: { required, legalTargetSquare },
     },
     
     data () {
@@ -115,7 +116,6 @@ export default {
             const errors = [];
             if (!this.$v.targetSquare.$dirty) return errors
             !this.$v.targetSquare.required && errors.push('Required');
-            !this.$v.targetSquare.squareRegex && errors.push('Should look like e4 or E4')
             !this.$v.targetSquare.legalTargetSquare && errors.push('Illegal move')
             return errors;
         },
