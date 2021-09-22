@@ -9,7 +9,8 @@
 *** DONE Create a dummy chess game in gamePanel for generating the pgn
 *** DONE If a move is legal, load pgn into the dummy chess game and make the move there
 *** DONE Then get the pgn from the dummy chess game and send that over hcs
-*** TODO Whenever the matchData changes get the latest pgn and load that into the real chess game
+*** DONE Whenever the matchData changes get the latest pgn and load that into the real chess game
+*** TODO The game board now needs to react to this.game.pgn()
 *** TODO Game board should jump to any new move that comes in
 *** TODO Move the game board to a new component?
 **** Game board should just take the pgn and arrange itself to display it

@@ -47,15 +47,23 @@ export const mutations = {
         let operator = messageData.operator;
         let topicPlayers = [state.MATCHES[topicId].playerWhite, state.MATCHES[topicId].playerBlack];
 
+        // filter out non-players
         if (!topicPlayers.includes(operator)) {
             console.log('Rejected a chat message from: ' + operator);
-        } else {
-            state.MATCHES[topicId].messages.push({
-                account: operator,
-                messageIndex: messageIndex,
-                message: message
-            });
+            return;
         }
+
+        // filter out blank messages
+        if (message == '' || message == ' ') {
+            console.log('Rejected an empty chat message from: ' + operator);
+            return;
+        }
+        
+        state.MATCHES[topicId].messages.push({
+            account: operator,
+            messageIndex: messageIndex,
+            message: message
+        });
     },
     PROCESS_CHESS_MOVE(state, messageData) {
         let topicId = messageData.topicId;
@@ -64,15 +72,25 @@ export const mutations = {
         let operator = messageData.operator;
         let topicPlayers = [state.MATCHES[topicId].playerWhite, state.MATCHES[topicId].playerBlack];
 
+        // filter out non-players
         if (!topicPlayers.includes(operator)) {
             console.log('Rejected a chess move from: ' + operator);
-        } else {
-            state.MATCHES[topicId].pgns.push({
-                operator: operator,
-                messageIndex: messageIndex,
-                newPgn: newPgn
-            });
+            return;
         }
+
+        // filter out double moves
+        if (state.MATCHES[topicId].pgns.length > 0) {
+            if (operator == state.MATCHES[topicId].pgns.at(-1).operator ) {
+                console.log('Rejected a double move from: ' + operator);
+                return;
+            }
+        }
+        
+        state.MATCHES[topicId].pgns.push({
+            operator: operator,
+            messageIndex: messageIndex,
+            newPgn: newPgn
+        });
     },
 };
 

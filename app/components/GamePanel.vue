@@ -127,11 +127,6 @@ export default {
                 return this.game.board();
             }
         },
-        gameTurn () {
-            if (!!this.game) {
-                return this.game.turn();
-            }
-        },
         pieceStyle() {
             let edge = this.getTileEdge();
             
@@ -162,11 +157,8 @@ export default {
             this.translateGameState(newGameState);
         },
         matchPGNs (newMatchPGNs, oldMatchPGNs) {
-            // need to filter the incoming topic messages here
-            // player in-game is already filtered in sessionData
-            // filter for double moves here (turn order)
-            // load the latest pgn and set the current turn
-            console.log(newMatchPGNs);
+            let latestPGN = newMatchPGNs.at(-1).newPgn;
+            this.game.load_pgn(latestPGN);
         }
     },
     
