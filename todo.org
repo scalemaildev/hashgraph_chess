@@ -6,9 +6,9 @@
 *** DONE Use pgn validation to validate the moves for the square (vuelidate)
 *** DONE Fix up the emit stuff
 *** DONE Get the index of the hcs message from hcs and add it to the move for filtering?
-*** TODO Create a dummy chess game in gamePanel for generating the pgn
-*** TODO If a move is legal, load pgn into the dummy chess game and make the move there
-*** TODO Then get the pgn from the dummy chess game and send that over hcs
+*** DONE Create a dummy chess game in gamePanel for generating the pgn
+*** DONE If a move is legal, load pgn into the dummy chess game and make the move there
+*** DONE Then get the pgn from the dummy chess game and send that over hcs
 *** TODO Whenever the matchData changes get the latest pgn and load that into the real chess game
 *** TODO Game board should jump to any new move that comes in
 *** TODO Move the game board to a new component?

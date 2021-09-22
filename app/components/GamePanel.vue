@@ -241,6 +241,7 @@ export default {
 
                 // make the move on the dummy board and grab the pgn
                 // TODO: add promotion handling (if statement)
+                // TODO: one more check for move validity here? error handling
                 this.dummyGame.move({ from: this.activeSquare, to: this.targetSquare });
                 let newPgn = this.dummyGame.pgn();
                 
