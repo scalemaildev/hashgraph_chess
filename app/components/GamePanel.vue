@@ -88,7 +88,7 @@ export default {
     
     data () {
         return {
-            game: null,
+            game: new Chess(),
             dummyGame: null,
             submittingMove: false,
             submitError: false,
@@ -122,11 +122,6 @@ export default {
             !this.$v.targetSquare.legalTargetSquare && errors.push('Illegal move')
             return errors;
         },
-        gameState () {
-            if (!!this.game) {
-                return this.game.board();
-            }
-        },
         pieceStyle() {
             let edge = this.getTileEdge();
             
@@ -153,19 +148,16 @@ export default {
     },
     
     watch: {
-        gameState (newGameState, oldGameState) {
-            this.translateGameState(newGameState);
-        },
         matchPGNs (newMatchPGNs, oldMatchPGNs) {
             let latestPGN = newMatchPGNs.at(-1).newPgn;
             this.game.load_pgn(latestPGN);
+            this.translateGameState(this.game.board());
         }
     },
     
     created () {
         this.setupTranslatedGameState();
         this.assignPlayerColors();
-        this.game = new Chess();
         this.translateGameState(this.game.board());
     },
     
