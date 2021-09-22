@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required, helpers } from 'vuelidate/lib/validators';
 import Chess from 'chess.js';
@@ -89,7 +89,7 @@ export default {
     data () {
         return {
             game: new Chess(),
-            pgn: '',
+            gamePgn: '',
             dummyGame: null,
             submittingMove: false,
             submitError: false,
@@ -98,13 +98,15 @@ export default {
             promotion: '',
             playerWhite: '',
             playerBlack: '',
-            currentTurn: '',
-            translatedGameState: {}
+            currentTurn: ''
         }
     },
     
     computed: {
-        ...mapGetters('sessionStorage', ['MATCH_DATA', 'MATCH_PGN_LATEST']),
+        ...mapGetters('sessionStorage', ['MATCH_DATA', 'MATCH_PGN_LATEST', 'MATCH_BOARD_STATE']),
+        matchPgn () {
+            return this.MATCH_PGN_LATEST(this.topicId);
+        },
         activeSquareErrors () {
             const errors = [];
             if (!this.$v.activeSquare.$dirty) return errors
@@ -146,11 +148,13 @@ export default {
     },
     
     watch: {
-        //gamePGN (newPGN, oldPGN) {
-        //console.log("the game's pgn was updated to" + newPGN);
-        //this.game.load_pgn(newPGN);
-        //this.translateGameState(this.game.board());
-        //},
+        matchPgn (newMatchPgn, oldMatchPgn) {
+            this.gamePgn = newMatchPgn;
+        },
+        gamePgn (newGamePgn, oldGamePgn) {
+            this.game.load_pgn(this.gamePgn);
+            this.translateGameState(this.game.board());
+        }
     },
     
     created () {
@@ -161,9 +165,10 @@ export default {
     },
     
     methods: {
+        ...mapMutations('sessionStorage', ['SET_BOARD_STATE']),
         ...mapActions('sessionStorage', ['SEND_MESSAGE']),
         getTile(row, col) {
-            let piece = this.translatedGameState[row - 1][col - 1];
+            let piece = this.MATCH_BOARD_STATE(this.topicId)[row - 1][col - 1];
             return `/game/${piece}.png`;
         },
         getTileBg(row, col) {
@@ -186,9 +191,18 @@ export default {
             this.playerBlack = this.MATCH_DATA(this.topicId).playerBlack;
         },
         initTranslatedGameState() {
+            let newBoardState = {}
+            
             for (let i = 0; i <= 7; i++) {
-                this.translatedGameState[i] = Array(8).fill('blank');
+                newBoardState[i] = Array(8).fill('blank');
             }
+
+            let newBoardStateData = {
+                newBoardState: newBoardState,
+                topicId: this.topicId
+            }
+
+            this.SET_BOARD_STATE(newBoardStateData);
         },
         setupGameState () {
             this.assignPlayerColors();
@@ -197,33 +211,42 @@ export default {
             this.initTranslatedGameState();
 
             // load current pgn if it exists in session storage
-            if (!this.isNewMatch()) {
-                console.log('existing match pgn found'); //TODO remove me
-                this.pgn = this.MATCH_PGN_LATEST(this.topicId);
-                this.game.load_pgn(this.pgn);
-            } else {
-                console.log('this is a new match'); //TODO remove me
+            if (this.matchDataFound()) {
+                this.gamePgn = this.MATCH_PGN_LATEST(this.topicId);
+                this.game.load_pgn(this.gamePgn);
             }
 
             // translate pgn into the game board
             this.translateGameState(this.game.board());
         },
-        isNewMatch () {
-            return !this.MATCH_PGN_LATEST(this.topicId);
+        matchDataFound () {
+            return this.MATCH_PGN_LATEST(this.topicId);
         },
         translateGameState (gameState) {
+            let newBoardState = {};
+            for (let i = 0; i <= 7; i++) {
+                newBoardState[i] = Array(8).fill('blank');
+            }
+            
             for (let row = 0; row < gameState.length; row++) {
                 for (let col = 0; col < gameState[row].length; col++) {
                     if (!!gameState[row][col]) {
                         let pieceType = gameState[row][col].type;
                         let pieceColor = gameState[row][col].color;
                         
-                        this.translatedGameState[row][col] = pieceColor + pieceType;
+                        newBoardState[row][col] = pieceColor + pieceType;
                     } else {
-                        this.translatedGameState[row][col] = 'blank';
+                        newBoardState[row][col] = 'blank';
                     }
                 }
             }
+            
+            let newBoardStateData = {
+                newBoardState: newBoardState,
+                topicId: this.topicId
+            }
+
+            this.SET_BOARD_STATE(newBoardStateData);
         },
         getLegalMoves (square) {
             return this.game.moves({ square: square });

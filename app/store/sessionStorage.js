@@ -34,11 +34,15 @@ export const mutations = {
                 account: 'Server',
                 message: "Started a new match between " + playerWhite + " and " + playerBlack + "..."
             }],
-            pgns: ['']
+            pgns: [''],
+            boardState: []
         });
     },
     CLEAR_MATCH_OBJECT(state, topicId) {
         this._vm.$set(state.MATCHES, topicId, {});
+    },
+    SET_BOARD_STATE(state, data) {
+        state.MATCHES[data.topicId].boardState = data.newBoardState;
     },
     PROCESS_CHAT_MESSAGE(state, messageData) {
         let topicId = messageData.topicId;
@@ -211,4 +215,9 @@ export const getters = {
             return state.MATCHES[topicId].pgns.at(-1).newPgn;
         };
     },
+    MATCH_BOARD_STATE: (state) => {
+        return topicId => {
+            return state.MATCHES[topicId].boardState;
+        };
+    }
 };

@@ -1,22 +1,18 @@
 * NOW
-** TODO Chess move input
-*** TODO Currently the game updates but the board does not updated upon receiving a new move
-**** Fix the watch/computed properties
-**** Plan for a new, blank board as well as incoming moves
-**** Add some sort of blip when a new move comes in (method?)
-*** TODO Move the game board to a new component?
-**** Game board should just take the pgn and arrange itself to display it
-**** Take the styling functions into the new component
-*** TODO Might need to make the move verbose to capture stuff like promotions
-*** TODO Need to add support for handling promotions
-**** users suggest a modal window with an extra menu option for promo
-* FUTURE
-** TODO Add displayed turn # for current displayed position beneath board
-** TODO Step forward/back through chess moves history
 ** TODO Who's turn is it? On game panel
 *** White To Move, Black To Move, or Game Over
 *** v-show for if its the current player's turn
+** TODO Add some sort of blip when a new chess move comes in
+** TODO Sending spinner for when user submits a chess move
+* FUTURE
+** TODO Need to add support for handling promotions
+**** users suggest a modal window with an extra menu option for promo
+** TODO Add displayed turn # for current displayed position beneath board
+** TODO Step forward/back through chess moves history
 ** TODO Left and Right alignment for player 1/2 in the messages window
+** TODO Move the game board to a new component?
+**** Game board should just take the pgn and arrange itself to display it
+**** Take the styling functions into the new component
 ** TODO Do a big runthrough of stylings for each monitor breakpoint
 *** Use both the big computer and laptop for each breakpoint
 *** Use big computer for XL
