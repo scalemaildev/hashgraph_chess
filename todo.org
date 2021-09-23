@@ -2,7 +2,6 @@
 ** Additional handling for incoming moves/messages
 *** TODO Session storage handling of the submission status?
 *** TODO Handle for submitting move when the sub never comes back (timeout?)
-*** TODO Add some sort of blip when a new chess move comes in
 * ON DECK
 ** TODO Add displayed turn # for current displayed position beneath board (and pgn?)
 ** TODO Step forward/back through chess moves history

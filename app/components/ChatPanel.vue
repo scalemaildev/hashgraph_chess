@@ -9,15 +9,17 @@
     <v-col cols="12">
       <MessagesWindow :topicId="topicId" />
     </v-col>
-    <v-col cols="12">
-      <MessageBox :topicId="topicId" />
-    </v-col>
+      <v-col cols="12">
+        <div v-show="!isObserver">
+          <MessageBox :topicId="topicId" />
+        </div>
+      </v-col>
   </v-row>
 </v-container>
 </template>
 
 <script>
 export default {
-    props: ['topicId'],
+    props: ['topicId', 'isObserver'],
 }
 </script>

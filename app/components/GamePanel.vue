@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required, helpers } from 'vuelidate/lib/validators';
 import Chess from 'chess.js';
@@ -96,7 +96,7 @@ var legalActiveSquare = (value, vm) => { return vm.getLegalMoves(vm.activeSquare
 var legalTargetSquare = (value, vm) => { return vm.getLegalMoves(vm.activeSquare).includes(vm.targetSquare) };
 
 export default {
-    props: ['topicId'],
+    props: ['topicId', 'isObserver'],
     
     mixins: [validationMixin],
     
@@ -115,15 +115,11 @@ export default {
             activeSquare: '',
             targetSquare: '',
             promotion: '',
-            playerWhite: '',
-            playerBlack: ''
         }
     },
     
     computed: {
-        ...mapState('sessionStorage', ['ACCOUNT_ID']),
-        ...mapGetters('sessionStorage', ['MATCH_DATA',
-                                         'MATCH_PGN_LATEST',
+        ...mapGetters('sessionStorage', ['MATCH_PGN_LATEST',
                                          'MATCH_BOARD_STATE']),
         /* Vuelidate Errors */
         activeSquareErrors () {
@@ -148,7 +144,7 @@ export default {
             
             return { width: edge, height: edge };
         },
-        horzFrameSize() { // TODO: fix heights for scale
+        horzFrameSize() {
             switch (this.$vuetify.breakpoint.name) {
             case 'xs': return { width: '340px', height: '10px' }
             case 'sm': return { width: '384px', height: '14px' }
@@ -157,7 +153,7 @@ export default {
             case 'xl': return { width: '510px', height: '16px' }
             }
         },
-        vertFrameSize() { // TODO: fix widths for scale
+        vertFrameSize() {
             switch (this.$vuetify.breakpoint.name) {
             case 'xs': return { width: '10px', height: '320px' }
             case 'sm': return { width: '12px', height: '360px' }
@@ -170,11 +166,6 @@ export default {
         /* Data */
         matchPgn () {
             return this.MATCH_PGN_LATEST(this.topicId);
-        },
-        isObserver() {
-            let playerList = [this.MATCH_DATA(this.topicId).playerWhite, this.MATCH_DATA(this.topicId).playerBlack];
-            
-            return !playerList.includes(this.ACCOUNT_ID);
         }
     },
     
@@ -219,10 +210,6 @@ export default {
         },
         
         /* Setup */
-        assignPlayerColors() {
-            this.playerWhite = this.MATCH_DATA(this.topicId).playerWhite;
-            this.playerBlack = this.MATCH_DATA(this.topicId).playerBlack;
-        },
         initTranslatedGameState() {
             let newBoardState = {}
             
@@ -300,12 +287,11 @@ export default {
             this.dummyGame.load_pgn(currentGameState);
             
             // make the move on the dummy board and grab the pgn
-            // TODO: add promotion handling
-            // TODO: another check for move validity here? error handling?
             let newMove = {
                 'from': this.activeSquare,
                 'to': this.targetSquare
             };
+            // TODO: add another move validation here? error handling?
             this.dummyGame.move(newMove);
             let newPgn = this.dummyGame.pgn();
             
@@ -333,9 +319,10 @@ export default {
                 
                 if (!response.success) {
                     this.submittingMove = false;
+                    this.submitError = true;
                 }
             }
-        },        
+        },
         turnStatus () {
             if (this.game.turn() == 'w') {
                 return 'White to Move';

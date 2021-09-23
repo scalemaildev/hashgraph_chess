@@ -7,10 +7,12 @@
     <v-container fluid class="matchComponents-wrapper">
       <v-row fluid justify='space-between'>
         <v-col xs="12" sm="12" md="6" lg="6" xl="6">
-          <GamePanel :topicId="topicId" />
+          <GamePanel :topicId="topicId"
+                     :isObserver="isObserver" />
         </v-col>
         <v-col xs="12" sm="12" md="6" lg="6" xl="6">
-          <ChatPanel :topicId="topicId" />
+          <ChatPanel :topicId="topicId"
+                     :isObserver="isObserver" />
         </v-col>
       </v-row>
     </v-container>
@@ -19,7 +21,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 
 export default {
     props: ['topicId'],
@@ -31,10 +33,16 @@ export default {
     },
     
     computed: {
+        ...mapState('sessionStorage', ['ACCOUNT_ID']),
         ...mapGetters('sessionStorage', ['MATCH_DATA']),
         matchData () {
             return this.MATCH_DATA(this.topicId);
         },
+        isObserver() {
+            let playerList = [this.MATCH_DATA(this.topicId).playerWhite, this.MATCH_DATA(this.topicId).playerBlack];
+            
+            return !playerList.includes(this.ACCOUNT_ID);
+        }
     },
     
     watch: {
