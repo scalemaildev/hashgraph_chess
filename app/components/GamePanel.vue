@@ -198,26 +198,26 @@ export default {
             for (let i = 0; i <= 7; i++) {
                 newBoardState[i] = Array(8).fill('blank');
             }
-
+            
             let newBoardStateData = {
                 newBoardState: newBoardState,
                 topicId: this.topicId
             }
-
+            
             this.SET_BOARD_STATE(newBoardStateData);
         },
         setupGameState () {
             this.assignPlayerColors();
-
+            
             // set the board to a bunch of empty tiles
             this.initTranslatedGameState();
-
+            
             // load current pgn if it exists in session storage
             if (this.matchDataFound()) {
                 this.gamePgn = this.MATCH_PGN_LATEST(this.topicId);
                 this.game.load_pgn(this.gamePgn);
             }
-
+            
             // translate pgn into the visible game board
             this.translateGameState(this.game.board());
         },
@@ -230,7 +230,7 @@ export default {
             for (let i = 0; i <= 7; i++) {
                 newBoardState[i] = Array(8);
             }
-
+            
             // go through the board and translate it to the piece images
             for (let row = 0; row < gameState.length; row++) {
                 for (let col = 0; col < gameState[row].length; col++) {
@@ -249,41 +249,55 @@ export default {
                 newBoardState: newBoardState,
                 topicId: this.topicId
             }
-
+            
             // send it all to session storage
             this.SET_BOARD_STATE(newBoardStateData);
         },
         getLegalMoves (square) {
-            return this.game.moves({ square: square });
+            // want to 'to' field from verbose array
+            let verboseLegalMoves = this.game.moves({ square: square, verbose: true });
+            let legalMoves = [];
+            verboseLegalMoves.forEach(square => legalMoves.push(square.to));
+            
+            return legalMoves;
+        },
+        createMessagePayload () {
+            // give dummy game the current game state
+            let currentGameState = this.game.pgn();
+            this.dummyGame = new Chess();
+            this.dummyGame.load_pgn(currentGameState);
+            
+            // make the move on the dummy board and grab the pgn
+            // TODO: add promotion handling (if statement)
+            // TODO: a check for move validity here? error handling?
+            let newMove = {
+                'from': this.activeSquare,
+                'to': this.targetSquare
+            };
+            this.dummyGame.move(newMove);
+            let newPgn = this.dummyGame.pgn();
+            
+            let messagePayload = {
+	        messageType: 'chessMove',
+                topicId: this.topicId,
+                newPgn: newPgn
+            };
+            
+            // reset the dummy board/inputs and return the object
+            this.dummyGame = null;
+            this.activeSquare = '';
+            this.targetSquare = '';
+            this.promotion = '';
+
+            return messagePayload;
         },
         async submitMove () {
             this.$v.$touch();
             if (!this.$v.$invalid) {
                 this.submittingMove = true;
 
-                // give dummy game the current game state
-                let currentGameState = this.game.pgn();
-                this.dummyGame = new Chess();
-                this.dummyGame.load_pgn(currentGameState);
-
-                // make the move on the dummy board and grab the pgn
-                // TODO: add promotion handling (if statement)
-                // TODO: a check for move validity here? error handling?
-                let move = this.dummyGame.move({ from: this.activeSquare, to: this.targetSquare });
-                console.log(move); //TODO moving white knight first doesn't work
-                let newPgn = this.dummyGame.pgn();
-                console.log(newPgn);
-                let messagePayload = {
-	            messageType: 'chessMove',
-                    topicId: this.topicId,
-                    newPgn: newPgn
-                };
-
-                // reset the dummy board/inputs and send the move
-                this.dummyGame = null;
-                this.activeSquare = '';
-                this.targetSquare = '';
-                this.promotion = '';
+                let messagePayload = await this.createMessagePayload();
+                console.log(messagePayload);
                 const response = await this.SEND_MESSAGE(messagePayload);
                 
                 if (response.success) {
