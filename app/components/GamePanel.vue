@@ -1,30 +1,36 @@
 <template>
-  <v-container fluid class="gamePanel-wrapper">
-    <v-row no-gutters align="center" class="flex-column d-flex">
-      <nuxt-img src="/game/border_top.png" :style="horzFrameSize"/>
-      <div class="d-flex" style="position: relative">
-          <nuxt-img src="/game/border_left_legend.png"
-                    :style="vertFrameSize"/>
-        <div v-for="col in 8" :key="col">
-          <div v-for="row in 8" :key="row">
-            <div :style="getTileBg(row, col)">
-              <nuxt-img :src="getTile(row, col)"
-                        :style="pieceStyle"/>
-            </div>
-          </div>  
-        </div>
-        <img src="/game/border_right.png"
-           :style="vertFrameSize">
+<v-container fluid class="gamePanel-wrapper">
+  <v-row no-gutters align="center" class="flex-column d-flex">
+    <nuxt-img src="/game/border_top.png" :style="horzFrameSize"/>
+    <div class="d-flex" style="position: relative">
+      <nuxt-img src="/game/border_left_legend.png"
+                :style="vertFrameSize"/>
+      <div v-for="col in 8" :key="col">
+        <div v-for="row in 8" :key="row">
+          <div :style="getTileBg(row, col)">
+            <nuxt-img :src="getTile(row, col)"
+                      :style="pieceStyle"/>
+          </div>
+        </div>  
       </div>
-      <img src="/game/border_bottom_legend.png"
-           :style="horzFrameSize">
-    </v-row>
-    <v-row>
+      <img src="/game/border_right.png"
+           :style="vertFrameSize">
+    </div>
+    <img src="/game/border_bottom_legend.png"
+         :style="horzFrameSize">
+  </v-row>
+  <v-row align="center" justify="center">
+    
+    <v-col cols="12" align="center">
+      <h4>Turn Info and Scroll Buttons Here</h4>
+    </v-col>
+
+    <v-col cols="12" align="center">
+      <h4>{{ turnStatus() }}</h4>
+    </v-col>
+    
+    <div v-if="!submittingMove">
       <v-col cols="12" align="center">
-        <h4>Turn Info and Scroll Buttons Here</h4>
-      </v-col>
-      <v-col cols="12" align="center">
-        <strong>It Is Your Move</strong>
         <v-form
           @submit.prevent="submitMove">
           <v-row align="center">
@@ -32,38 +38,49 @@
             <v-col cols="2">
               <strong>Move</strong>
             </v-col>
-              <v-col cols="2">
-                <v-text-field
-                  v-model="activeSquare"
-                  :error-messages="activeSquareErrors"
-                  required
-                  autocomplete="off"
-                  @input="$v.activeSquare.$touch()"
-                  @blur="$v.activeSquare.$touch()"
-                  label="Square"/>
-              </v-col>
-              <v-col cols="1">
-                <strong> To </strong>
-              </v-col>
-              <v-col cols="3">
-                <v-select
-                  v-model="targetSquare"
-                  :items="getLegalMoves(this.activeSquare)"
-                  :error-messages="targetSquareErrors"
-                  required
-                  @input="$v.targetSquare.$touch()"
-                  @blur="$v.targetSquare.$touch()"
-                  label="Target"/>
-              </v-col>
-              <v-col cols="2">
-                <v-btn type="submitMove">Send</v-btn>
-              </v-col>
+            <v-col cols="2">
+              <v-text-field
+                v-model="activeSquare"
+                :error-messages="activeSquareErrors"
+                required
+                autocomplete="off"
+                @input="$v.activeSquare.$touch()"
+                @blur="$v.activeSquare.$touch()"
+                label="Square"/>
+            </v-col>
+            <v-col cols="1">
+              <strong> To </strong>
+            </v-col>
+            <v-col cols="3">
+              <v-select
+                v-model="targetSquare"
+                :items="getLegalMoves(this.activeSquare)"
+                :error-messages="targetSquareErrors"
+                required
+                @input="$v.targetSquare.$touch()"
+                @blur="$v.targetSquare.$touch()"
+                label="Target"/>
+            </v-col>
+            <v-col cols="2">
+              <v-btn type="submitMove">Send</v-btn>
+            </v-col>
             <v-spacer />
           </v-row>
         </v-form>
       </v-col>
-    </v-row>
-  </v-container>
+    </div>
+    <div v-else-if="submittingMove" style="margin-top: 4vh;">
+      <v-row>
+        <v-col cols="12" align="center">
+          <v-progress-circular indeterminate />
+        </v-col>
+        <v-col cols="12" align="center">
+          <h4>... SUBMITTING ...</h4>
+        </v-col>
+      </v-row>
+    </div>
+  </v-row>
+</v-container>
 </template>
 
 <script>
@@ -97,8 +114,7 @@ export default {
             targetSquare: '',
             promotion: '',
             playerWhite: '',
-            playerBlack: '',
-            currentTurn: ''
+            playerBlack: ''
         }
     },
     
@@ -161,7 +177,8 @@ export default {
         gamePgn (newGamePgn, oldGamePgn) {
             this.game.load_pgn(this.gamePgn);
             this.translateGameState(this.game.board());
-        }
+            this.submittingMove = false;
+        },
     },
     
     created () {
@@ -295,25 +312,29 @@ export default {
             this.activeSquare = '';
             this.targetSquare = '';
             this.promotion = '';
-
+            
             return messagePayload;
         },
         async submitMove () {
             this.$v.$touch();
             if (!this.$v.$invalid) {
                 this.submittingMove = true;
-
+                
                 let messagePayload = await this.createMessagePayload();
                 const response = await this.SEND_MESSAGE(messagePayload);
                 
-                if (response.success) {
+                if (!response.success) {
                     this.submittingMove = false;
-                } else {
-                    this.submittingMove = false;
-                    this.submitError = true; //TODO submit error handling
                 }
             }
-        }
+        },        
+        turnStatus () {
+            if (this.game.turn() == 'w') {
+                return 'White to Move';
+            } else {
+                return 'Black to Move';
+            }
+        },
     }
 }
 </script>

@@ -1,7 +1,10 @@
 * NOW
-** TODO Sending spinner for when user submits a chess move
+** DONE Sending spinner for when user submits a chess move
 *** And destroy it when a move comes in
-** TODO Add some sort of blip when a new chess move comes in
+** Additional handling for incoming moves/messages
+*** TODO Session storage handling of the submission status?
+*** TODO Handle for submitting move when the sub never comes back (timeout?)
+*** TODO Add some sort of blip when a new chess move comes in
 ** TODO Who's turn is it? On game panel
 *** Should be in the same 'zone' as the submit spinner and chess move form
 *** White To Move, Black To Move, or Game Over
