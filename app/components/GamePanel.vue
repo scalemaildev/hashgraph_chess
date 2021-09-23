@@ -228,8 +228,6 @@ export default {
             return this.MATCH_PGN_LATEST(this.topicId);
         },
         setupGameState () {
-            this.assignPlayerColors();
-            
             // set the board to a bunch of empty tiles
             this.initTranslatedGameState();
             
