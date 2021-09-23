@@ -29,13 +29,6 @@
       <h4>{{ turnStatus() }}</h4>
     </v-col>
     
-    
-    <div v-show="isObserver">
-      <v-col cols="12" align="center">
-        <h4>Observer Mode</h4>
-      </v-col>
-    </div>
-    
     <div v-show="!isObserver">
       <div v-if="!submittingMove">
         <v-col cols="12" align="center">

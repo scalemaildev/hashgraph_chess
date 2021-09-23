@@ -1,16 +1,11 @@
 <template>
 <v-container no-gutters class="chatPanel-box">
-  <div class="d-flex flex-row align-center">
-    <div v-show="isObserver">
-      <v-col cols="12" align="center">
-        <h4>Observer Mode</h4>
-      </v-col>
-    </div>
     <div v-show="!isObserver">
-      <v-text-field v-model="chatMessage" placeholder="Enter chat message here..." @keypress.enter="sendMessage()"></v-text-field>
-      <v-btn class="ml-4" @click="sendMessage()">Send</v-btn>
+      <div class="d-flex flex-row align-center">
+        <v-text-field v-model="chatMessage" placeholder="Enter chat message here..." @keypress.enter="sendMessage()"></v-text-field>
+        <v-btn class="ml-4" @click="sendMessage()">Send</v-btn>
+      </div>
     </div>
-  </div>
 </v-container>
 </template>
 
