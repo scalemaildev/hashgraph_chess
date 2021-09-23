@@ -1,14 +1,21 @@
 <template>
 <v-container no-gutters class="chatPanel-box">
   <div class="d-flex flex-row align-center">
-    <v-text-field v-model="chatMessage" placeholder="Enter chat message here..." @keypress.enter="sendMessage()"></v-text-field>
-    <v-btn class="ml-4" @click="sendMessage()">Send</v-btn>
+    <div v-show="isObserver">
+      <v-col cols="12" align="center">
+        <h4>Observer Mode</h4>
+      </v-col>
+    </div>
+    <div v-show="!isObserver">
+      <v-text-field v-model="chatMessage" placeholder="Enter chat message here..." @keypress.enter="sendMessage()"></v-text-field>
+      <v-btn class="ml-4" @click="sendMessage()">Send</v-btn>
+    </div>
   </div>
 </v-container>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
   
 export default {
     props: ['topicId'],
@@ -16,6 +23,16 @@ export default {
     data() {
         return {
             chatMessage: "",
+        }
+    },
+
+    computed: {
+        ...mapState('sessionStorage', ['ACCOUNT_ID']),
+        ...mapGetters('sessionStorage', ['MATCH_DATA']),
+        isObserver() {
+            let playerList = [this.MATCH_DATA(this.topicId).playerWhite, this.MATCH_DATA(this.topicId).playerBlack];
+            
+            return !playerList.includes(this.ACCOUNT_ID);
         }
     },
     
