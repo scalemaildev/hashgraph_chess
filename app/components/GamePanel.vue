@@ -122,6 +122,7 @@ export default {
             !this.$v.targetSquare.legalTargetSquare && errors.push('Illegal move')
             return errors;
         },
+        
         /* CSS Styling */
         pieceStyle() {
             let edge = this.getTileEdge();
@@ -146,6 +147,7 @@ export default {
             case 'xl': return { width: '15px', height: '480px' }
             }
         },
+        
         /* Data */
         matchPgn () {
             return this.MATCH_PGN_LATEST(this.topicId);
@@ -169,6 +171,8 @@ export default {
     methods: {
         ...mapMutations('sessionStorage', ['SET_BOARD_STATE']),
         ...mapActions('sessionStorage', ['SEND_MESSAGE']),
+        
+        /* Styles */
         getTile(row, col) {
             let piece = this.MATCH_BOARD_STATE(this.topicId)[row - 1][col - 1];
             return `/game/${piece}.png`;
@@ -188,6 +192,8 @@ export default {
             case 'xl': return '60px'
             }
         },
+        
+        /* Setup */
         assignPlayerColors() {
             this.playerWhite = this.MATCH_DATA(this.topicId).playerWhite;
             this.playerBlack = this.MATCH_DATA(this.topicId).playerBlack;
@@ -206,6 +212,9 @@ export default {
             
             this.SET_BOARD_STATE(newBoardStateData);
         },
+        matchDataFound () {
+            return this.MATCH_PGN_LATEST(this.topicId);
+        },
         setupGameState () {
             this.assignPlayerColors();
             
@@ -221,9 +230,8 @@ export default {
             // translate pgn into the visible game board
             this.translateGameState(this.game.board());
         },
-        matchDataFound () {
-            return this.MATCH_PGN_LATEST(this.topicId);
-        },
+        
+        /* Board and Movement */
         translateGameState (gameState) {
             // need the object of arrays to be filled
             let newBoardState = {};
@@ -250,11 +258,10 @@ export default {
                 topicId: this.topicId
             }
             
-            // send it all to session storage
-            this.SET_BOARD_STATE(newBoardStateData);
+            this.SET_BOARD_STATE(newBoardStateData); // send it all to session storage
         },
         getLegalMoves (square) {
-            // want to 'to' field from verbose array
+            // want the 'to' field from verbose array
             let verboseLegalMoves = this.game.moves({ square: square, verbose: true });
             let legalMoves = [];
             verboseLegalMoves.forEach(square => legalMoves.push(square.to));
@@ -268,8 +275,8 @@ export default {
             this.dummyGame.load_pgn(currentGameState);
             
             // make the move on the dummy board and grab the pgn
-            // TODO: add promotion handling (if statement)
-            // TODO: a check for move validity here? error handling?
+            // TODO: add promotion handling
+            // TODO: another check for move validity here? error handling?
             let newMove = {
                 'from': this.activeSquare,
                 'to': this.targetSquare
@@ -283,7 +290,7 @@ export default {
                 newPgn: newPgn
             };
             
-            // reset the dummy board/inputs and return the object
+            // reset the dummy board/inputs and return the payload
             this.dummyGame = null;
             this.activeSquare = '';
             this.targetSquare = '';
@@ -297,14 +304,13 @@ export default {
                 this.submittingMove = true;
 
                 let messagePayload = await this.createMessagePayload();
-                console.log(messagePayload);
                 const response = await this.SEND_MESSAGE(messagePayload);
                 
                 if (response.success) {
                     this.submittingMove = false;
                 } else {
                     this.submittingMove = false;
-                    this.submitError = true;
+                    this.submitError = true; //TODO submit error handling
                 }
             }
         }
