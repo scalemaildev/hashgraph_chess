@@ -129,20 +129,20 @@ export default {
         },
         horzFrameSize() { // TODO: fix heights for scale
             switch (this.$vuetify.breakpoint.name) {
-            case 'xs': return { width: '180px', height: '10px' }
-            case 'sm': return { width: '260px', height: '10px' }
+            case 'xs': return { width: '340px', height: '10px' }
+            case 'sm': return { width: '384px', height: '14px' }
             case 'md': return { width: '340px', height: '10px' }
-            case 'lg': return { width: '380px', height: '10px' }
-            case 'xl': return { width: '60px', height: '10px' } // TODO
+            case 'lg': return { width: '384px', height: '14px' }
+            case 'xl': return { width: '510px', height: '16px' }
             }
         },
         vertFrameSize() { // TODO: fix widths for scale
             switch (this.$vuetify.breakpoint.name) {
-            case 'xs': return { width: '10px', height: '160px' }
-            case 'sm': return { width: '10px', height: '240px' }
+            case 'xs': return { width: '10px', height: '320px' }
+            case 'sm': return { width: '12px', height: '360px' }
             case 'md': return { width: '10px', height: '320px' }
-            case 'lg': return { width: '10px', height: '360px' }
-            case 'xl': return { width: '10px', height: '60px' } // TODO
+            case 'lg': return { width: '12px', height: '360px' }
+            case 'xl': return { width: '15px', height: '480px' }
             }
         }
     },
@@ -179,8 +179,8 @@ export default {
         },
         getTileEdge() {
             switch (this.$vuetify.breakpoint.name) {
-            case 'xs': return '20px'
-            case 'sm': return '30px'
+            case 'xs': return '40px'
+            case 'sm': return '45px'
             case 'md': return '40px'
             case 'lg': return '45px'
             case 'xl': return '60px' // TODO

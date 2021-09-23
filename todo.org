@@ -1,10 +1,4 @@
 * NOW
-** TODO Do a big runthrough of stylings for each monitor breakpoint
-*** Use both the big computer and laptop for each breakpoint
-*** Use big computer for XL
-*** Style the arrows, frames, and tiles
-*** Remember the frames are undersized and should be scaled out
-*** Fix styling on move input form between breakpoints as well
 ** TODO Sending spinner for when user submits a chess move
 *** And destroy it when a move comes in
 ** TODO Add some sort of blip when a new chess move comes in
@@ -38,6 +32,7 @@
 **** Take the styling functions into the new component
 ** TODO Change player validation to use public key method
 ** TODO Replace grid input method with drag and drog
+** TODO Do another pass at the css styling and ALL breakpoint settings
 ** TODO Big cleanup and refactoring run
 * BUGS
 ** The chat window doesn't scroll to the bottom on new messages
