@@ -1,41 +1,35 @@
 * NOW
-** DONE Sending spinner for when user submits a chess move
-*** And destroy it when a move comes in
+** TODO Observer mode handling
+*** Disable chat and moves for non-players
+*** Chat Box and Move Input Form replaced by 'Observer Mode' text
 ** Additional handling for incoming moves/messages
 *** TODO Session storage handling of the submission status?
 *** TODO Handle for submitting move when the sub never comes back (timeout?)
 *** TODO Add some sort of blip when a new chess move comes in
-** TODO Who's turn is it? On game panel
-*** Should be in the same 'zone' as the submit spinner and chess move form
-*** White To Move, Black To Move, or Game Over
-*** v-show for if its the current player's turn
 * ON DECK
-** TODO Need to add support for handling promotions
-**** users suggest a modal window with an extra menu option for promo
-** TODO Step forward/back through chess moves history
 ** TODO Add displayed turn # for current displayed position beneath board (and pgn?)
-** TODO Error handling for when move submit fails (revert to original state)
-*** Should only fail if there's a loss of connection?
-** TODO Observer mode handling
-*** Disable chat and moves for non-players
-*** Chat Box and Move Input Form replaced by 'Observer Mode'
+** TODO Step forward/back through chess moves history
 ** TODO Game over handling
 *** Don't accept any more moves
 *** Display who won
+** TODO Resign button (with client-side validation like a move)
 ** TODO Left and Right alignment for player 1/2 in the messages window
+** TODO Need to add support for handling promotions
+**** users suggest a modal window with an extra menu option for promo
 * FUTURE
+** TODO Error handling for when move submit fails (revert to original state)
+*** Should only fail if there's a loss of connection?
 ** TODO Need a timeout for topic subbing (and visible error message)
-** TODO Add footer with terms of use, github link, and credits to start page(s)
+** TODO Footer with terms of use, github link, and credits to start page(s)
 *** Artist for sprites was Daniela De Lena
 *** Mention hedera discord and stack overflow
 *** And modules like nuxt-socket-io and chess.js
-** TODO Resign button (with client-side validation like a move)
 ** TODO Move the game board to a new component?
 **** Game board should just take the pgn and arrange itself to display it
 **** Take the styling functions into the new component
 ** TODO Change player validation to use public key method
-** TODO Replace grid input method with drag and drog
 ** TODO Do another pass at the css styling and ALL breakpoint settings
+** TODO Replace grid input method with drag and drog
 ** TODO Big cleanup and refactoring run
 * BUGS
 ** The chat window doesn't scroll to the bottom on new messages

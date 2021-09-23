@@ -24,67 +24,76 @@
     <v-col cols="12" align="center">
       <h4>Turn Info and Scroll Buttons Here</h4>
     </v-col>
-
+    
     <v-col cols="12" align="center">
       <h4>{{ turnStatus() }}</h4>
     </v-col>
     
-    <div v-if="!submittingMove">
+    
+    <div v-show="isObserver">
       <v-col cols="12" align="center">
-        <v-form
-          @submit.prevent="submitMove">
-          <v-row align="center">
-            <v-spacer />
-            <v-col cols="2">
-              <strong>Move</strong>
-            </v-col>
-            <v-col cols="2">
-              <v-text-field
-                v-model="activeSquare"
-                :error-messages="activeSquareErrors"
-                required
-                autocomplete="off"
-                @input="$v.activeSquare.$touch()"
-                @blur="$v.activeSquare.$touch()"
-                label="Square"/>
-            </v-col>
-            <v-col cols="1">
-              <strong> To </strong>
-            </v-col>
-            <v-col cols="3">
-              <v-select
-                v-model="targetSquare"
-                :items="getLegalMoves(this.activeSquare)"
-                :error-messages="targetSquareErrors"
-                required
-                @input="$v.targetSquare.$touch()"
-                @blur="$v.targetSquare.$touch()"
-                label="Target"/>
-            </v-col>
-            <v-col cols="2">
-              <v-btn type="submitMove">Send</v-btn>
-            </v-col>
-            <v-spacer />
-          </v-row>
-        </v-form>
+        <h4>Observer Mode</h4>
       </v-col>
     </div>
-    <div v-else-if="submittingMove" style="margin-top: 4vh;">
-      <v-row>
+    
+    <div v-show="!isObserver">
+      <div v-if="!submittingMove">
         <v-col cols="12" align="center">
-          <v-progress-circular indeterminate />
+          <v-form
+            @submit.prevent="submitMove">
+            <v-row align="center">
+              <v-spacer />
+              <v-col cols="2">
+                <strong>Move</strong>
+              </v-col>
+              <v-col cols="2">
+                <v-text-field
+                  v-model="activeSquare"
+                  :error-messages="activeSquareErrors"
+                  required
+                  autocomplete="off"
+                  @input="$v.activeSquare.$touch()"
+                  @blur="$v.activeSquare.$touch()"
+                  label="Square"/>
+              </v-col>
+              <v-col cols="1">
+                <strong> To </strong>
+              </v-col>
+              <v-col cols="3">
+                <v-select
+                  v-model="targetSquare"
+                  :items="getLegalMoves(this.activeSquare)"
+                  :error-messages="targetSquareErrors"
+                  required
+                  @input="$v.targetSquare.$touch()"
+                  @blur="$v.targetSquare.$touch()"
+                  label="Target"/>
+              </v-col>
+              <v-col cols="2">
+                <v-btn type="submitMove">Send</v-btn>
+              </v-col>
+              <v-spacer />
+            </v-row>
+          </v-form>
         </v-col>
-        <v-col cols="12" align="center">
-          <h4>... SUBMITTING ...</h4>
-        </v-col>
-      </v-row>
+      </div>
+      <div v-else-if="submittingMove" style="margin-top: 4vh;">
+        <v-row>
+          <v-col cols="12" align="center">
+            <v-progress-circular indeterminate />
+          </v-col>
+          <v-col cols="12" align="center">
+            <h4>... SUBMITTING ...</h4>
+          </v-col>
+        </v-row>
+      </div>
     </div>
   </v-row>
 </v-container>
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from 'vuex';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required, helpers } from 'vuelidate/lib/validators';
 import Chess from 'chess.js';
@@ -119,6 +128,7 @@ export default {
     },
     
     computed: {
+        ...mapState('sessionStorage', ['ACCOUNT_ID']),
         ...mapGetters('sessionStorage', ['MATCH_DATA',
                                          'MATCH_PGN_LATEST',
                                          'MATCH_BOARD_STATE']),
@@ -167,6 +177,11 @@ export default {
         /* Data */
         matchPgn () {
             return this.MATCH_PGN_LATEST(this.topicId);
+        },
+        isObserver() {
+            let playerList = [this.MATCH_DATA(this.topicId).playerWhite, this.MATCH_DATA(this.topicId).playerBlack];
+            
+            return !playerList.includes(this.ACCOUNT_ID);
         }
     },
     
