@@ -1,6 +1,8 @@
 * NOW
-** Additional handling for incoming moves/messages
-*** TODO Session storage handling of the submission status?
+** TODO Migrate any possible game panel functionality to vuex
+*** TODO Vuex handling of the submission status? (not session storage)
+** TODO Additional handling for incoming moves/messages
+*** Will first require the vuex migration
 *** TODO Handle for submitting move when the sub never comes back (timeout?)
 * ON DECK
 ** TODO Add displayed turn # for current displayed position beneath board (and pgn?)
@@ -23,6 +25,7 @@
 ** TODO Move the game board to a new component?
 **** Game board should just take the pgn and arrange itself to display it
 **** Take the styling functions into the new component
+**** This could use vuex (not sessionstorage) for everything
 ** TODO Change player validation to use public key method
 ** TODO Do another pass at the css styling and ALL breakpoint settings
 ** TODO Replace grid input method with drag and drog
