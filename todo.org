@@ -1,7 +1,4 @@
 * NOW
-** TODO Observer mode handling
-*** Disable chat and moves for non-players
-*** Chat Box and Move Input Form replaced by 'Observer Mode' text
 ** Additional handling for incoming moves/messages
 *** TODO Session storage handling of the submission status?
 *** TODO Handle for submitting move when the sub never comes back (timeout?)
