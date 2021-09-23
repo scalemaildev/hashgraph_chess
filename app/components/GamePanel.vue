@@ -103,10 +103,10 @@ export default {
     },
     
     computed: {
-        ...mapGetters('sessionStorage', ['MATCH_DATA', 'MATCH_PGN_LATEST', 'MATCH_BOARD_STATE']),
-        matchPgn () {
-            return this.MATCH_PGN_LATEST(this.topicId);
-        },
+        ...mapGetters('sessionStorage', ['MATCH_DATA',
+                                         'MATCH_PGN_LATEST',
+                                         'MATCH_BOARD_STATE']),
+        /* Vuelidate Errors */
         activeSquareErrors () {
             const errors = [];
             if (!this.$v.activeSquare.$dirty) return errors
@@ -122,6 +122,7 @@ export default {
             !this.$v.targetSquare.legalTargetSquare && errors.push('Illegal move')
             return errors;
         },
+        /* CSS Styling */
         pieceStyle() {
             let edge = this.getTileEdge();
             
@@ -144,6 +145,10 @@ export default {
             case 'lg': return { width: '12px', height: '360px' }
             case 'xl': return { width: '15px', height: '480px' }
             }
+        },
+        /* Data */
+        matchPgn () {
+            return this.MATCH_PGN_LATEST(this.topicId);
         }
     },
     
@@ -159,9 +164,6 @@ export default {
     
     created () {
         this.setupGameState();
-    },
-    
-    mounted () {
     },
     
     methods: {
@@ -183,7 +185,7 @@ export default {
             case 'sm': return '45px'
             case 'md': return '40px'
             case 'lg': return '45px'
-            case 'xl': return '60px' // TODO
+            case 'xl': return '60px'
             }
         },
         assignPlayerColors() {
@@ -207,7 +209,7 @@ export default {
         setupGameState () {
             this.assignPlayerColors();
 
-            // set board to a bunch of empty tiles
+            // set the board to a bunch of empty tiles
             this.initTranslatedGameState();
 
             // load current pgn if it exists in session storage
@@ -216,18 +218,20 @@ export default {
                 this.game.load_pgn(this.gamePgn);
             }
 
-            // translate pgn into the game board
+            // translate pgn into the visible game board
             this.translateGameState(this.game.board());
         },
         matchDataFound () {
             return this.MATCH_PGN_LATEST(this.topicId);
         },
         translateGameState (gameState) {
+            // need the object of arrays to be filled
             let newBoardState = {};
             for (let i = 0; i <= 7; i++) {
-                newBoardState[i] = Array(8).fill('blank');
+                newBoardState[i] = Array(8);
             }
-            
+
+            // go through the board and translate it to the piece images
             for (let row = 0; row < gameState.length; row++) {
                 for (let col = 0; col < gameState[row].length; col++) {
                     if (!!gameState[row][col]) {
@@ -246,6 +250,7 @@ export default {
                 topicId: this.topicId
             }
 
+            // send it all to session storage
             this.SET_BOARD_STATE(newBoardStateData);
         },
         getLegalMoves (square) {
@@ -256,17 +261,18 @@ export default {
             if (!this.$v.$invalid) {
                 this.submittingMove = true;
 
-                // give the dummy game current game state
+                // give dummy game the current game state
                 let currentGameState = this.game.pgn();
                 this.dummyGame = new Chess();
                 this.dummyGame.load_pgn(currentGameState);
 
                 // make the move on the dummy board and grab the pgn
                 // TODO: add promotion handling (if statement)
-                // TODO: one more check for move validity here? error handling
-                this.dummyGame.move({ from: this.activeSquare, to: this.targetSquare });
+                // TODO: a check for move validity here? error handling?
+                let move = this.dummyGame.move({ from: this.activeSquare, to: this.targetSquare });
+                console.log(move); //TODO moving white knight first doesn't work
                 let newPgn = this.dummyGame.pgn();
-                
+                console.log(newPgn);
                 let messagePayload = {
 	            messageType: 'chessMove',
                     topicId: this.topicId,
@@ -280,7 +286,7 @@ export default {
                 this.promotion = '';
                 const response = await this.SEND_MESSAGE(messagePayload);
                 
-                if (response.result == 'SUCCESS') {
+                if (response.success) {
                     this.submittingMove = false;
                 } else {
                     this.submittingMove = false;

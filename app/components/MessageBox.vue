@@ -28,7 +28,7 @@ export default {
 	        message: this.chatMessage
             };
             
-            const response = await this.SEND_MESSAGE(messagePayload);
+            await this.SEND_MESSAGE(messagePayload);
             this.chatMessage = "";
         }
     },

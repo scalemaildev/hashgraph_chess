@@ -122,7 +122,7 @@ export default {
                 'playerBlack': this.opponentAccountId
             });
 
-            if (response.result == 'SUCCESS') {
+            if (response.success) {
                 this.opponentAccountId = "";
                 let topicId = response.newTopicId;
                 console.log(response.responseMessage);

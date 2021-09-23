@@ -33,7 +33,8 @@ io.on('connection', socket => {
     });
 
     socket.on('subscribeToTopic', async (context) => {
-        hashgraph.subscribeToTopic(io, context.topicId);
+        let response = await hashgraph.subscribeToTopic(io, context.topicId);
+        io.emit('subscribeToTopic', response);
     });
     
 });

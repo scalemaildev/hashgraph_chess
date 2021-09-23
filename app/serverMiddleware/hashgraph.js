@@ -1,7 +1,7 @@
 /* Utils */
 const TextDecoder = require("text-encoding").TextDecoder;
 
-/* From SDK */
+/* Hashgraph SDK */
 const {
     Client,
     AccountId,
@@ -15,20 +15,20 @@ const {
 var HederaClient;
 var subscriptions = {};
 
-// Testnet only as for right now. Can add Mainnet later
-function initHashgraphClient(incAccountId, incPrivateKey) {
+function initHashgraphClient(newAccountId, newPrivateKey) {
     try {
+        // Testnet only as for right now. Can add Mainnet in prod
         HederaClient = Client.forTestnet();
-        let accountId = AccountId.fromString(incAccountId);
-        let privateKey = PrivateKey.fromString(incPrivateKey);
+        let accountId = AccountId.fromString(newAccountId);
+        let privateKey = PrivateKey.fromString(newPrivateKey);
         HederaClient.setOperator(accountId, privateKey);
         return {
-            result: 'SUCCESS',
+            success: true,
             responseMessage: 'Hedera Hashgraph client initialized'
         };
     } catch (error) {
         return {
-            result: 'FAILURE',
+            success: false,
             responseMessage: 'Hedera Hashgraph client failed to initialize'
         };
     }
@@ -36,15 +36,15 @@ function initHashgraphClient(incAccountId, incPrivateKey) {
 
 function unsetClient() {
     try {
-        HederaClient = "";
+        HederaClient = null;
         return {
-            result: 'SUCCESS',
+            success: true,
             responseMessage: 'Hedera Hashgraph client has been unset'
         };
     } catch (error) {
         return {
-            result: 'FAILURE',
-            responseMessage: 'Failed to unset Hedera Hashgraph client'
+            success: false,
+            responseMessage: 'Failed to unset the Hedera Hashgraph client somehow'
         };
     }
 }
@@ -55,13 +55,13 @@ async function createNewTopic() {
         const topicReceipt = await tx.getReceipt(HederaClient);
         const newTopicId = topicReceipt.topicId.toString();
         return {
-            result: 'SUCCESS',
+            success: true,
             responseMessage: 'Created new topic ' + newTopicId,
             newTopicId: newTopicId,
         };
     } catch (error) {
         return {
-            result: 'FAILURE',
+            success: false,
             responseMessage: 'Failed to create a new topic',
             errorMessage: error
         };
@@ -74,27 +74,27 @@ async function sendHCSMessage(data) {
     let messagePayload = JSON.stringify(messageObject);
     
     try {
-        let response = await new TopicMessageSubmitTransaction({
+        await new TopicMessageSubmitTransaction({
             topicId: TopicId.fromString(data.context.topicId),
             message: messagePayload})
             .execute(HederaClient);
         
         return {
-            result: 'SUCCESS',
-            responseMessage: 'Sent message to HCS',
-            response: response
+            success: true,
+            responseMessage: 'Sent message to HCS'
         };
     } catch (error) {
         return {
-            result: 'FAILURE',
+            success: false,
             responseMessage: 'Failed to send message to HCS'
         };
     }
 }
 
-function subscribeToTopic(io, topicIdString) {
+async function subscribeToTopic(io, topicIdString) {
     const topicId = TopicId.fromString(topicIdString);
 
+    // when the page is refreshed, pre-existing subs remain
     if (subscriptions[topicIdString]) {
         subscriptions[topicIdString].unsubscribe();
     }
@@ -105,14 +105,18 @@ function subscribeToTopic(io, topicIdString) {
             .setStartTime(0)
             .subscribe(HederaClient, res => {
                 let contents = new TextDecoder("utf-8").decode(res.contents);
-                let contentsPayload = JSON.parse(contents);
-                contentsPayload['sequenceNumber'] = res.sequenceNumber.toString();
-                
-                io.emit('newHCSMessage', JSON.stringify(contentsPayload));
+                io.emit('newHCSMessage', contents);
             });
         subscriptions[topicIdString] = sub;
+        return {
+            success: true,
+            responseMessage: 'Subscribed to topic'
+        };
     } catch (error) {
-        console.log(error);
+        return {
+            success: false,
+            responseMessage: 'Failed to subscribe'
+        };
     }
 }
 

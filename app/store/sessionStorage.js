@@ -4,7 +4,7 @@ export const state = () => ({
     PRIVATE_KEY: '',
     ACTIVE_PANEL: 'loadingPanel',
     LOCK_BUTTON: false,
-    MATCHES: {},
+    MATCHES: {}
 });
 
 /* MUTATIONS */
@@ -41,64 +41,61 @@ export const mutations = {
     CLEAR_MATCH_OBJECT(state, topicId) {
         this._vm.$set(state.MATCHES, topicId, {});
     },
-    SET_BOARD_STATE(state, data) {
-        state.MATCHES[data.topicId].boardState = data.newBoardState;
+    SET_BOARD_STATE(state, newBoardStateData) {
+        state.MATCHES[newBoardStateData.topicId].boardState = newBoardStateData.newBoardState;
     },
     PROCESS_CHAT_MESSAGE(state, messageData) {
         let topicId = messageData.topicId;
         let message = messageData.message;
-        let messageIndex = messageData.messageIndex;
         let operator = messageData.operator;
         let topicPlayers = [state.MATCHES[topicId].playerWhite, state.MATCHES[topicId].playerBlack];
 
         // filter out non-players
         if (!topicPlayers.includes(operator)) {
-            console.log('Rejected a chat message from: ' + operator);
+            console.warn('Rejected a chat message from: ' + operator);
             return;
         }
 
         // filter out blank messages
         if (message == '' || message == ' ') {
-            console.log('Rejected an empty chat message from: ' + operator);
+            console.warn('Rejected an empty chat message from: ' + operator);
             return;
         }
         
         state.MATCHES[topicId].messages.push({
             account: operator,
-            messageIndex: messageIndex,
             message: message
         });
     },
     PROCESS_CHESS_MOVE(state, messageData) {
         let topicId = messageData.topicId;
-        let messageIndex = messageData.sequenceNumber;
         let newPgn = messageData.newPgn;
         let operator = messageData.operator;
         let topicPlayers = [state.MATCHES[topicId].playerWhite, state.MATCHES[topicId].playerBlack];
 
         // filter out non-players
         if (!topicPlayers.includes(operator)) {
-            console.log('Rejected a chess move from: ' + operator);
+            console.warn('Rejected a chess move from: ' + operator);
             return;
         }
 
         // filter out double moves
         if (state.MATCHES[topicId].pgns.length > 0) {
             if (operator == state.MATCHES[topicId].pgns.at(-1).operator ) {
-                console.log('Rejected a double move from: ' + operator);
+                console.warn('Rejected a double move from: ' + operator);
                 return;
             }
         }
         
         state.MATCHES[topicId].pgns.push({
             operator: operator,
-            messageIndex: messageIndex,
             newPgn: newPgn
         });
     },
 };
 
 /* Actions */
+// All actions should use ASYNC_EMIT and return the response in all cases
 export const actions = {
     async INIT_HASHGRAPH_CLIENT({ commit }, context) {
         const response = await this.dispatch(
@@ -108,7 +105,7 @@ export const actions = {
                 privateKey: context.privateKey
             });
 
-        if (response.result == 'SUCCESS') {
+        if (response.success) {
             commit('SET_ACCOUNT_ID', context.accountId);
             commit('SET_PRIVATE_KEY', context.privateKey);
             commit('TOGGLE_LOCK_BUTTON', true);
@@ -118,12 +115,12 @@ export const actions = {
     },
 
     async UNSET_CLIENT({ commit }) {
-        // dispatch a method to clear the client server-side
+        // dispatch a method to clear the hashgraph client server-side
         const response = await this.dispatch('ASYNC_EMIT', {
             'eventName': 'unsetClient'
         });
 
-        if (response.result == 'SUCCESS') {
+        if (response.success) {
             commit('SET_ACCOUNT_ID', '');
             commit('SET_PRIVATE_KEY', '');
             commit('TOGGLE_LOCK_BUTTON', false);
@@ -143,7 +140,7 @@ export const actions = {
     async CREATE_MATCH({ state }, context) {
         const response = await this.dispatch('sessionStorage/CREATE_NEW_TOPIC');
 
-        if (response.result == 'SUCCESS') {
+        if (response.success) {
             let newMatchData = {
                 messageType: 'matchCreation',
                 topicId: response.newTopicId,
@@ -158,20 +155,22 @@ export const actions = {
             });
         }
 
-        // always return the response
         return response;
     },
 
     async SUBSCRIBE_TO_TOPIC({ commit }, topicId) {
+        //if we're subbing to a topic, clear out any pre-existing data for it
         commit('CLEAR_MATCH_OBJECT', topicId);
-        this.dispatch('ASYNC_EMIT', {
+        
+        const response = await this.dispatch('ASYNC_EMIT', {
             eventName: 'subscribeToTopic',
             topicId: topicId
         });
+        return response;
     },
 
-    SEND_MESSAGE({ state }, messagePayload) {
-        let response = this.dispatch('ASYNC_EMIT', {
+    async SEND_MESSAGE({ state }, messagePayload) {
+        let response = await this.dispatch('ASYNC_EMIT', {
             eventName: 'sendHCSMessage',
             operator: state.ACCOUNT_ID,
             context: messagePayload

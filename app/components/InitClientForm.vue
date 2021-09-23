@@ -107,7 +107,7 @@ export default {
                 'privateKey': this.privateKey
             });
             
-            if (response.result == 'SUCCESS') {
+            if (response.success) {
                 this.accountId = "";
                 this.privateKey = "";
                 this.SET_ACTIVE_PANEL('clientPanel');

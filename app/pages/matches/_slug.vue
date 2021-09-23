@@ -58,7 +58,7 @@ export default {
                 privateKey: this.PRIVATE_KEY
             });
 
-            if (response.result == 'SUCCESS') {
+            if (response.success) {
                 this.SET_ACTIVE_PANEL('clientPanel');
             }
         },
