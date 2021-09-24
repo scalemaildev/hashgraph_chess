@@ -8,11 +8,11 @@
       <v-row fluid justify='space-between'>
         <v-col xs="12" sm="12" md="6" lg="6" xl="6">
           <GamePanel :topicId="topicId"
-                     :isObserver="isObserver" />
+                     :userType="userType" />
         </v-col>
         <v-col xs="12" sm="12" md="6" lg="6" xl="6">
           <ChatPanel :topicId="topicId"
-                     :isObserver="isObserver" />
+                     :userType="userType" />
         </v-col>
       </v-row>
     </v-container>
@@ -38,10 +38,8 @@ export default {
         matchData () {
             return this.MATCH_DATA(this.topicId);
         },
-        isObserver() {
-            let playerList = [this.MATCH_DATA(this.topicId).playerWhite, this.MATCH_DATA(this.topicId).playerBlack];
-            
-            return !playerList.includes(this.ACCOUNT_ID);
+        userType() {
+            return this.MATCH_DATA(this.topicId).userType;
         }
     },
     

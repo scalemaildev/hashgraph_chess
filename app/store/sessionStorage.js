@@ -25,11 +25,19 @@ export const mutations = {
         let topicId = messageData.topicId;
         let playerWhite = messageData.playerWhite;
         let playerBlack = messageData.playerBlack;
+        let userType = 'o';
+
+        if (state.ACCOUNT_ID == playerWhite) {
+            userType = 'w';
+        } else if (state.ACCOUNT_ID == playerBlack) {
+            userType = 'b';
+        }
         
         this._vm.$set(state.MATCHES, topicId, {
             created: true,
             playerWhite: playerWhite,
             playerBlack: playerBlack,
+            userType: userType,
             messages: [{
                 account: 'Server',
                 message: "Started a new match between " + playerWhite + " and " + playerBlack + "..."
@@ -48,10 +56,10 @@ export const mutations = {
         let topicId = messageData.topicId;
         let message = messageData.message;
         let operator = messageData.operator;
-        let topicPlayers = [state.MATCHES[topicId].playerWhite, state.MATCHES[topicId].playerBlack];
+        let match = state.MATCHES[topicId];
 
         // filter out non-players
-        if (!topicPlayers.includes(operator)) {
+        if (operator != match.playerWhite && operator != match.playerBlack) {
             console.warn('Rejected a chat message from: ' + operator);
             return;
         }
@@ -71,10 +79,10 @@ export const mutations = {
         let topicId = messageData.topicId;
         let newPgn = messageData.newPgn;
         let operator = messageData.operator;
-        let topicPlayers = [state.MATCHES[topicId].playerWhite, state.MATCHES[topicId].playerBlack];
+        let match = state.MATCHES[topicId];
 
         // filter out non-players
-        if (!topicPlayers.includes(operator)) {
+        if (operator != match.playerWhite && operator != match.playerBlack) {
             console.warn('Rejected a chess move from: ' + operator);
             return;
         }

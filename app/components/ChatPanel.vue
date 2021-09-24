@@ -10,7 +10,7 @@
       <MessagesWindow :topicId="topicId" />
     </v-col>
       <v-col cols="12">
-        <div v-show="!isObserver">
+        <div v-show="userType != 'o'">
           <MessageBox :topicId="topicId" />
         </div>
       </v-col>
@@ -20,6 +20,6 @@
 
 <script>
 export default {
-    props: ['topicId', 'isObserver'],
+    props: ['topicId', 'userType'],
 }
 </script>

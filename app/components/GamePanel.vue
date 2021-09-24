@@ -29,7 +29,7 @@
       <h4>{{ turnStatus() }}</h4>
     </v-col>
     
-    <div v-show="!isObserver">
+    <div v-show="userType != 'o'">
       <div v-if="!submittingMove">
         <v-col cols="12" align="center">
           <v-form
@@ -96,7 +96,7 @@ var legalActiveSquare = (value, vm) => { return vm.getLegalMoves(vm.activeSquare
 var legalTargetSquare = (value, vm) => { return vm.getLegalMoves(vm.activeSquare).includes(vm.targetSquare) };
 
 export default {
-    props: ['topicId', 'isObserver'],
+    props: ['topicId', 'userType'],
     
     mixins: [validationMixin],
     
