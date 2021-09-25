@@ -21,10 +21,6 @@
 *** Artist for sprites was Daniela De Lena
 *** Mention hedera discord and stack overflow
 *** And modules like nuxt-socket-io and chess.js
-** TODO Move the game board to a new component?
-**** Game board should just take the pgn and arrange itself to display it
-**** Take the styling functions into the new component
-**** This could use vuex (not sessionstorage) for everything
 ** TODO Change player validation to use public key method
 ** TODO Do another pass at the css styling and ALL breakpoint settings
 ** TODO Replace grid input method with drag and drog

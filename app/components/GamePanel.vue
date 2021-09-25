@@ -1,7 +1,8 @@
 <template>
 <v-container fluid class="gamePanel-wrapper">
   <ChessBoard
-    :boardState="MATCH_BOARD_STATE(this.topicId)"/>
+    :userType="userType"
+    :displayedBoardState="displayedBoardState"/>
   <v-row align="center" justify="center">
     <v-col cols="12" align="center">
       <h4>Turn Info and Scroll Buttons Here</h4>
@@ -87,20 +88,20 @@ export default {
     
     data () {
         return {
-            game: new Chess(),
-            gamePgn: '',
             dummyGame: null,
             activeSquare: '',
             targetSquare: '',
             promotion: '',
             turn: '',
+            displayedBoardState: {}
         }
     },
     
     computed: {
         ...mapState(['SUBMITTING_MOVE', 'MOVE_SUBMISSION_ERROR']),
-        ...mapGetters('sessionStorage', ['MATCH_PGN_LATEST',
-                                         'MATCH_BOARD_STATE']),
+        ...mapGetters('sessionStorage', ['LATEST_MATCH_PGN',
+                                         'GAME_INSTANCE',
+                                         'GAME_INSTANCE_STATE']),
         /* Vuelidate Errors */
         activeSquareErrors () {
             const errors = [];
@@ -119,22 +120,18 @@ export default {
         },
         
         /* Data */
-        matchPgn () {
-            return this.MATCH_PGN_LATEST(this.topicId);
+        latestMatchPgn () {
+            return this.LATEST_MATCH_PGN(this.topicId);
         }
     },
     
     watch: {
-        matchPgn (newMatchPgn, oldMatchPgn) {
-            this.gamePgn = newMatchPgn;
-        },
-        gamePgn (newGamePgn, oldGamePgn) {
-            this.game.load_pgn(this.gamePgn);
+        latestMatchPgn (newMatchPgn, oldMatchPgn) {
             this.LOAD_PGN({
                 topicId: this.topicId,
-                newPgn: this.gamePgn
+                newPgn: newMatchPgn
             });
-            this.translateGameState(this.game.board());
+            this.translateGameState(this.GAME_INSTANCE_STATE);
             this.TOGGLE_SUBMITTING_MOVE(false);
         }
     },
@@ -144,46 +141,45 @@ export default {
     },
     
     methods: {
-        ...mapMutations(['TOGGLE_SUBMITTING_MOVE', 'TOGGLE_MOVE_SUBMISSION_ERROR']),
-        ...mapMutations('sessionStorage', ['SET_BOARD_STATE',
-                                           'CREATE_GAME',
+        ...mapMutations(['TOGGLE_SUBMITTING_MOVE',
+                         'TOGGLE_MOVE_SUBMISSION_ERROR']),
+        ...mapMutations('sessionStorage', ['CREATE_GAME',
                                            'LOAD_PGN']),
         ...mapActions('sessionStorage', ['SEND_MESSAGE']),
         
         /* Setup */
         initTranslatedGameState() {
-            let newBoardState = {}
+            let blankBoard = {};
             
             for (let i = 0; i <= 7; i++) {
-                newBoardState[i] = Array(8).fill('blank');
+                blankBoard[i] = Array(8).fill('blank');
             }
-            
-            let newBoardStateData = {
-                newBoardState: newBoardState,
-                topicId: this.topicId
-            }
-            
-            this.SET_BOARD_STATE(newBoardStateData);
+
+            this.displayedBoardState = blankBoard;
         },
         matchDataFound () {
-            return this.MATCH_PGN_LATEST(this.topicId);
+            return this.LATEST_MATCH_PGN(this.topicId);
         },
         setupGameState () {
             // set the board to a bunch of empty tiles
             this.initTranslatedGameState();
             
-            // load current pgn if it exists in session storage
+            // load current pgn if it exists
             if (this.matchDataFound()) {
-                this.gamePgn = this.MATCH_PGN_LATEST(this.topicId);
-                this.game.load_pgn(this.gamePgn);
+                let latestPgn = this.LATEST_MATCH_PGN(this.topicId);
                 this.LOAD_PGN({
                     topicId: this.topicId,
-                    newPgn: this.gamePgn
+                    newPgn: latestPgn
+                });
+            } else {
+                this.LOAD_PGN({
+                    topicId: this.topicId,
+                    newPgn: ''
                 });
             }
-            
+
             // translate pgn into the visible game board
-            this.translateGameState(this.game.board());
+            this.translateGameState(this.GAME_INSTANCE_STATE(this.topicId));
         },
         
         /* Board and Movement */
@@ -208,24 +204,21 @@ export default {
                 }
             }
             
-            let newBoardStateData = {
-                newBoardState: newBoardState,
-                topicId: this.topicId
-            }
-            
-            this.SET_BOARD_STATE(newBoardStateData); // send it all to session storage
+            this.displayedBoardState = newBoardState;
         },
         getLegalMoves (square) {
             // want the 'to' field from verbose array
-            let verboseLegalMoves = this.game.moves({ square: square, verbose: true });
-            let legalMoves = [];
-            verboseLegalMoves.forEach(square => legalMoves.push(square.to));
+            //let verboseLegalMoves = this.GAME_INSTANCE.moves({ square: square, verbose: true });
+            //let legalMoves = [];
+            //verboseLegalMoves.forEach(square => legalMoves.push(square.to));
             
-            return legalMoves;
+            //return legalMoves;
+
+            return 'bleh';
         },
         createMessagePayload () {
             // give dummy game the current game state
-            let currentGameState = this.game.pgn();
+            let currentGameState = this.GAME_INSTANCE.pgn();
             this.dummyGame = new Chess();
             this.dummyGame.load_pgn(currentGameState);
             
@@ -267,13 +260,14 @@ export default {
             }
         },
         turnStatus () {
-            if (this.game.turn() == 'w') {
-                this.turn = 'w';
-                return 'White to Move';
-            } else {
-                this.turn = 'b';
-                return 'Black to Move';
-            }
+            return 'bleh';
+            // if (this.GAME_INSTANCE.turn() == 'w') {
+            //     this.turn = 'w';
+            //     return 'White to Move';
+            // } else {
+            //     this.turn = 'b';
+            //     return 'Black to Move';
+            // }
         },
     }
 }

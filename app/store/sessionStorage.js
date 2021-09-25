@@ -128,6 +128,7 @@ export const mutations = {
 /* Actions */
 // All actions should use ASYNC_EMIT and return the response in all cases
 export const actions = {
+    /* Hashgraph Client */
     async INIT_HASHGRAPH_CLIENT({ commit }, context) {
         const response = await this.dispatch(
             'ASYNC_EMIT', {
@@ -161,38 +162,18 @@ export const actions = {
         }
     },
 
+    /* Topic Subscription and Messages */
     async CREATE_NEW_TOPIC() {
         let response = await this.dispatch('ASYNC_EMIT', {
             eventName: 'createNewTopic'
         });
         return response;
     },
-
-    async CREATE_MATCH({ state }, context) {
-        const response = await this.dispatch('sessionStorage/CREATE_NEW_TOPIC');
-
-        if (response.success) {
-            let newMatchData = {
-                messageType: 'matchCreation',
-                topicId: response.newTopicId,
-                playerWhite: context.playerWhite,
-                playerBlack: context.playerBlack,
-            };
-            
-            this.dispatch('ASYNC_EMIT', {
-                eventName: 'sendHCSMessage',
-                operator: state.ACCOUNT_ID,
-                context: newMatchData
-            });
-        }
-
-        return response;
-    },
-
+    
     async SUBSCRIBE_TO_TOPIC({ commit }, topicId) {
         //if we're subbing to a topic, clear out any pre-existing data for it
         commit('CLEAR_MATCH_OBJECT', topicId);
-        //commit('CLEAR_GAME_INSTANCE', topicId);
+        commit('CLEAR_GAME_INSTANCE', topicId);
         
         const response = await this.dispatch('ASYNC_EMIT', {
             eventName: 'subscribeToTopic',
@@ -227,6 +208,28 @@ export const actions = {
             console.log('Got unknown message type: ' + messageData.messageType);
         }
     },
+
+    /* Match and Game Board */
+    async CREATE_MATCH({ state }, context) {
+        const response = await this.dispatch('sessionStorage/CREATE_NEW_TOPIC');
+
+        if (response.success) {
+            let newMatchData = {
+                messageType: 'matchCreation',
+                topicId: response.newTopicId,
+                playerWhite: context.playerWhite,
+                playerBlack: context.playerBlack,
+            };
+            
+            this.dispatch('ASYNC_EMIT', {
+                eventName: 'sendHCSMessage',
+                operator: state.ACCOUNT_ID,
+                context: newMatchData
+            });
+        }
+
+        return response;
+    },
 };
 
 /* GETTERS */
@@ -241,14 +244,19 @@ export const getters = {
             return state.MATCHES[topicId].messages;
         };
     },
-    MATCH_PGN_LATEST: (state) => {
+    LATEST_MATCH_PGN: (state) => {
         return topicId => {
             return state.MATCHES[topicId].pgns.at(-1).newPgn;
         };
     },
-    MATCH_BOARD_STATE: (state) => {
+    GAME_INSTANCE: (state) => {
         return topicId => {
-            return state.MATCHES[topicId].boardState;
+            return state.GAME_INSTANCES[topicId];
+        };
+    },
+    GAME_INSTANCE_STATE: (state) => {
+        return topicId => {
+            return state.GAME_INSTANCES[topicId].board();
         };
     }
 };

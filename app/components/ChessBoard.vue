@@ -24,7 +24,7 @@
 
 <script>
 export default {
-    props: ['boardState'],
+    props: ['userType', 'displayedBoardState'],
     
     computed: {
         pieceStyle() {
@@ -54,7 +54,7 @@ export default {
     
     methods: {
         getTile(row, col) {
-            let piece = this.boardState[row - 1][col - 1];
+            let piece = this.displayedBoardState[row - 1][col - 1];
             return `/game/${piece}.png`;
         },
         getTileBg(row, col) {
