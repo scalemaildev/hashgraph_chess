@@ -100,9 +100,10 @@ export default {
     computed: {
         ...mapState(['SUBMITTING_MOVE', 'MOVE_SUBMISSION_ERROR']),
         ...mapGetters('sessionStorage', ['LATEST_MATCH_PGN',
-                                         'GAME_INSTANCE',
-                                         'GAME_INSTANCE_STATE',
-                                         'GAME_INSTANCE_TURN']),
+                                         'GAME_PGN',
+                                         'GAME_STATE',
+                                         'GAME_TURN',
+                                         'GAME_MOVES']),
         /* Vuelidate Errors */
         activeSquareErrors () {
             const errors = [];
@@ -132,7 +133,7 @@ export default {
                 topicId: this.topicId,
                 newPgn: newMatchPgn
             });
-            this.translateGameState(this.GAME_INSTANCE_STATE);
+            this.translateGameState(this.GAME_STATE(this.topicId));
             this.TOGGLE_SUBMITTING_MOVE(false);
         }
     },
@@ -145,8 +146,7 @@ export default {
         ...mapMutations(['TOGGLE_SUBMITTING_MOVE',
                          'TOGGLE_MOVE_SUBMISSION_ERROR']),
         ...mapMutations('sessionStorage', ['CREATE_GAME',
-                                           'LOAD_PGN',
-                                           'GET_MOVES']),
+                                           'LOAD_PGN']),
         ...mapActions('sessionStorage', ['SEND_MESSAGE']),
         
         /* Setup */
@@ -181,7 +181,7 @@ export default {
             }
 
             // translate pgn into the visible game board
-            this.translateGameState(this.GAME_INSTANCE_STATE(this.topicId));
+            this.translateGameState(this.GAME_STATE(this.topicId));
         },
         
         /* Board and Movement */
@@ -210,23 +210,18 @@ export default {
         },
         getLegalMoves (square) {
             // want the 'to' field from verbose array
-            let verboseLegalMoves = this.GET_MOVES({
+            let verboseLegalMoves = this.GAME_MOVES({
                 topicId: this.topicId,
                 square: square
             });
             
             let legalMoves = [];
-            if (!!verboseLegalMoves) {
-                verboseLegalMoves.forEach(square => legalMoves.push(square.to));
-            
-                return legalMoves;
-            } else {
-                return [];
-            }
+            verboseLegalMoves.forEach(square => legalMoves.push(square.to));
+            return legalMoves;
         },
         createMessagePayload () {
             // give dummy game the current game state
-            let currentGameState = this.GAME_INSTANCE.pgn();
+            let currentGameState = this.GAME_PGN(this.topicId);
             this.dummyGame = new Chess();
             this.dummyGame.load_pgn(currentGameState);
             
@@ -268,7 +263,7 @@ export default {
             }
         },
         turnStatus () {
-            if (this.GAME_INSTANCE_TURN(this.topicId) == 'w') {
+            if (this.GAME_TURN(this.topicId) == 'w') {
                 this.turn = 'w';
                 return 'White to Move';
             } else {

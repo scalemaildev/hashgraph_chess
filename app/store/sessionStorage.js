@@ -73,9 +73,6 @@ export const mutations = {
         let newPgn = boardData.newPgn;
         state.GAME_INSTANCES[topicId].load_pgn(newPgn);
     },
-    GET_MOVES(state, moveData) {
-        return state.GAME_INSTANCES[moveData.topicId].moves({ square: moveData.square, verbose: true });
-    },
 
     /* Message and Move Processing */
     PROCESS_CHAT_MESSAGE(state, messageData) {
@@ -257,14 +254,24 @@ export const getters = {
             return state.GAME_INSTANCES[topicId];
         };
     },
-    GAME_INSTANCE_STATE: (state) => {
+    GAME_PGN: (state) => {
+        return topicId => {
+            return state.GAME_INSTANCES[topicId].pgn();
+        };
+    },
+    GAME_STATE: (state) => {
         return topicId => {
             return state.GAME_INSTANCES[topicId].board();
         };
     },
-    GAME_INSTANCE_TURN(state) {
+    GAME_TURN(state) {
         return topicId => {
             return state.GAME_INSTANCES[topicId].turn();
+        };
+    },
+    GAME_MOVES(state) {
+        return request => {
+            return state.GAME_INSTANCES[request.topicId].moves({ square: request.square, verbose: true });
         };
     },
 };
