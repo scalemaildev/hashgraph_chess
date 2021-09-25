@@ -244,6 +244,11 @@ export const getters = {
             return state.MATCHES[topicId].messages;
         };
     },
+    MATCH_PGNS: (state) => {
+        return topicId => {
+            return state.MATCHES[topicId].pgns;
+        };
+    },
     LATEST_MATCH_PGN: (state) => {
         return topicId => {
             return state.MATCHES[topicId].pgns.at(-1).newPgn;

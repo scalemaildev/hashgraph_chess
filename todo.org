@@ -1,10 +1,10 @@
 * NOW
+** TODO Add displayed turn # for current displayed position beneath board (and pgn?)
+** TODO Step forward/back through chess moves history
 ** TODO Additional handling for incoming moves/messages
 *** Will first require the vuex migration
 *** TODO Handle for submitting move when the sub never comes back (timeout?)
 * ON DECK
-** TODO Add displayed turn # for current displayed position beneath board (and pgn?)
-** TODO Step forward/back through chess moves history
 ** TODO Game over handling
 *** Don't accept any more moves
 *** Display who won

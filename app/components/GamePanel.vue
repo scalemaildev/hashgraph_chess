@@ -98,8 +98,10 @@ export default {
     },
     
     computed: {
-        ...mapState(['SUBMITTING_MOVE', 'MOVE_SUBMISSION_ERROR']),
+        ...mapState(['SUBMITTING_MOVE',
+                     'MOVE_SUBMISSION_ERROR']),
         ...mapGetters('sessionStorage', ['LATEST_MATCH_PGN',
+                                         'MATCH_PGNS',
                                          'GAME_PGN',
                                          'GAME_STATE',
                                          'GAME_TURN',
@@ -205,11 +207,12 @@ export default {
                     }
                 }
             }
-            
+
+            // display the new board state
             this.displayedBoardState = newBoardState;
         },
         getLegalMoves (square) {
-            // want the 'to' field from verbose array
+            // we want the 'to' field from the verbose array
             let verboseLegalMoves = this.GAME_MOVES({
                 topicId: this.topicId,
                 square: square
@@ -225,11 +228,12 @@ export default {
             this.dummyGame = new Chess();
             this.dummyGame.load_pgn(currentGameState);
             
-            // make the move on the dummy board and grab the pgn
+            // make the move on the dummy board and grab the new pgn
             let newMove = {
                 'from': this.activeSquare,
                 'to': this.targetSquare
             };
+            
             // TODO: add another move validation here? error handling?
             this.dummyGame.move(newMove);
             let newPgn = this.dummyGame.pgn();
