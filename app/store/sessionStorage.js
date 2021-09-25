@@ -274,9 +274,14 @@ export const getters = {
             return state.GAME_INSTANCES[topicId].turn();
         };
     },
-    GAME_MOVES(state) {
+    GAME_LEGAL_MOVES(state) {
         return request => {
             return state.GAME_INSTANCES[request.topicId].moves({ square: request.square, verbose: true });
+        };
+    },
+    GAME_HISTORY(state) {
+        return topicId => {
+            return state.GAME_INSTANCES[topicId].history();
         };
     },
 };

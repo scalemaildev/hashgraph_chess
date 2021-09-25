@@ -1,16 +1,39 @@
 <template>
 <v-container fluid class="gamePanel-wrapper">
+  
   <ChessBoard
     :userType="userType"
-    :displayedBoardState="displayedBoardState"/>
+    :displayedBoardState="displayedBoardState" />
+  
   <v-row align="center" justify="center">
-    <v-col cols="12" align="center">
-      <h4>Turn Info and Scroll Buttons Here</h4>
+    <v-spacer />
+    <v-col cols="2" align="center">
+      <v-btn>
+        <<
+      </v-btn>
     </v-col>
+    <v-col cols="2" align="center">
+      <v-btn>
+        <
+      </v-btn>
+    </v-col>
+    <v-col cols="2" align="center">
+      <v-btn>
+        >
+      </v-btn>
+    </v-col>
+    <v-col cols="2" align="center">
+      <v-btn>
+        >>
+      </v-btn>
+    </v-col>
+    <v-spacer />
+  </v-row>
+  <v-row align="center" justify="center">
     <v-col cols="12" align="center">
       <h4>{{ turnStatus() }}</h4>
     </v-col>
-    <div v-show="userType != 'o' && userType == turn">
+    <div v-show="userType != 'o' && userType == currentTurn">
       <div v-if="!SUBMITTING_MOVE">
         <v-col cols="12" align="center">
           <v-form
@@ -92,7 +115,7 @@ export default {
             activeSquare: '',
             targetSquare: '',
             promotion: '',
-            turn: '',
+            currentTurn: '',
             displayedBoardState: {}
         }
     },
@@ -105,7 +128,8 @@ export default {
                                          'GAME_PGN',
                                          'GAME_STATE',
                                          'GAME_TURN',
-                                         'GAME_MOVES']),
+                                         'GAME_LEGAL_MOVES',
+                                         'GAME_HISTORY']),
         /* Vuelidate Errors */
         activeSquareErrors () {
             const errors = [];
@@ -213,7 +237,7 @@ export default {
         },
         getLegalMoves (square) {
             // we want the 'to' field from the verbose array
-            let verboseLegalMoves = this.GAME_MOVES({
+            let verboseLegalMoves = this.GAME_LEGAL_MOVES({
                 topicId: this.topicId,
                 square: square
             });
@@ -268,13 +292,17 @@ export default {
         },
         turnStatus () {
             if (this.GAME_TURN(this.topicId) == 'w') {
-                this.turn = 'w';
+                this.currentTurn = 'w';
                 return 'White to Move';
             } else {
-                this.turn = 'b';
+                this.currentTurn = 'b';
                 return 'Black to Move';
             }
         },
+        displayedPgn () {
+            let gameHistory = this.GAME_HISTORY(this.topicId);
+            return gameHistory.at(-1);
+        }
     }
 }
 </script>
