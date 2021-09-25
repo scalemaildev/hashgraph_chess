@@ -1,10 +1,13 @@
+import Chess from 'chess.js';
+
 /* State */
 export const state = () => ({
     ACCOUNT_ID: '',
     PRIVATE_KEY: '',
     ACTIVE_PANEL: 'loadingPanel',
     LOCK_BUTTON: false,
-    MATCHES: {}
+    MATCHES: {},
+    GAME_INSTANCES: {}
 });
 
 /* MUTATIONS */
@@ -21,6 +24,9 @@ export const mutations = {
     SET_ACTIVE_PANEL(state, newPanel) {
         state.ACTIVE_PANEL = newPanel;
     },
+    CREATE_GAME_INSTANCE(state, topicId) {
+        state.GAME_INSTANCES[topicId] = new Chess();
+    },
     CREATE_MATCH_OBJECT(state, messageData) {
         let topicId = messageData.topicId;
         let playerWhite = messageData.playerWhite;
@@ -32,6 +38,8 @@ export const mutations = {
         } else if (state.ACCOUNT_ID == playerBlack) {
             userType = 'b';
         }
+
+        this.commit('sessionStorage/CREATE_GAME_INSTANCE', topicId);
         
         this._vm.$set(state.MATCHES, topicId, {
             created: true,

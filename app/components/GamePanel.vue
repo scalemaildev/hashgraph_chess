@@ -186,7 +186,7 @@ export default {
     
     methods: {
         ...mapMutations(['TOGGLE_SUBMITTING_MOVE', 'TOGGLE_MOVE_SUBMISSION_ERROR']),
-        ...mapMutations('sessionStorage', ['SET_BOARD_STATE']),
+        ...mapMutations('sessionStorage', ['SET_BOARD_STATE', 'CREATE_GAME']),
         ...mapActions('sessionStorage', ['SEND_MESSAGE']),
         
         /* Styles */
