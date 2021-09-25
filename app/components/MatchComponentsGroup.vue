@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div v-if="!matchDataLoaded" class="content-spaced-mid">
+  <div v-if="!matchDataLoaded || !gameDataLoaded" class="content-spaced-mid">
     <LoadingPanel loadingText="SUBSCRIBING" />
   </div>
   <div v-else>
@@ -28,15 +28,20 @@ export default {
     
     data () {
         return {
-            matchDataLoaded: false
+            matchDataLoaded: false,
+            gameDataLoaded: false
         }
     },
     
     computed: {
         ...mapState('sessionStorage', ['ACCOUNT_ID']),
-        ...mapGetters('sessionStorage', ['MATCH_DATA']),
+        ...mapGetters('sessionStorage', ['MATCH_DATA',
+                                        'GAME_INSTANCE']),
         matchData () {
             return this.MATCH_DATA(this.topicId);
+        },
+        gameData () {
+            return this.GAME_INSTANCE(this.topicId);
         },
         userType() {
             return this.MATCH_DATA(this.topicId).userType;
@@ -49,6 +54,13 @@ export default {
                 this.matchDataLoaded = false;
             } else {
                 this.matchDataLoaded = true;
+            }
+        },
+        gameData (newGameData, oldGameData) {
+            if (!newGameData) {
+                this.gameDataLoaded = false;
+            } else {
+                this.gameDataLoaded = true;
             }
         }
     },

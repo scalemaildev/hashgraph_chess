@@ -2,6 +2,7 @@
 export const state = () => ({
     SUBMITTING_MOVE: false,
     MOVE_SUBMISSION_ERROR: false,
+    LEGAL_MOVES: []
 });
 
 /* Mutations */

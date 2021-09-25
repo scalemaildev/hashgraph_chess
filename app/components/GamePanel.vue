@@ -101,7 +101,8 @@ export default {
         ...mapState(['SUBMITTING_MOVE', 'MOVE_SUBMISSION_ERROR']),
         ...mapGetters('sessionStorage', ['LATEST_MATCH_PGN',
                                          'GAME_INSTANCE',
-                                         'GAME_INSTANCE_STATE']),
+                                         'GAME_INSTANCE_STATE',
+                                         'GAME_INSTANCE_TURN']),
         /* Vuelidate Errors */
         activeSquareErrors () {
             const errors = [];
@@ -144,7 +145,8 @@ export default {
         ...mapMutations(['TOGGLE_SUBMITTING_MOVE',
                          'TOGGLE_MOVE_SUBMISSION_ERROR']),
         ...mapMutations('sessionStorage', ['CREATE_GAME',
-                                           'LOAD_PGN']),
+                                           'LOAD_PGN',
+                                           'GET_MOVES']),
         ...mapActions('sessionStorage', ['SEND_MESSAGE']),
         
         /* Setup */
@@ -208,13 +210,19 @@ export default {
         },
         getLegalMoves (square) {
             // want the 'to' field from verbose array
-            //let verboseLegalMoves = this.GAME_INSTANCE.moves({ square: square, verbose: true });
-            //let legalMoves = [];
-            //verboseLegalMoves.forEach(square => legalMoves.push(square.to));
+            let verboseLegalMoves = this.GET_MOVES({
+                topicId: this.topicId,
+                square: square
+            });
             
-            //return legalMoves;
-
-            return 'bleh';
+            let legalMoves = [];
+            if (!!verboseLegalMoves) {
+                verboseLegalMoves.forEach(square => legalMoves.push(square.to));
+            
+                return legalMoves;
+            } else {
+                return [];
+            }
         },
         createMessagePayload () {
             // give dummy game the current game state
@@ -260,14 +268,13 @@ export default {
             }
         },
         turnStatus () {
-            return 'bleh';
-            // if (this.GAME_INSTANCE.turn() == 'w') {
-            //     this.turn = 'w';
-            //     return 'White to Move';
-            // } else {
-            //     this.turn = 'b';
-            //     return 'Black to Move';
-            // }
+            if (this.GAME_INSTANCE_TURN(this.topicId) == 'w') {
+                this.turn = 'w';
+                return 'White to Move';
+            } else {
+                this.turn = 'b';
+                return 'Black to Move';
+            }
         },
     }
 }
