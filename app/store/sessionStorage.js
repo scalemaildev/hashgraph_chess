@@ -12,6 +12,7 @@ export const state = () => ({
 
 /* MUTATIONS */
 export const mutations = {
+    /* Toggles and Settings */
     SET_ACCOUNT_ID(state, accountId) {
         state.ACCOUNT_ID = accountId;
     },
@@ -24,8 +25,13 @@ export const mutations = {
     SET_ACTIVE_PANEL(state, newPanel) {
         state.ACTIVE_PANEL = newPanel;
     },
+    
+    /* Creation and Clearing */
     CREATE_GAME_INSTANCE(state, topicId) {
         state.GAME_INSTANCES[topicId] = new Chess();
+    },
+    CLEAR_GAME_INSTANCE(state, topicId) {
+        this._vm.$set(state.GAME_INSTANCES, topicId, {});
     },
     CREATE_MATCH_OBJECT(state, messageData) {
         let topicId = messageData.topicId;
@@ -57,9 +63,18 @@ export const mutations = {
     CLEAR_MATCH_OBJECT(state, topicId) {
         this._vm.$set(state.MATCHES, topicId, {});
     },
+
+    /* Game Board */
     SET_BOARD_STATE(state, newBoardStateData) {
         state.MATCHES[newBoardStateData.topicId].boardState = newBoardStateData.newBoardState;
     },
+    LOAD_PGN(state, boardData) {
+        let topicId = boardData.topicId;
+        let newPgn = boardData.newPgn;
+        state.GAME_INSTANCES[topicId].load_pgn(newPgn);
+    },
+
+    /* Message and Move Processing */
     PROCESS_CHAT_MESSAGE(state, messageData) {
         let topicId = messageData.topicId;
         let message = messageData.message;
@@ -177,6 +192,7 @@ export const actions = {
     async SUBSCRIBE_TO_TOPIC({ commit }, topicId) {
         //if we're subbing to a topic, clear out any pre-existing data for it
         commit('CLEAR_MATCH_OBJECT', topicId);
+        //commit('CLEAR_GAME_INSTANCE', topicId);
         
         const response = await this.dispatch('ASYNC_EMIT', {
             eventName: 'subscribeToTopic',

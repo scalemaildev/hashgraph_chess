@@ -175,6 +175,10 @@ export default {
         },
         gamePgn (newGamePgn, oldGamePgn) {
             this.game.load_pgn(this.gamePgn);
+            this.LOAD_PGN({
+                topicId: this.topicId,
+                newPgn: this.gamePgn
+            });
             this.translateGameState(this.game.board());
             this.TOGGLE_SUBMITTING_MOVE(false);
         }
@@ -186,7 +190,9 @@ export default {
     
     methods: {
         ...mapMutations(['TOGGLE_SUBMITTING_MOVE', 'TOGGLE_MOVE_SUBMISSION_ERROR']),
-        ...mapMutations('sessionStorage', ['SET_BOARD_STATE', 'CREATE_GAME']),
+        ...mapMutations('sessionStorage', ['SET_BOARD_STATE',
+                                           'CREATE_GAME',
+                                           'LOAD_PGN']),
         ...mapActions('sessionStorage', ['SEND_MESSAGE']),
         
         /* Styles */
@@ -236,6 +242,10 @@ export default {
             if (this.matchDataFound()) {
                 this.gamePgn = this.MATCH_PGN_LATEST(this.topicId);
                 this.game.load_pgn(this.gamePgn);
+                this.LOAD_PGN({
+                    topicId: this.topicId,
+                    newPgn: this.gamePgn
+                });
             }
             
             // translate pgn into the visible game board
