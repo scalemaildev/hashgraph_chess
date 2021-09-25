@@ -1,7 +1,5 @@
 * NOW
 ** TODO Migrate any possible game panel functionality to vuex
-*** DONE Vuex handling of the submission status? (not session storage)
-*** TODO Add vuex handling of whether it's this player's turn
 ** TODO Additional handling for incoming moves/messages
 *** Will first require the vuex migration
 *** TODO Handle for submitting move when the sub never comes back (timeout?)

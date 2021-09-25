@@ -29,8 +29,8 @@
       <h4>{{ turnStatus() }}</h4>
     </v-col>
     
-    <div v-show="userType != 'o'">
-      <div v-if="!submittingMove">
+    <div v-show="userType != 'o' && userType == turn">
+      <div v-if="!SUBMITTING_MOVE">
         <v-col cols="12" align="center">
           <v-form
             @submit.prevent="submitMove">
@@ -70,7 +70,7 @@
           </v-form>
         </v-col>
       </div>
-      <div v-else-if="submittingMove" style="margin-top: 4vh;">
+      <div v-else-if="SUBMITTING_MOVE" style="margin-top: 4vh;">
         <v-row>
           <v-col cols="12" align="center">
             <v-progress-circular indeterminate />
@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from 'vuex';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required, helpers } from 'vuelidate/lib/validators';
 import Chess from 'chess.js';
@@ -110,15 +110,15 @@ export default {
             game: new Chess(),
             gamePgn: '',
             dummyGame: null,
-            submittingMove: false,
-            submitError: false,
             activeSquare: '',
             targetSquare: '',
             promotion: '',
+            turn: '',
         }
     },
     
     computed: {
+        ...mapState(['SUBMITTING_MOVE', 'MOVE_SUBMISSION_ERROR']),
         ...mapGetters('sessionStorage', ['MATCH_PGN_LATEST',
                                          'MATCH_BOARD_STATE']),
         /* Vuelidate Errors */
@@ -176,8 +176,8 @@ export default {
         gamePgn (newGamePgn, oldGamePgn) {
             this.game.load_pgn(this.gamePgn);
             this.translateGameState(this.game.board());
-            this.submittingMove = false;
-        },
+            this.TOGGLE_SUBMITTING_MOVE(false);
+        }
     },
     
     created () {
@@ -185,6 +185,7 @@ export default {
     },
     
     methods: {
+        ...mapMutations(['TOGGLE_SUBMITTING_MOVE', 'TOGGLE_MOVE_SUBMISSION_ERROR']),
         ...mapMutations('sessionStorage', ['SET_BOARD_STATE']),
         ...mapActions('sessionStorage', ['SEND_MESSAGE']),
         
@@ -310,21 +311,23 @@ export default {
         async submitMove () {
             this.$v.$touch();
             if (!this.$v.$invalid) {
-                this.submittingMove = true;
+                this.TOGGLE_SUBMITTING_MOVE(true);
                 
                 let messagePayload = await this.createMessagePayload();
                 const response = await this.SEND_MESSAGE(messagePayload);
                 
                 if (!response.success) {
-                    this.submittingMove = false;
-                    this.submitError = true;
+                    this.TOGGLE_SUBMITTING_MOVE(false);
+                    this.TOGGLE_MOVE_SUBMISSION_ERROR(true);
                 }
             }
         },
         turnStatus () {
             if (this.game.turn() == 'w') {
+                this.turn = 'w';
                 return 'White to Move';
             } else {
+                this.turn = 'b';
                 return 'Black to Move';
             }
         },

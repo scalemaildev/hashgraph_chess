@@ -1,6 +1,18 @@
 /* State */
 export const state = () => ({
+    SUBMITTING_MOVE: false,
+    MOVE_SUBMISSION_ERROR: false,
 });
+
+/* Mutations */
+export const mutations = {
+    TOGGLE_SUBMITTING_MOVE(state, bool) {
+        state.SUBMITTING_MOVE = bool;
+    },
+    TOGGLE_MOVE_SUBMISSION_ERROR(state, bool) {
+        state.MOVE_SUBMISSION_ERROR = bool;
+    }
+};
 
 /* Actions */
 export const actions = {
