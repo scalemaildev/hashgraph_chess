@@ -157,7 +157,7 @@ export default {
         /* Data */
         latestMatchPgn () {
             return this.LATEST_MATCH_PGN(this.topicId);
-        },
+        }
     },
     
     watch: {
@@ -206,6 +206,7 @@ export default {
             // load current pgn if it exists
             if (this.matchDataFound()) {
                 let latestPgn = this.LATEST_MATCH_PGN(this.topicId);
+                this.turnIndex = this.maxMoveIndex();
                 this.LOAD_PGN({
                     topicId: this.topicId,
                     newPgn: latestPgn
@@ -310,6 +311,9 @@ export default {
                 return 'Black to Move';
             }
         },
+        maxMoveIndex () {
+            return this.GAME_HISTORY(this.topicId).length;
+        },
         displayFirstMove () {
             if (this.turnIndex == 1) {
                 this.displayTurn(1); // sloppy handling of init state
@@ -325,21 +329,17 @@ export default {
             }
         },
         displayNextMove () {
-            let maxMoveIndex = this.GAME_HISTORY(this.topicId).length;
-            
-            if (this.turnIndex < maxMoveIndex) {
+            if (this.turnIndex < this.maxMoveIndex()) {
                 this.turnIndex += 1;
             }
         },
         displayLastMove () {
-            let maxMoveIndex = this.GAME_HISTORY(this.topicId).length;
-            
-            this.turnIndex = maxMoveIndex;
+            this.turnIndex = this.maxMoveIndex();
         },
         displayTurn (turnIndex) {
             let gameHistory = this.GAME_HISTORY(this.topicId).slice(0, turnIndex);
 
-            if (turnIndex < this.GAME_HISTORY(this.topicId).length) {
+            if (turnIndex < this.maxMoveIndex()) {
                 this.isLatestTurnDisplayed = false;
             } else {
                 this.isLatestTurnDisplayed = true;
