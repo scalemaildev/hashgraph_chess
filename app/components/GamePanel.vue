@@ -44,7 +44,8 @@
       <div v-if="!SUBMITTING_MOVE">
         <v-col cols="12" align="center">
           <v-form
-            @submit.prevent="submitMove">
+            @submit.prevent="submitMove"
+            :disabled="!isLatestTurnDisplayed">
             <v-row align="center">
               <v-spacer />
               <v-col cols="2">
@@ -74,7 +75,8 @@
                   label="Target"/>
               </v-col>
               <v-col cols="2">
-                <v-btn type="submitMove">Send</v-btn>
+                <v-btn type="submitMove"
+                       :disabled="!isLatestTurnDisplayed">Send</v-btn>
               </v-col>
               <v-spacer />
             </v-row>
