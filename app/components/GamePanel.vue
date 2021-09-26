@@ -178,10 +178,10 @@ export default {
             });
             
             this.translateGameState(this.GAME_STATE(this.topicId));
+            this.turnIndex = this.maxMoveIndex;
             this.TOGGLE_SUBMITTING_MOVE(false);
         },
         turnIndex (newTurnIndex, oldTurnIndex) {
-
             // is this the first move?
             if (newTurnIndex == 1) {
                 this.prevMoves = false;
