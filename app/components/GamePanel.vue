@@ -121,7 +121,7 @@ export default {
             targetSquare: '',
             promotion: '',
             currentTurn: '',
-            turnIndex: 0,
+            turnIndex: '',
             displayedBoardState: {}
         }
     },
@@ -165,15 +165,12 @@ export default {
                 topicId: this.topicId,
                 newPgn: newMatchPgn
             });
+            
             this.translateGameState(this.GAME_STATE(this.topicId));
             this.TOGGLE_SUBMITTING_MOVE(false);
         },
         turnIndex (newTurnIndex, oldTurnIndex) {
-            let initBoard = [''];
-            let shortHistory = this.GAME_HISTORY(this.topicId);
-            let fullHistory = initBoard.concat(shortHistory);
-
-            this.displayTurn(fullHistory, newTurnIndex);
+            this.displayTurn(newTurnIndex);
         }
     },
     
@@ -187,7 +184,7 @@ export default {
         ...mapMutations('sessionStorage', ['CREATE_GAME',
                                            'LOAD_PGN']),
         ...mapActions('sessionStorage', ['SEND_MESSAGE']),
-
+        
         /* Setup */
         initTranslatedGameState() {
             let blankBoard = {};
@@ -195,7 +192,7 @@ export default {
             for (let i = 0; i <= 7; i++) {
                 blankBoard[i] = Array(8).fill('blank');
             }
-
+            
             this.displayedBoardState = blankBoard;
         },
         matchDataFound () {
@@ -218,7 +215,7 @@ export default {
                     newPgn: ''
                 });
             }
-
+            
             // translate pgn into the visible game board
             // TODO: change this to use the board history
             let maxMoveIndex = this.GAME_HISTORY(this.topicId).length;
@@ -247,7 +244,7 @@ export default {
                     }
                 }
             }
-
+            
             // display the new board state
             this.displayedBoardState = newBoardState;
         },
@@ -327,7 +324,7 @@ export default {
         },
         displayNextMove () {
             let maxMoveIndex = this.GAME_HISTORY(this.topicId).length;
-
+            
             if (this.turnIndex >= maxMoveIndex ) {
                 this.turnIndex = maxMoveIndex;
             } else {
@@ -339,10 +336,27 @@ export default {
             
             this.turnIndex = maxMoveIndex;
         },
-        displayTurn (gameHistory, turnIndex) {
-            console.log(gameHistory);
-            console.log(turnIndex);
-        }
+        displayTurn (turnIndex) {
+            let initBoard = [''];
+            let fullHistory = initBoard.concat(this.GAME_HISTORY(this.topicId));
+            let gameHistory = fullHistory.slice(0, turnIndex + 1);
+            
+            this.convertGameHistoryToPgn(gameHistory);
+        },
+        convertGameHistoryToPgn (gameHistory) {            
+            this.dummyGame = new Chess();
+            
+            if (gameHistory.length == 1) {
+                this.dummyGame.load_pgn('');
+            } else {
+                gameHistory.forEach(move => {
+                    this.dummyGame.move(move);
+                });
+            };
+            
+            this.translateGameState(this.dummyGame.board());
+            this.dummyGame = null;
+        },
     }
 }
 </script>
