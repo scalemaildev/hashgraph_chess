@@ -1,11 +1,9 @@
 <template>
 <v-container fluid class="gamePanel-wrapper">
-  
   <ChessBoard
     :userType="userType"
     :displayedBoardState="displayedBoardState"
     :isLatestTurnDisplayed="isLatestTurnDisplayed" />
-  
   <v-row align="center" justify="center">
     <v-spacer />
     <v-col cols="2" align="center">
@@ -164,21 +162,22 @@ export default {
         latestMatchPgn () {
             return this.LATEST_MATCH_PGN(this.topicId);
         },
-        maxMoveIndex () {
-            return this.GAME_HISTORY(this.topicId).length;
-        }
         
     },
     
     watch: {
         latestMatchPgn (newMatchPgn, oldMatchPgn) {
+            // load new pgn into our vuex game state
             this.LOAD_PGN({
                 topicId: this.topicId,
                 newPgn: newMatchPgn
             });
-            
-            this.translateGameState(this.GAME_STATE(this.topicId));
-            this.turnIndex = this.maxMoveIndex;
+
+            // display the latest game state on our dummy board
+            this.turnIndex = this.GAME_HISTORY(this.topicId).length;
+            this.displayTurn(this.turnIndex);
+
+            // if we were submitting the move, it came back
             this.TOGGLE_SUBMITTING_MOVE(false);
         },
         turnIndex (newTurnIndex, oldTurnIndex) {
@@ -190,7 +189,7 @@ export default {
             }
 
             // is this the last move?
-            if (newTurnIndex == this.maxMoveIndex) {
+            if (newTurnIndex == this.GAME_HISTORY(this.topicId).length) {
                 this.nextMoves = false
             } else {
                 this.nextMoves = true;
@@ -231,7 +230,7 @@ export default {
             // load current pgn if it exists
             if (this.matchDataFound()) {
                 let latestPgn = this.LATEST_MATCH_PGN(this.topicId);
-                this.turnIndex = this.maxMoveIndex;
+                this.turnIndex = this.GAME_HISTORY(this.topicId).length;
                 this.LOAD_PGN({
                     topicId: this.topicId,
                     newPgn: latestPgn
@@ -351,17 +350,17 @@ export default {
             }
         },
         displayNextMove () {
-            if (this.turnIndex < this.maxMoveIndex) {
+            if (this.turnIndex < this.GAME_HISTORY(this.topicId).length) {
                 this.turnIndex += 1;
             }
         },
         displayLastMove () {
-            this.turnIndex = this.maxMoveIndex;
+            this.turnIndex = this.GAME_HISTORY(this.topicId).length;
         },
         displayTurn (turnIndex) {
             let gameHistory = this.GAME_HISTORY(this.topicId).slice(0, turnIndex);
 
-            if (turnIndex < this.maxMoveIndex) {
+            if (turnIndex < this.GAME_HISTORY(this.topicId).length) {
                 this.isLatestTurnDisplayed = false;
             } else {
                 this.isLatestTurnDisplayed = true;

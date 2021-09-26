@@ -145,7 +145,6 @@ export const actions = {
         
         return response;
     },
-
     async UNSET_CLIENT({ commit }) {
         // dispatch a method to clear the hashgraph client server-side
         const response = await this.dispatch('ASYNC_EMIT', {
@@ -169,7 +168,6 @@ export const actions = {
         });
         return response;
     },
-    
     async SUBSCRIBE_TO_TOPIC({ commit }, topicId) {
         //if we're subbing to a topic, clear out any pre-existing data for it
         commit('CLEAR_MATCH_OBJECT', topicId);
@@ -181,7 +179,6 @@ export const actions = {
         });
         return response;
     },
-
     async SEND_MESSAGE({ state }, messagePayload) {
         let response = await this.dispatch('ASYNC_EMIT', {
             eventName: 'sendHCSMessage',
@@ -190,7 +187,6 @@ export const actions = {
         });
         return response;
     },
-
     PROCESS_MESSAGE({ commit }, messageResponse) {
         let messageData = JSON.parse(messageResponse);
         
@@ -275,8 +271,8 @@ export const getters = {
         };
     },
     GAME_LEGAL_MOVES(state) {
-        return request => {
-            return state.GAME_INSTANCES[request.topicId].moves({ square: request.square, verbose: true });
+        return args => {
+            return state.GAME_INSTANCES[args.topicId].moves({ square: args.square, verbose: true });
         };
     },
     GAME_HISTORY(state) {
