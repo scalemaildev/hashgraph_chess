@@ -94,7 +94,7 @@ async function sendHCSMessage(data) {
 async function subscribeToTopic(io, topicIdString) {
     const topicId = TopicId.fromString(topicIdString);
 
-    // when the page is refreshed, pre-existing subs remain
+    // when the page is refreshed, pre-existing subs still remain
     if (subscriptions[topicIdString]) {
         subscriptions[topicIdString].unsubscribe();
     }

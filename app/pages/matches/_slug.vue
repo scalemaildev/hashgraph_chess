@@ -8,7 +8,8 @@
     </v-col>
   </v-row>
   <div v-if="ACTIVE_PANEL == 'loadingPanel'" class="content-spaced-mid">
-    <LoadingPanel loadingText="LOADING" />
+    <LoadingPanel loadingText="LOADING"
+                  warningTime=12000 />
   </div>
   <div v-else-if="ACTIVE_PANEL == 'startPanel'">
     <MatchStartPanel />

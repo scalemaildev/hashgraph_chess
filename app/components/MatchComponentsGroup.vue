@@ -1,7 +1,8 @@
 <template>
 <div>
   <div v-if="!matchDataLoaded || !gameDataLoaded" class="content-spaced-mid">
-    <LoadingPanel loadingText="SUBSCRIBING" />
+    <LoadingPanel loadingText="SUBSCRIBING"
+                  warningTime=12000 />
   </div>
   <div v-else>
     <v-container fluid class="matchComponents-wrapper">
@@ -29,7 +30,8 @@ export default {
     data () {
         return {
             matchDataLoaded: false,
-            gameDataLoaded: false
+            gameDataLoaded: false,
+            subscriptionTimeout: false
         }
     },
     

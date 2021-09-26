@@ -1,18 +1,14 @@
 * NOW
-** TODO Disable form submission if not on most recent board state
-** TODO Additional handling for incoming moves/messages
-*** Handle for submitting move when the sub never comes back (timeout?)
-** TODO Error handling for when move submit fails (revert to original state)
-*** Should only fail if there's a loss of connection?
-** TODO Need a timeout for topic subbing (and visible error message)
-* ON DECK
 ** TODO Game over handling
 *** Don't accept any more moves
 *** Display who won
-** TODO Resign button (with client-side validation like a move)
-** TODO Left and Right alignment for player 1/2 in the messages window
+*** Put it in the turnStatus method (and make a new method for handling it)
+** TODO Resign button
+*** Should be its own message type
+*** Needs same validation as moves and messages
+* ON DECK
 ** TODO Need to add support for handling promotions
-**** users suggest a modal window with an extra menu option for promo
+*** A modal window containing an extra menu option for promotion choice
 * FUTURE
 ** TODO Footer with terms of use, github link, and credits to start page(s)
 *** Artist for sprites was Daniela De Lena
@@ -23,6 +19,8 @@
 ** TODO Do another pass at the css styling and ALL breakpoint settings
 *** The loading spinner for new match panel spreads the container
 *** The loading spinner for move submission spreads the container
+*** Change the computed styles to computed classes and them moves to assets
+*** Refactor the asset css stuff to inherit from base styles
 ** TODO Replace grid input method with drag and drog
 ** TODO Another big cleanup and refactoring run
 * BUGS

@@ -84,14 +84,8 @@
         </v-col>
       </div>
       <div v-else-if="SUBMITTING_MOVE" style="margin-top: 4vh;">
-        <v-row>
-          <v-col cols="12" align="center">
-            <v-progress-circular indeterminate />
-          </v-col>
-          <v-col cols="12" align="center">
-            <h4>... SUBMITTING ...</h4>
-          </v-col>
-        </v-row>
+        <LoadingPanel loadingText="SUBMITTING"
+                      warningTime=12000 />
       </div>
     </div>
   </v-row>
@@ -329,6 +323,7 @@ export default {
             }
         },
         turnStatus () {
+            //TODO: check for game over (and condition) here
             if (this.GAME_TURN(this.topicId) == 'w') {
                 this.currentTurn = 'w';
                 return 'White to Move';

@@ -51,16 +51,8 @@
   </div>
   <!-- LOADING -->
   <div v-if="creatingMatch" class="content-spaced-small">
-    <v-row>
-      <v-col cols="12" align="center" justify="center">
-        <v-progress-circular
-          indeterminate
-          />
-      </v-col>
-      <v-col cols="12" align="center" justify="center">
-        ... Creating Match ...
-      </v-col>
-    </v-row>
+    <LoadingPanel loadingText="CREATING MATCH"
+                  warningTime=12000 />
   </div>
 </div>
 </v-container>
