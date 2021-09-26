@@ -3,27 +3,32 @@
   
   <ChessBoard
     :userType="userType"
-    :displayedBoardState="displayedBoardState" />
+    :displayedBoardState="displayedBoardState"
+    :turnIndex="turnIndex" />
   
   <v-row align="center" justify="center">
     <v-spacer />
     <v-col cols="2" align="center">
-      <v-btn>
+      <v-btn
+        @click.prevent="displayFirstMove()">
         <<
       </v-btn>
     </v-col>
     <v-col cols="2" align="center">
-      <v-btn>
+      <v-btn
+        @click.prevent="displayPrevMove()">
         <
       </v-btn>
     </v-col>
     <v-col cols="2" align="center">
-      <v-btn>
+      <v-btn
+        @click.prevent="displayNextMove()">
         >
       </v-btn>
     </v-col>
     <v-col cols="2" align="center">
-      <v-btn>
+      <v-btn
+        @click.prevent="displayLastMove()">
         >>
       </v-btn>
     </v-col>
@@ -116,6 +121,7 @@ export default {
             targetSquare: '',
             promotion: '',
             currentTurn: '',
+            turnIndex: 0,
             displayedBoardState: {}
         }
     },
@@ -161,6 +167,13 @@ export default {
             });
             this.translateGameState(this.GAME_STATE(this.topicId));
             this.TOGGLE_SUBMITTING_MOVE(false);
+        },
+        turnIndex (newTurnIndex, oldTurnIndex) {
+            let initBoard = [''];
+            let shortHistory = this.GAME_HISTORY(this.topicId);
+            let fullHistory = initBoard.concat(shortHistory);
+
+            this.displayTurn(fullHistory, newTurnIndex);
         }
     },
     
@@ -174,7 +187,7 @@ export default {
         ...mapMutations('sessionStorage', ['CREATE_GAME',
                                            'LOAD_PGN']),
         ...mapActions('sessionStorage', ['SEND_MESSAGE']),
-        
+
         /* Setup */
         initTranslatedGameState() {
             let blankBoard = {};
@@ -207,6 +220,9 @@ export default {
             }
 
             // translate pgn into the visible game board
+            // TODO: change this to use the board history
+            let maxMoveIndex = this.GAME_HISTORY(this.topicId).length;
+            
             this.translateGameState(this.GAME_STATE(this.topicId));
         },
         
@@ -299,9 +315,33 @@ export default {
                 return 'Black to Move';
             }
         },
-        displayedPgn () {
-            let gameHistory = this.GAME_HISTORY(this.topicId);
-            return gameHistory.at(-1);
+        displayFirstMove () {
+            this.turnIndex = 0;
+        },
+        displayPrevMove () {
+            if (this.turnIndex == 0) {
+                this.turnIndex = 0;
+            } else {
+                this.turnIndex -= 1;
+            }
+        },
+        displayNextMove () {
+            let maxMoveIndex = this.GAME_HISTORY(this.topicId).length;
+
+            if (this.turnIndex >= maxMoveIndex ) {
+                this.turnIndex = maxMoveIndex;
+            } else {
+                this.turnIndex += 1;
+            }
+        },
+        displayLastMove () {
+            let maxMoveIndex = this.GAME_HISTORY(this.topicId).length;
+            
+            this.turnIndex = maxMoveIndex;
+        },
+        displayTurn (gameHistory, turnIndex) {
+            console.log(gameHistory);
+            console.log(turnIndex);
         }
     }
 }

@@ -24,7 +24,7 @@
 
 <script>
 export default {
-    props: ['userType', 'displayedBoardState'],
+    props: ['userType', 'displayedBoardState', 'turnIndex'],
     
     computed: {
         pieceStyle() {
