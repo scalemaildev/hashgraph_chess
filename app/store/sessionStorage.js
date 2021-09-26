@@ -281,7 +281,8 @@ export const getters = {
     },
     GAME_HISTORY(state) {
         return topicId => {
-            return state.GAME_INSTANCES[topicId].history();
+            let initState = [''];
+            return initState.concat(state.GAME_INSTANCES[topicId].history());
         };
     },
 };

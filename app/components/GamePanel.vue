@@ -4,7 +4,7 @@
   <ChessBoard
     :userType="userType"
     :displayedBoardState="displayedBoardState"
-    :turnIndex="turnIndex" />
+    :isLatestTurnDisplayed="isLatestTurnDisplayed" />
   
   <v-row align="center" justify="center">
     <v-spacer />
@@ -121,7 +121,8 @@ export default {
             targetSquare: '',
             promotion: '',
             currentTurn: '',
-            turnIndex: '',
+            isLatestTurnDisplayed: true,
+            turnIndex: 1, // this does not begin at 0
             displayedBoardState: {}
         }
     },
@@ -156,7 +157,7 @@ export default {
         /* Data */
         latestMatchPgn () {
             return this.LATEST_MATCH_PGN(this.topicId);
-        }
+        },
     },
     
     watch: {
@@ -217,9 +218,6 @@ export default {
             }
             
             // translate pgn into the visible game board
-            // TODO: change this to use the board history
-            let maxMoveIndex = this.GAME_HISTORY(this.topicId).length;
-            
             this.translateGameState(this.GAME_STATE(this.topicId));
         },
         
@@ -313,21 +311,23 @@ export default {
             }
         },
         displayFirstMove () {
-            this.turnIndex = 0;
+            if (this.turnIndex == 1) {
+                this.displayTurn(1); // sloppy handling of init state
+            } else {
+                this.turnIndex = 1;
+            }
         },
         displayPrevMove () {
-            if (this.turnIndex == 0) {
-                this.turnIndex = 0;
-            } else {
+            if (this.turnIndex > 1) {
                 this.turnIndex -= 1;
+            } else {
+                this.displayTurn(1); // sloppy handling of init state
             }
         },
         displayNextMove () {
             let maxMoveIndex = this.GAME_HISTORY(this.topicId).length;
             
-            if (this.turnIndex >= maxMoveIndex ) {
-                this.turnIndex = maxMoveIndex;
-            } else {
+            if (this.turnIndex < maxMoveIndex) {
                 this.turnIndex += 1;
             }
         },
@@ -337,16 +337,20 @@ export default {
             this.turnIndex = maxMoveIndex;
         },
         displayTurn (turnIndex) {
-            let initBoard = [''];
-            let fullHistory = initBoard.concat(this.GAME_HISTORY(this.topicId));
-            let gameHistory = fullHistory.slice(0, turnIndex + 1);
+            let gameHistory = this.GAME_HISTORY(this.topicId).slice(0, turnIndex);
+
+            if (turnIndex < this.GAME_HISTORY(this.topicId).length) {
+                this.isLatestTurnDisplayed = false;
+            } else {
+                this.isLatestTurnDisplayed = true;
+            }
             
             this.convertGameHistoryToPgn(gameHistory);
         },
         convertGameHistoryToPgn (gameHistory) {            
             this.dummyGame = new Chess();
             
-            if (gameHistory.length == 1) {
+            if (gameHistory.length <= 1) {
                 this.dummyGame.load_pgn('');
             } else {
                 gameHistory.forEach(move => {
