@@ -1,5 +1,4 @@
 * NOW
-** TODO Disable turn scrolling buttons for index limits
 ** TODO Additional handling for incoming moves/messages
 *** Will first require the vuex migration
 *** TODO Handle for submitting move when the sub never comes back (timeout?)

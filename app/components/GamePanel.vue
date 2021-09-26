@@ -10,25 +10,29 @@
     <v-spacer />
     <v-col cols="2" align="center">
       <v-btn
-        @click.prevent="displayFirstMove()">
+        @click.prevent="displayFirstMove()"
+        :disabled="!prevMoves">
         <<
       </v-btn>
     </v-col>
     <v-col cols="2" align="center">
       <v-btn
-        @click.prevent="displayPrevMove()">
+        @click.prevent="displayPrevMove()"
+        :disabled="!prevMoves">
         <
       </v-btn>
     </v-col>
     <v-col cols="2" align="center">
       <v-btn
-        @click.prevent="displayNextMove()">
+        @click.prevent="displayNextMove()"
+        :disabled="!nextMoves">
         >
       </v-btn>
     </v-col>
     <v-col cols="2" align="center">
       <v-btn
-        @click.prevent="displayLastMove()">
+        @click.prevent="displayLastMove()"
+        :disabled="!nextMoves">
         >>
       </v-btn>
     </v-col>
@@ -123,6 +127,8 @@ export default {
             currentTurn: '',
             isLatestTurnDisplayed: true,
             turnIndex: 1, // this does not begin at 0
+            prevMoves: false,
+            nextMoves: false,
             displayedBoardState: {}
         }
     },
@@ -157,7 +163,11 @@ export default {
         /* Data */
         latestMatchPgn () {
             return this.LATEST_MATCH_PGN(this.topicId);
+        },
+        maxMoveIndex () {
+            return this.GAME_HISTORY(this.topicId).length;
         }
+        
     },
     
     watch: {
@@ -171,8 +181,23 @@ export default {
             this.TOGGLE_SUBMITTING_MOVE(false);
         },
         turnIndex (newTurnIndex, oldTurnIndex) {
+
+            // is this the first move?
+            if (newTurnIndex == 1) {
+                this.prevMoves = false;
+            } else {
+                this.prevMoves = true;
+            }
+
+            // is this the last move?
+            if (newTurnIndex == this.maxMoveIndex) {
+                this.nextMoves = false
+            } else {
+                this.nextMoves = true;
+            }
+            
             this.displayTurn(newTurnIndex);
-        }
+        },
     },
     
     created () {
@@ -206,7 +231,7 @@ export default {
             // load current pgn if it exists
             if (this.matchDataFound()) {
                 let latestPgn = this.LATEST_MATCH_PGN(this.topicId);
-                this.turnIndex = this.maxMoveIndex();
+                this.turnIndex = this.maxMoveIndex;
                 this.LOAD_PGN({
                     topicId: this.topicId,
                     newPgn: latestPgn
@@ -311,9 +336,6 @@ export default {
                 return 'Black to Move';
             }
         },
-        maxMoveIndex () {
-            return this.GAME_HISTORY(this.topicId).length;
-        },
         displayFirstMove () {
             if (this.turnIndex == 1) {
                 this.displayTurn(1); // sloppy handling of init state
@@ -329,17 +351,17 @@ export default {
             }
         },
         displayNextMove () {
-            if (this.turnIndex < this.maxMoveIndex()) {
+            if (this.turnIndex < this.maxMoveIndex) {
                 this.turnIndex += 1;
             }
         },
         displayLastMove () {
-            this.turnIndex = this.maxMoveIndex();
+            this.turnIndex = this.maxMoveIndex;
         },
         displayTurn (turnIndex) {
             let gameHistory = this.GAME_HISTORY(this.topicId).slice(0, turnIndex);
 
-            if (turnIndex < this.maxMoveIndex()) {
+            if (turnIndex < this.maxMoveIndex) {
                 this.isLatestTurnDisplayed = false;
             } else {
                 this.isLatestTurnDisplayed = true;
