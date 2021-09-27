@@ -2,6 +2,7 @@
 ** TODO Resign button
 *** Should be its own message type
 *** Needs same validation as moves and messages
+*** Needs a confirmation modal
 ** TODO Need to add support for handling promotions
 *** A modal window containing an extra menu option for promotion choice
 * ON DECK

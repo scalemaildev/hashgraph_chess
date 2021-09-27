@@ -82,6 +82,11 @@
                        :disabled="!isLatestTurnDisplayed">Send</v-btn>
               </v-col>
               <v-spacer />
+              <v-col cols="12">
+                <v-btn>
+                  Resign
+                </v-btn>
+              </v-col>
             </v-row>
           </v-form>
         </v-col>
@@ -128,7 +133,9 @@ export default {
             turnIndex: 1, // this does not begin at 0
             prevMoves: false,
             nextMoves: false,
-            displayedBoardState: {}
+            displayedBoardState: {},
+            resignModal: false,
+            promotionModal: false
         }
     },
     
