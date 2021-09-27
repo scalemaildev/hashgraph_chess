@@ -2,11 +2,13 @@
 
 This is an application that allows users to conduct chess matches over the [Hedera Consensus Service.](https://hedera.com/consensus-service) Chess moves (and chat messages) are submitted to the consensus service, where they are ordered as an immutable log of events. These events are then translated into the board states and messages that are served to the client.
 
-In order to use this application, you will need a Hedera Hashgraph [Testnet account.](https://portal.hedera.com/register) Later versions of this application will also allow players to user their [Mainnet accounts.](https://hedera.com/account-creation)
+In order to use this application, you will need a Hedera Hashgraph [Testnet account.](https://portal.hedera.com/register) Later versions of this application will also allow players to use their [Mainnet accounts.](https://hedera.com/account-creation)
 
 ## Technical Information
 
 This is a [NuxtJS](https://nuxtjs.org/) application that leverages several useful modules, most notably: [chess.js](https://github.com/jhlywa/chess.js), [nuxt-socket-io](https://github.com/richardeschloss/nuxt-socket-io), and of course [hedera-sdk-js](https://github.com/hashgraph/hedera-sdk-js). It also comes with a compose file for [docker containerization](https://www.docker.com/) which is intended for use with [Elastic Beanstalk.](https://aws.amazon.com/elasticbeanstalk/)
+
+You can run the application locally via either its compose file, or the usual "npm install" -> "npm run dev" method.
 
 ### How It Works
 
