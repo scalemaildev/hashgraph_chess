@@ -134,7 +134,7 @@ export const mutations = {
         let operator = messageData.operator;
         let playerWhite = state.MATCHES[topicId].playerWhite;
         let playerBlack = state.MATCHES[topicId].playerBlack;
-        let resignedPlayer = '';;
+        let resignedPlayer = '';
 
         if (operator == playerWhite) {
             resignedPlayer = 'w';

@@ -39,11 +39,11 @@
   <v-row align="center" justify="center">
     <v-col cols="12" align="center">
       <h4>{{ turnStatus() }}</h4>
-      <div v-show="inCheck && !isGameOver">
+      <div v-show="inCheck && !isGameOver && !playerResigned">
         <span style="color: red;"><h4>Check</h4></span>
       </div>
     </v-col>
-    <div v-show="userType != 'o' && userType == currentTurn && !isGameOver">
+    <div v-show="userType != 'o' && userType == currentTurn && !isGameOver && !playerResigned">
       <div v-if="!SUBMITTING_MOVE">
         <v-col cols="12" align="center">
           <v-form
