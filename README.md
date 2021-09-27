@@ -12,17 +12,17 @@ You can run the application locally via its compose file, or the usual "npm inst
 
 ### How It Works
 
-- The hashgraph functionality sits in the server middleware, where it's utilized by a socket (specifically one provided by nuxt-socket-io module).
-- The NuxtJS front-end allows the user to pass commands to the server middleware, where they're emitted to the HCS via the socket. This includes the command to subscribe to an HCS topic.
+- The hashgraph functionality sits in the server middleware, where it's utilized by a socket (specifically one provided by the nuxt-socket-io module).
+- The NuxtJS front-end allows users to pass commands to the server middleware, where they're emitted to the HCS via the socket. This includes the command to subscribe to an HCS topic.
 - When the server middleware receives a response from the HCS topic subscription, it passes that information along to the vuex state for processing. Once the new information is processed, it's served to the client (usually as a new chess move or chat message). Some data might be rejected, such as double moves, blank messages, or anything sent to the topic by a non-player.
 - The game state is stored in vuex, making it readily accessible from any component via a plethora of mutations, actions, and getters.
-- A dummy game is used client-side to validate moves before sending them to the HCS. Instead of sending individual moves to the HCS, the [Portable Game Notation](https://en.wikipedia.org/wiki/Portable_Game_Notation) from the dummy game is sent. The game state is only updated when it receives a PGN from the topic subscription. This is done to prevent deviation in game states.
+- A dummy game is used client-side to display board states, and validate moves before sending them to the HCS. Instead of sending individual moves to the HCS, the [Portable Game Notation](https://en.wikipedia.org/wiki/Portable_Game_Notation) from the dummy game is sent. The canonical game state is only updated when it receives a PGN from the topic subscription. This is done to prevent deviation in game states.
 
 ## Future Steps
 
 ### Player Validation Improvement
 
-The player validation method (verifying who sent the information to the HCS topic) will be done using a spoof-proof method, such as signing via public keys.
+The player validation method (verifying who sent the information to the HCS topic) will be done using a spoof-proof method, such as signing with public/private keys.
 
 ### Client Initialization Improvement
 
@@ -36,9 +36,9 @@ The move input form will be replaced with an interactive chess board.
 
 I will continue to work on the user interface to allow the application to be used across a wide variety of desktop and mobile devices.
 
-### Mainnet
+### Mainnet Migration
 
-Once the application is deemed secure and serviceable, the Hashgraph sdk client will be pointed toward the Hedera Hashgraph Mainnet. Users will be able to conduct chess matches using tinybars from their Mainnet accounts. At this time, the application will also be hosted on AWS Elastic Beanstalk for public use.
+Once the application is deemed secure and serviceable, the client will be pointed toward the Hedera Hashgraph Mainnet. Users will be able to conduct chess matches using tinybars from their Mainnet accounts. At that time, the application will also be hosted on AWS Elastic Beanstalk for public use.
 
 ## Credits
 
