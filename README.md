@@ -15,7 +15,7 @@ You can run the application locally via its compose file, or the usual "npm inst
 - The hashgraph functionality sits in the server middleware, where it's utilized by a socket (specifically one provided by nuxt-socket-io module).
 - The NuxtJS front-end allows the user to pass commands to the server middleware, where they're emitted to the HCS via the socket. This includes the command to subscribe to an HCS topic.
 - When the server middleware receives a response from the HCS topic subscription, it passes that information along to the vuex state for processing. Once the new information is processed, it's served to the client (usually as a new chess move or chat message). Some data might be rejected, such as double moves, blank messages, or anything sent to the topic by a non-player.
-- The game state is stored in vuex instead of the client, making it readily accessible from any component via a plethora of mutations, actions, and getters.
+- The game state is stored in vuex, making it readily accessible from any component via a plethora of mutations, actions, and getters.
 - A dummy game is used client-side to validate moves before sending them to the HCS. Instead of sending individual moves to the HCS, the [Portable Game Notation](https://en.wikipedia.org/wiki/Portable_Game_Notation) from the dummy game is sent. The game state is only updated when it receives a PGN from the topic subscription. This is done to prevent deviation in game states.
 
 ## Future Steps
@@ -26,7 +26,7 @@ The player validation method (verifying who sent the information to the HCS topi
 
 ### Client Initialization Improvement
 
-To prevent players from having to input their account id's and private keys into text fields, this application will switch over to utilizing browser extension wallets whenever they become available for Hedera Hashgraph.
+To prevent players from having to input their account ID's and private keys into text fields, this application will utilize browser extension wallets whenever they become available for Hedera Hashgraph. I will still keep the option to input the fields manually, of course.
 
 ### Move Input Improvement
 
