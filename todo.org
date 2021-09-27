@@ -1,4 +1,5 @@
 * NOW
+** TODO Make black player text lighter
 ** TODO Check Handling
 ** TODO Game over handling
 *** Don't accept any more moves

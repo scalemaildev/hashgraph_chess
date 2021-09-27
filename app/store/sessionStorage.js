@@ -104,6 +104,11 @@ export const mutations = {
         let operator = messageData.operator;
         let match = state.MATCHES[topicId];
 
+        // filter out moves after game is over
+        if (state.GAME_INSTANCES[topicId].game_over()) {
+            return;
+        }
+
         // filter out non-players
         if (operator != match.playerWhite && operator != match.playerBlack) {
             console.warn('Rejected a chess move from: ' + operator);
@@ -289,14 +294,14 @@ export const getters = {
     GAME_OVER_STATUS(state) {
         return topicId => {
             if (state.GAME_INSTANCES[topicId].game_over()) {
-                let currentTurn = state.GAME_INSTANCES[topicId].turn();
                 
                 // check specific game over type
                 if (state.GAME_INSTANCES[topicId].in_checkmate()) {
+                    let currentTurn = state.GAME_INSTANCES[topicId].turn();
                     if (currentTurn == 'w') {
-                        return 'Game Result: Black - Checkmate';
+                        return 'Game Result: Checkmate - Black Wins';
                     } else {
-                        return 'Game Result: White - Checkmate';
+                        return 'Game Result: Checkmate - White Wins';
                     }
                 } else if (state.GAME_INSTANCES[topicId].in_draw()) {
                     return 'Game Result: Draw';

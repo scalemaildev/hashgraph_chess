@@ -39,7 +39,7 @@
   <v-row align="center" justify="center">
     <v-col cols="12" align="center">
       <h4>{{ turnStatus() }}</h4>
-      <div v-show="inCheck">
+      <div v-show="inCheck && !isGameOver">
         <span style="color: red;"><h4>Check</h4></span>
       </div>
     </v-col>

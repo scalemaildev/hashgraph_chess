@@ -3,10 +3,10 @@
   <ul v-chat-scroll style="list-style-type: none; padding-left: 0;">
     <li v-for="msg in matchMessages">
       <div v-if="msg.account == playerWhite">
-        <span style='color: #aba9c9;'><strong>{{ msg.account }}:</strong> {{ msg.message }}</span>
+        <strong><span style='color: #aba9c9;'>{{ msg.account }}:</span></strong> {{ msg.message }}
       </div>
       <div v-else-if="msg.account == playerBlack">
-        <span style='color: #706e8f;'><strong>{{ msg.account }}:</strong> {{ msg.message }}</span>
+        <strong><span style='color: #747294;'>{{ msg.account }}:</span></strong> {{ msg.message }}
       </div>
       <div v-else>
         <strong>{{ msg.account }}:</strong> {{ msg.message }}
