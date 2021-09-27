@@ -83,9 +83,8 @@
               </v-col>
               <v-spacer />
               <v-col cols="12">
-                <v-btn>
-                  Resign
-                </v-btn>
+                <ResignDialog
+                  :topicId="topicId" />
               </v-col>
             </v-row>
           </v-form>
@@ -134,8 +133,8 @@ export default {
             prevMoves: false,
             nextMoves: false,
             displayedBoardState: {},
-            resignModal: false,
-            promotionModal: false
+            resignDialogue: false,
+            promoDialogue: false
         }
     },
     

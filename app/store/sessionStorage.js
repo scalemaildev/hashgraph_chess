@@ -57,7 +57,8 @@ export const mutations = {
                 message: "Started a new match between " + playerWhite + " and " + playerBlack + "..."
             }],
             pgns: [''],
-            boardState: []
+            boardState: [],
+            resigned: false
         });
     },
     CLEAR_MATCH_OBJECT(state, topicId) {
@@ -104,8 +105,8 @@ export const mutations = {
         let operator = messageData.operator;
         let match = state.MATCHES[topicId];
 
-        // filter out moves after game is over
-        if (state.GAME_INSTANCES[topicId].game_over()) {
+        // filter out moves after game is over (game_over() or resigned match)
+        if (state.GAME_INSTANCES[topicId].game_over() || state.MATCHES[topicId.resigned]) {
             return;
         }
 
@@ -128,6 +129,24 @@ export const mutations = {
             newPgn: newPgn
         });
     },
+    PROCESS_RESIGN(state, messageData) {
+        let topicId = messageData.topicId;
+        let operator = messageData.operator;
+        let playerWhite = state.MATCHES[topicId].playerWhite;
+        let playerBlack = state.MATCHES[topicId].playerBlack;
+        let resignedPlayer = '';
+
+        if (operator == playerWhite) {
+            resignedPlayer = 'w';
+        } else if (operator == playerBlack) {
+            resignedPlayer = 'b';
+        } else {
+            // somehow got a non-player resignation
+            return;
+        }
+
+        state.MATCHES[topicId].resigned = resignedPlayer;
+    }
 };
 
 /* Actions */
@@ -204,6 +223,9 @@ export const actions = {
             break;
         case 'chessMove':
             commit('PROCESS_CHESS_MOVE', messageData);
+            break;
+        case 'resignPlayer':
+            commit('PROCESS_RESIGN', messageData);
             break;
         default:
             console.log('Got unknown message type: ' + messageData.messageType);
@@ -293,8 +315,16 @@ export const getters = {
     },
     GAME_OVER_STATUS(state) {
         return topicId => {
+            // resigned check
+            let resignedPlayer = state.MATCHES[topicId].resigned;
+            if (resignedPlayer == 'w') {
+                return 'Game Result: Resignation - Black Wins';
+            } else if (resignedPlayer == 'b') {
+                return 'Game Result: Resignation - White Wins';
+            }
+
+            // game_over() check
             if (state.GAME_INSTANCES[topicId].game_over()) {
-                
                 // check specific game over type
                 if (state.GAME_INSTANCES[topicId].in_checkmate()) {
                     let currentTurn = state.GAME_INSTANCES[topicId].turn();
