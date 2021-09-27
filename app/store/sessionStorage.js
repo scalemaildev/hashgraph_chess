@@ -289,9 +289,15 @@ export const getters = {
     GAME_OVER_STATUS(state) {
         return topicId => {
             if (state.GAME_INSTANCES[topicId].game_over()) {
+                let currentTurn = state.GAME_INSTANCES[topicId].turn();
+                
                 // check specific game over type
                 if (state.GAME_INSTANCES[topicId].in_checkmate()) {
-                    return 'Game Result: Checkmate';
+                    if (currentTurn == 'w') {
+                        return 'Game Result: Black - Checkmate';
+                    } else {
+                        return 'Game Result: White - Checkmate';
+                    }
                 } else if (state.GAME_INSTANCES[topicId].in_draw()) {
                     return 'Game Result: Draw';
                 } else if (state.GAME_INSTANCES[topicId].in_stalemate()) {
