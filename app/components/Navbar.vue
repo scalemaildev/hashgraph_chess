@@ -1,7 +1,7 @@
 <template>
 <v-toolbar color="rgba(18, 32, 59, 0.8);" class="navbar-wrapper">
   <v-toolbar-title class="navbar-backing">
-    <h2 style="display: inline">♄ashgraph Chess</h2> <sup>Pre-Beta</sup>
+    <h2 style="display: inline">♄ashgraph Chess</h2> <sup>Beta</sup>
   </v-toolbar-title>
   <v-spacer />
   <v-btn v-show="LOCK_BUTTON" @click="unsetClient">

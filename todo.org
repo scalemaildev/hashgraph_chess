@@ -14,6 +14,7 @@
 *** The loading spinner for move submission spreads the container
 *** Change the computed styles to computed classes and them moves to assets
 *** Refactor the asset css stuff to inherit from base styles
+** TODO Stop text fields from stupid suggestions (new password method)
 ** TODO One last big cleanup and refactoring run
 * FUTURE
 ** TODO Change player validation to use public key method
