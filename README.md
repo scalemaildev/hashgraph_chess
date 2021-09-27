@@ -36,6 +36,10 @@ The move input form will be replaced with an interactive chess board.
 
 I will continue to work on the user interface to allow the application to be used across a wide variety of desktop and mobile devices.
 
+### Mainnet
+
+Once the application is deemed secure and serviceable, the Hashgraph sdk client will be pointed toward the Hedera Hashgraph Mainnet. Users will be able to conduct chess matches using tinybars from their Mainnet accounts. At this time, the application will also be hosted on AWS Elastic Beanstalk for public use.
+
 ## Credits
 
 - The chess sprites are from [Daniela De Lena's spritesheet.](https://dilena.de/chess-artwork-pieces-and-board-art-assets)
