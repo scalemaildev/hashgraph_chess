@@ -1,10 +1,4 @@
 * NOW
-** TODO Make black player text lighter
-** TODO Check Handling
-** TODO Game over handling
-*** Don't accept any more moves
-*** Display who won
-*** Put it in the turnStatus method (and make a new method for handling it)
 ** TODO Resign button
 *** Should be its own message type
 *** Needs same validation as moves and messages
