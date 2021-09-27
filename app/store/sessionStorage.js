@@ -281,4 +281,29 @@ export const getters = {
             return initState.concat(state.GAME_INSTANCES[topicId].history());
         };
     },
+    GAME_CHECK_STATUS(state) {
+        return topicId => {
+            return state.GAME_INSTANCES[topicId].in_check();
+        };
+    },
+    GAME_OVER_STATUS(state) {
+        return topicId => {
+            if (state.GAME_INSTANCES[topicId].game_over()) {
+                // check specific game over type
+                if (state.GAME_INSTANCES[topicId].in_checkmate()) {
+                    return 'Game Result: Checkmate';
+                } else if (state.GAME_INSTANCES[topicId].in_draw()) {
+                    return 'Game Result: Draw';
+                } else if (state.GAME_INSTANCES[topicId].in_stalemate()) {
+                    return 'Game Result: Stalemate';
+                } else if (state.GAME_INSTANCES[topicId].in_threefold_repetition()) {
+                    return 'Game Result: Threefold Repetition';
+                } else {
+                    return 'Game Result: Unknown';
+                }
+            } else {
+                return false;
+            }
+        };
+    }
 };

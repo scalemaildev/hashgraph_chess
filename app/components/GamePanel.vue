@@ -39,8 +39,11 @@
   <v-row align="center" justify="center">
     <v-col cols="12" align="center">
       <h4>{{ turnStatus() }}</h4>
+      <div v-show="inCheck">
+        <span style="color: red;"><h4>Check</h4></span>
+      </div>
     </v-col>
-    <div v-show="userType != 'o' && userType == currentTurn">
+    <div v-show="userType != 'o' && userType == currentTurn && !isGameOver">
       <div v-if="!SUBMITTING_MOVE">
         <v-col cols="12" align="center">
           <v-form
@@ -120,6 +123,8 @@ export default {
             promotion: '',
             currentTurn: '',
             isLatestTurnDisplayed: true,
+            inCheck: false,
+            isGameOver: false,
             turnIndex: 1, // this does not begin at 0
             prevMoves: false,
             nextMoves: false,
@@ -136,7 +141,9 @@ export default {
                                          'GAME_STATE',
                                          'GAME_TURN',
                                          'GAME_LEGAL_MOVES',
-                                         'GAME_HISTORY']),
+                                         'GAME_HISTORY',
+                                         'GAME_CHECK_STATUS',
+                                         'GAME_OVER_STATUS']),
         /* Vuelidate Errors */
         activeSquareErrors () {
             const errors = [];
@@ -172,6 +179,10 @@ export default {
             // display the latest game state on our dummy board
             this.turnIndex = this.GAME_HISTORY(this.topicId).length;
             this.displayTurn(this.turnIndex);
+
+            // check if the game is in check or over
+            this.inCheck = this.GAME_CHECK_STATUS(this.topicId);
+            this.isGameOver = this.GAME_OVER_STATUS(this.topicId);
 
             // if we were submitting the move, it came back
             this.TOGGLE_SUBMITTING_MOVE(false);
@@ -323,14 +334,25 @@ export default {
             }
         },
         turnStatus () {
-            //TODO: check for game over (and condition) here
+            let turnStatusString = '';
+            
+            // first check if the game is over
+            if (this.isGameOver) {
+                this.currentTurn = '';
+                turnStatusString = this.isGameOver;
+                return turnStatusString;
+            }
+
+            // otherwise set the string to the current player's turn
             if (this.GAME_TURN(this.topicId) == 'w') {
                 this.currentTurn = 'w';
-                return 'White to Move';
+                turnStatusString = 'White to Move';
             } else {
                 this.currentTurn = 'b';
-                return 'Black to Move';
+                turnStatusString = 'Black to Move';
             }
+
+            return turnStatusString;
         },
         displayFirstMove () {
             if (this.turnIndex == 1) {

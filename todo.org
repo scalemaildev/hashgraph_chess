@@ -1,4 +1,5 @@
 * NOW
+** TODO Check Handling
 ** TODO Game over handling
 *** Don't accept any more moves
 *** Display who won
