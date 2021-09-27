@@ -149,6 +149,7 @@ export default {
                                          'GAME_LEGAL_MOVES',
                                          'GAME_HISTORY',
                                          'GAME_CHECK_STATUS',
+                                         'GAME_RESIGNED_STATUS',
                                          'GAME_OVER_STATUS']),
         /* Vuelidate Errors */
         activeSquareErrors () {
@@ -171,7 +172,9 @@ export default {
         latestMatchPgn () {
             return this.LATEST_MATCH_PGN(this.topicId);
         },
-        
+        playerResigned () {
+            return this.GAME_RESIGNED_STATUS(this.topicId);
+        }
     },
     
     watch: {
@@ -209,7 +212,7 @@ export default {
             }
             
             this.displayTurn(newTurnIndex);
-        },
+        }
     },
     
     created () {
@@ -341,8 +344,15 @@ export default {
         },
         turnStatus () {
             let turnStatusString = '';
+
+            // first check if a player resigned
+            if (this.playerResigned) {
+                this.currentTurn = '';
+                turnStatusString = this.playerResigned;
+                return turnStatusString;
+            }
             
-            // first check if the game is over
+            // then check if the game is over
             if (this.isGameOver) {
                 this.currentTurn = '';
                 turnStatusString = this.isGameOver;

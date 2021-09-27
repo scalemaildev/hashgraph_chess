@@ -57,7 +57,7 @@ export default {
     
     methods: {
         ...mapActions('sessionStorage', ['SEND_MESSAGE']),
-        submitResign() {
+        async submitResign() {
             let messagePayload = {
 	        messageType: 'resignPlayer',
                 topicId: this.topicId

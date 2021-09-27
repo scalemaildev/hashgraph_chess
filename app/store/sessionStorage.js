@@ -134,7 +134,7 @@ export const mutations = {
         let operator = messageData.operator;
         let playerWhite = state.MATCHES[topicId].playerWhite;
         let playerBlack = state.MATCHES[topicId].playerBlack;
-        let resignedPlayer = '';
+        let resignedPlayer = '';;
 
         if (operator == playerWhite) {
             resignedPlayer = 'w';
@@ -313,16 +313,24 @@ export const getters = {
             return state.GAME_INSTANCES[topicId].in_check();
         };
     },
-    GAME_OVER_STATUS(state) {
+    GAME_RESIGNED_STATUS(state) {
         return topicId => {
-            // resigned check
+            // check if either player resigned
             let resignedPlayer = state.MATCHES[topicId].resigned;
+            
+            console.log(resignedPlayer);
+            
             if (resignedPlayer == 'w') {
                 return 'Game Result: Resignation - Black Wins';
             } else if (resignedPlayer == 'b') {
                 return 'Game Result: Resignation - White Wins';
+            } else {
+                return false;
             }
-
+        };
+    },
+    GAME_OVER_STATUS(state) {
+        return topicId => {
             // game_over() check
             if (state.GAME_INSTANCES[topicId].game_over()) {
                 // check specific game over type
