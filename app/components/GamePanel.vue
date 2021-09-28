@@ -311,7 +311,7 @@ export default {
                     'from': this.activeSquare,
                     'to': this.targetSquare
                 };
-           }
+            }
             
             this.dummyGame.move(newMove);
             let newPgn = this.dummyGame.pgn();
@@ -337,10 +337,12 @@ export default {
             };
             
             let promoCheck = this.dummyGame.moves({ verbose: true })
-                  .filter((move) => move.from === newMove.from && 
-                          move.to === newMove.to &&
-                          moves.flags.includes('p')).length > 0;
+                .filter((move) => move.from === newMove.from && 
+                        move.to === newMove.to &&
+                        move.flags.includes('p')).length > 0;
 
+            // TODO: should it be move.flags? this was changed
+            
             return promoCheck;
         },
         async submitMove () {
@@ -354,15 +356,15 @@ export default {
                 this.dummyGame.load_pgn(currentGameState);
                 
                 // check for promotion and spawn promo modal if so
-                if (this.isPromotion) {
+                if (this.isPromotion()) {
                     // TODO: open up the modal before continuing
                 } else {
                     let messagePayload = await this.createMoveMessagePayload();
                     const response = await this.SEND_MESSAGE(messagePayload);
-                }
-                
-                if (!response.success) {
-                    this.TOGGLE_SUBMITTING_MOVE(false);
+                    
+                    if (!response.success) {
+                        this.TOGGLE_SUBMITTING_MOVE(false);
+                    }
                 }
             }
         },
