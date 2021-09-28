@@ -107,7 +107,30 @@
       </v-card-title>
       
       <v-card-text>
-        Select pawn promotion.
+        <v-btn
+          block
+          :disabled="promotion == 'b'"
+          @click.prevent="setPromo('b')">
+          Bishop
+        </v-btn>
+        <v-btn
+          block
+          :disabled="promotion == 'n'"
+          @click.prevent="setPromo('n')">
+          Knight
+        </v-btn>
+        <v-btn
+          block
+          :disabled="promotion == 'r'"
+          @click.prevent="setPromo('r')">
+          Rook
+        </v-btn>
+        <v-btn
+          block
+          :disabled="promotion == 'q'"
+          @click.prevent="setPromo('q')">
+          Queen
+        </v-btn>
       </v-card-text>
       
       <v-divider></v-divider>
@@ -333,7 +356,7 @@ export default {
             let newMove = {};
             
             // make the move on the dummy board and grab the new pgn
-            if (promo) {                
+            if (promo) {
                 newMove = {
                     'from': this.activeSquare,
                     'to': this.targetSquare,
@@ -378,6 +401,9 @@ export default {
             
             return promoCheck;
         },
+        setPromo (piece) {
+            this.promotion = piece;
+        },
         async submitMove () {
             this.$v.$touch();
             if (!this.$v.$invalid) {
@@ -390,6 +416,7 @@ export default {
                 
                 // check for promotion and spawn promo modal if so
                 if (this.isPromotion()) {
+                    this.promotion = 'q'; // default to queen
                     this.promoDialog = true;
                 } else {
                     this.confirmMove();
