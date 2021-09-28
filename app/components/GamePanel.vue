@@ -397,8 +397,6 @@ export default {
                         move.to === newMove.to &&
                         move.flags.includes('p')).length > 0;
             
-            // TODO: should it be move.flags? this was changed
-            
             return promoCheck;
         },
         setPromo (piece) {
