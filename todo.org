@@ -1,10 +1,11 @@
 * NOW
-** TODO Do another pass at the css styling and ALL breakpoint settings
+** TODO Refactor CSS styling entirely and use visual breakpoints
+*** Use inheritance and cascading properties in styles.scss
+*** Change the computed styles to computed classes and them moves to assets
+*** There is deviation between the laptop and desktop displays wrt vh
+*** Use % instead of vh?
 *** The loading spinner for new match panel spreads the container
 *** The loading spinner for move submission spreads the container
-*** Change the computed styles to computed classes and them moves to assets
-*** Refactor the asset css stuff to inherit from base styles
-*** All the stylings should be computed based on breakpoint, including the game and chat panels
 ** TODO Stop text fields from stupid suggestions (new password method)
 ** TODO One last big cleanup and refactoring run
 * FUTURE
