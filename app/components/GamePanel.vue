@@ -110,25 +110,25 @@
         <v-btn
           block
           :disabled="promotion == 'b'"
-          @click.prevent="setPromo('b')">
+          @click="setPromo('b')">
           Bishop
         </v-btn>
         <v-btn
           block
           :disabled="promotion == 'n'"
-          @click.prevent="setPromo('n')">
+          @click="setPromo('n')">
           Knight
         </v-btn>
         <v-btn
           block
           :disabled="promotion == 'r'"
-          @click.prevent="setPromo('r')">
+          @click="setPromo('r')">
           Rook
         </v-btn>
         <v-btn
           block
           :disabled="promotion == 'q'"
-          @click.prevent="setPromo('q')">
+          @click="setPromo('q')">
           Queen
         </v-btn>
       </v-card-text>
