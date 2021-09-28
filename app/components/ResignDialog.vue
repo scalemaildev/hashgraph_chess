@@ -16,11 +16,7 @@
       </v-card-title>
       
       <v-card-text>
-        Resign from this game?        
-        <div v-show="submittingMove">
-          <LoadingPanel loadingText="SUBMITTING"
-                        warningTime=12000 />
-        </div>
+        Resign from this game?
       </v-card-text>
       
       <v-divider></v-divider>

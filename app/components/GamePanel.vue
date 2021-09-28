@@ -11,14 +11,14 @@
         @click.prevent="displayFirstMove()"
         :disabled="!prevMoves">
         <<
-      </v-btn>
+           </v-btn>
     </v-col>
     <v-col cols="2" align="center">
       <v-btn
         @click.prevent="displayPrevMove()"
         :disabled="!prevMoves">
         <
-      </v-btn>
+          </v-btn>
     </v-col>
     <v-col cols="2" align="center">
       <v-btn
@@ -96,6 +96,40 @@
       </div>
     </div>
   </v-row>
+  
+  <v-dialog
+    persistent
+    v-model="promoDialog"
+    max-width="500">
+    <v-card>
+      <v-card-title>
+        Pawn Promotion
+      </v-card-title>
+      
+      <v-card-text>
+        Select pawn promotion.
+      </v-card-text>
+      
+      <v-divider></v-divider>
+      
+      <v-card-actions>
+        <v-btn
+          color="primary"
+          text
+          @click="cancelMove()">
+          Cancel Move
+        </v-btn>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="primary"
+          text
+          @click.prevent="confirmMove(true)">
+          Confirm
+        </v-btn>
+      </v-card-actions>
+      
+    </v-card>
+  </v-dialog>
 </v-container>
 </template>
 
@@ -133,8 +167,7 @@ export default {
             prevMoves: false,
             nextMoves: false,
             displayedBoardState: {},
-            resignDialogue: false,
-            promoDialogue: false
+            promoDialog: false
         }
     },
     
@@ -340,7 +373,7 @@ export default {
                 .filter((move) => move.from === newMove.from && 
                         move.to === newMove.to &&
                         move.flags.includes('p')).length > 0;
-
+            
             // TODO: should it be move.flags? this was changed
             
             return promoCheck;
@@ -357,16 +390,27 @@ export default {
                 
                 // check for promotion and spawn promo modal if so
                 if (this.isPromotion()) {
-                    // TODO: open up the modal before continuing
+                    this.promoDialog = true;
                 } else {
-                    let messagePayload = await this.createMoveMessagePayload();
-                    const response = await this.SEND_MESSAGE(messagePayload);
-                    
-                    if (!response.success) {
-                        this.TOGGLE_SUBMITTING_MOVE(false);
-                    }
+                    this.confirmMove();
                 }
             }
+        },
+        async confirmMove (promo=false) {
+            // pass whether its a promo move to the message payload
+            let messagePayload = await this.createMoveMessagePayload(promo);
+            const response = await this.SEND_MESSAGE(messagePayload);
+            
+            if (!response.success) {
+                this.TOGGLE_SUBMITTING_MOVE(false);
+            }
+        },
+        cancelMove () {
+            this.promoDialog = false;
+            this.dummyGame = null;
+            this.activeSquare = '';
+            this.targetSquare = '';
+            this.promotion = '';
         },
         turnStatus () {
             let turnStatusString = '';
