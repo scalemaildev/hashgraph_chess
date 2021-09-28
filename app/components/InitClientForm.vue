@@ -11,7 +11,7 @@
           required
           @input="$v.accountId.$touch()"
           @blur="$v.accountId.$touch()"
-          label="Account ID"/>
+          label="Testnet Account ID"/>
       </v-col>    
       <v-spacer />
     </v-row>
@@ -25,7 +25,7 @@
           required
           @input="$v.privateKey.$touch()"
           @blur="$v.privateKey.$touch()"
-          label="Private Key"/>
+          label="Testnet Account Private Key"/>
       </v-col>
       <v-spacer />
     </v-row>

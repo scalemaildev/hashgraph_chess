@@ -1,8 +1,4 @@
 * NOW
-** TODO Footer with terms of use, github link, and credits to start page(s)
-*** Artist for sprites was Daniela De Lena
-*** Mention hedera discord and stack overflow
-*** And modules like nuxt-socket-io and chess.js
 ** TODO Do another pass at the css styling and ALL breakpoint settings
 *** The loading spinner for new match panel spreads the container
 *** The loading spinner for move submission spreads the container
@@ -14,6 +10,7 @@
 * FUTURE
 ** TODO Change player validation to use public key method
 ** TODO Handle the 'matches' page? (redirect)
-** TODO Replace grid input method with drag and drop
+** TODO Replace grid input method with clickable css elements
+** TODO Browser extension?
 * BUGS
 ** The chat window doesn't scroll to the bottom on new messages
