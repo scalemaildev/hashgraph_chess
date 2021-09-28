@@ -332,6 +332,7 @@ export default {
             this.$v.$touch();
             if (!this.$v.$invalid) {
                 this.TOGGLE_SUBMITTING_MOVE(true);
+                this.TOGGLE_MOVE_SUBMISSION_ERROR(false);
                 
                 let messagePayload = await this.createMessagePayload();
                 const response = await this.SEND_MESSAGE(messagePayload);

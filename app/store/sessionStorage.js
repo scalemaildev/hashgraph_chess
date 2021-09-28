@@ -318,8 +318,6 @@ export const getters = {
             // check if either player resigned
             let resignedPlayer = state.MATCHES[topicId].resigned;
             
-            console.log(resignedPlayer);
-            
             if (resignedPlayer == 'w') {
                 return 'Game Result: Resignation - Black Wins';
             } else if (resignedPlayer == 'b') {

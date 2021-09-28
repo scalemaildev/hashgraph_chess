@@ -17,7 +17,7 @@
       
       <v-card-text>
         Resign from this game?        
-        <div v-show="submitting">
+        <div v-show="submittingMove">
           <LoadingPanel loadingText="SUBMITTING"
                         warningTime=12000 />
         </div>
@@ -46,23 +46,40 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
   
 export default {
     props: ['topicId'],
     
     data () {
         return {
-            dialog: false,
-            submitting: false,
-            submitError: false
+            dialog: false
+        }
+    },
+
+    computed: {
+        ...mapState(['SUBMITTING_MOVE',
+                     'MOVE_SUBMISSION_ERROR']),
+        submittingMove () {
+            return this.SUBMITTING_MOVE;
+        }
+    },
+
+    watch: {
+        submittingMove (newState, oldState) {
+            if (!newState) {
+                this.dialog = false;
+            }
         }
     },
     
     methods: {
+        ...mapMutations(['TOGGLE_SUBMITTING_MOVE',
+                        'TOGGLE_MOVE_SUBMISSION_ERROR']),
         ...mapActions('sessionStorage', ['SEND_MESSAGE']),
         async submitResign() {
-            this.submitting = true;
+            this.TOGGLE_MOVE_SUBMISSION_ERROR(false);
+            this.TOGGLE_SUBMITTING_MOVE(true);
             
             let messagePayload = {
 	        messageType: 'resignPlayer',
@@ -71,10 +88,9 @@ export default {
             
             const response = await this.SEND_MESSAGE(messagePayload);
 
-            if (response.success) {
-                this.dialog = false;
-            } else {
-                this.submitError = true;
+            if (!response.success) {
+                this.TOGGLE_SUBMITTING_MOVE(false);
+                this.TOGGLE_MOVE_SUBMISSION_ERROR(true);
             }
         }
     }

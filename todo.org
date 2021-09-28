@@ -1,11 +1,7 @@
 * NOW
-** TODO Resign button
-*** Should be its own message type
-*** Needs same validation as moves and messages
-*** Needs a confirmation modal
-*** TODO Need submit spinner on the modal
 ** TODO Need to add support for handling promotions
 *** A modal window containing an extra menu option for promotion choice
+** TODO MOVE_SUBMISSION_ERROR is never used
 * ON DECK
 ** TODO Footer with terms of use, github link, and credits to start page(s)
 *** Artist for sprites was Daniela De Lena
@@ -16,6 +12,7 @@
 *** The loading spinner for move submission spreads the container
 *** Change the computed styles to computed classes and them moves to assets
 *** Refactor the asset css stuff to inherit from base styles
+*** All the stylings should be computed based on breakpoint, including the game and chat panels
 ** TODO Stop text fields from stupid suggestions (new password method)
 ** TODO One last big cleanup and refactoring run
 * FUTURE
