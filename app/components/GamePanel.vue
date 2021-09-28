@@ -316,7 +316,7 @@ export default {
             this.translateGameState(this.GAME_STATE(this.topicId));
         },
         
-        /* Board and Movement */
+        /* Chess Board and History */
         translateGameState (gameState) {
             // need the object of arrays to be filled
             let newBoardState = {};
@@ -341,6 +341,83 @@ export default {
             // display the new board state
             this.displayedBoardState = newBoardState;
         },
+        turnStatus () {
+            let turnStatusString = '';
+
+            // first check if a player resigned
+            if (this.playerResigned) {
+                this.currentTurn = '';
+                turnStatusString = this.playerResigned;
+                return turnStatusString;
+            }
+            
+            // then check if the game is over
+            if (this.isGameOver) {
+                this.currentTurn = '';
+                turnStatusString = this.isGameOver;
+                return turnStatusString;
+            }
+
+            // otherwise set the string to the current player's turn
+            if (this.GAME_TURN(this.topicId) == 'w') {
+                this.currentTurn = 'w';
+                turnStatusString = 'White to Move';
+            } else {
+                this.currentTurn = 'b';
+                turnStatusString = 'Black to Move';
+            }
+
+            return turnStatusString;
+        },
+        displayFirstMove () {
+            if (this.turnIndex == 1) {
+                this.displayTurn(1); // sloppy handling of init state
+            } else {
+                this.turnIndex = 1;
+            }
+        },
+        displayPrevMove () {
+            if (this.turnIndex > 1) {
+                this.turnIndex -= 1;
+            } else {
+                this.displayTurn(1); // sloppy handling of init state
+            }
+        },
+        displayNextMove () {
+            if (this.turnIndex < this.GAME_HISTORY(this.topicId).length) {
+                this.turnIndex += 1;
+            }
+        },
+        displayLastMove () {
+            this.turnIndex = this.GAME_HISTORY(this.topicId).length;
+        },
+        displayTurn (turnIndex) {
+            let gameHistory = this.GAME_HISTORY(this.topicId).slice(0, turnIndex);
+
+            if (turnIndex < this.GAME_HISTORY(this.topicId).length) {
+                this.isLatestTurnDisplayed = false;
+            } else {
+                this.isLatestTurnDisplayed = true;
+            }
+            
+            this.convertGameHistoryToPgn(gameHistory);
+        },
+        convertGameHistoryToPgn (gameHistory) {            
+            this.dummyGame = new Chess();
+            
+            if (gameHistory.length <= 1) {
+                this.dummyGame.load_pgn('');
+            } else {
+                gameHistory.forEach(move => {
+                    this.dummyGame.move(move);
+                });
+            };
+            
+            this.translateGameState(this.dummyGame.board());
+            this.dummyGame = null;
+        },
+
+        /* Moves */
         getLegalMoves (square) {
             // we want the 'to' field from the verbose array
             let verboseLegalMoves = this.GAME_LEGAL_MOVES({
@@ -436,83 +513,7 @@ export default {
             this.activeSquare = '';
             this.targetSquare = '';
             this.promotion = '';
-        },
-        turnStatus () {
-            let turnStatusString = '';
-
-            // first check if a player resigned
-            if (this.playerResigned) {
-                this.currentTurn = '';
-                turnStatusString = this.playerResigned;
-                return turnStatusString;
-            }
-            
-            // then check if the game is over
-            if (this.isGameOver) {
-                this.currentTurn = '';
-                turnStatusString = this.isGameOver;
-                return turnStatusString;
-            }
-
-            // otherwise set the string to the current player's turn
-            if (this.GAME_TURN(this.topicId) == 'w') {
-                this.currentTurn = 'w';
-                turnStatusString = 'White to Move';
-            } else {
-                this.currentTurn = 'b';
-                turnStatusString = 'Black to Move';
-            }
-
-            return turnStatusString;
-        },
-        displayFirstMove () {
-            if (this.turnIndex == 1) {
-                this.displayTurn(1); // sloppy handling of init state
-            } else {
-                this.turnIndex = 1;
-            }
-        },
-        displayPrevMove () {
-            if (this.turnIndex > 1) {
-                this.turnIndex -= 1;
-            } else {
-                this.displayTurn(1); // sloppy handling of init state
-            }
-        },
-        displayNextMove () {
-            if (this.turnIndex < this.GAME_HISTORY(this.topicId).length) {
-                this.turnIndex += 1;
-            }
-        },
-        displayLastMove () {
-            this.turnIndex = this.GAME_HISTORY(this.topicId).length;
-        },
-        displayTurn (turnIndex) {
-            let gameHistory = this.GAME_HISTORY(this.topicId).slice(0, turnIndex);
-
-            if (turnIndex < this.GAME_HISTORY(this.topicId).length) {
-                this.isLatestTurnDisplayed = false;
-            } else {
-                this.isLatestTurnDisplayed = true;
-            }
-            
-            this.convertGameHistoryToPgn(gameHistory);
-        },
-        convertGameHistoryToPgn (gameHistory) {            
-            this.dummyGame = new Chess();
-            
-            if (gameHistory.length <= 1) {
-                this.dummyGame.load_pgn('');
-            } else {
-                gameHistory.forEach(move => {
-                    this.dummyGame.move(move);
-                });
-            };
-            
-            this.translateGameState(this.dummyGame.board());
-            this.dummyGame = null;
-        },
+        }
     }
 }
 </script>
-
