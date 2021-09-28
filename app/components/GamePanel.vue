@@ -110,25 +110,25 @@
         <v-btn
           block
           :disabled="promotion == 'b'"
-          @click="setPromo('b')">
+          @click.prevent="setPromo('b')">
           Bishop
         </v-btn>
         <v-btn
           block
           :disabled="promotion == 'n'"
-          @click="setPromo('n')">
+          @click.prevent="setPromo('n')">
           Knight
         </v-btn>
         <v-btn
           block
           :disabled="promotion == 'r'"
-          @click="setPromo('r')">
+          @click.prevent="setPromo('r')">
           Rook
         </v-btn>
         <v-btn
           block
           :disabled="promotion == 'q'"
-          @click="setPromo('q')">
+          @click.prevent="setPromo('q')">
           Queen
         </v-btn>
       </v-card-text>
@@ -499,6 +499,7 @@ export default {
             }
         },
         async confirmMove (promo=false) {
+            this.promoDialog = false;
             // pass whether its a promo move to the message payload
             let messagePayload = await this.createMoveMessagePayload(promo);
             const response = await this.SEND_MESSAGE(messagePayload);
@@ -513,6 +514,7 @@ export default {
             this.activeSquare = '';
             this.targetSquare = '';
             this.promotion = '';
+            this.TOGGLE_SUBMITTING_MOVE(false);
         }
     }
 }
