@@ -1,7 +1,9 @@
 * NOW
 ** TODO Need to add support for handling promotions
 *** A modal window containing an extra menu option for promotion choice
+*** Will have to check each move for isPromotion using github method
 ** TODO MOVE_SUBMISSION_ERROR is never used
+*** Get rid of it?
 * ON DECK
 ** TODO Footer with terms of use, github link, and credits to start page(s)
 *** Artist for sprites was Daniela De Lena

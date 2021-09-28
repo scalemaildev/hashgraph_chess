@@ -139,8 +139,7 @@ export default {
     },
     
     computed: {
-        ...mapState(['SUBMITTING_MOVE',
-                     'MOVE_SUBMISSION_ERROR']),
+        ...mapState(['SUBMITTING_MOVE']),
         ...mapGetters('sessionStorage', ['LATEST_MATCH_PGN',
                                          'MATCH_PGNS',
                                          'GAME_PGN',
@@ -184,15 +183,15 @@ export default {
                 topicId: this.topicId,
                 newPgn: newMatchPgn
             });
-
+            
             // display the latest game state on our dummy board
             this.turnIndex = this.GAME_HISTORY(this.topicId).length;
             this.displayTurn(this.turnIndex);
-
+            
             // check if the game is in check or over
             this.inCheck = this.GAME_CHECK_STATUS(this.topicId);
             this.isGameOver = this.GAME_OVER_STATUS(this.topicId);
-
+            
             // if we were submitting the move, it came back
             this.TOGGLE_SUBMITTING_MOVE(false);
         },
@@ -203,7 +202,7 @@ export default {
             } else {
                 this.prevMoves = true;
             }
-
+            
             // is this the last move?
             if (newTurnIndex == this.GAME_HISTORY(this.topicId).length) {
                 this.nextMoves = false
@@ -220,8 +219,7 @@ export default {
     },
     
     methods: {
-        ...mapMutations(['TOGGLE_SUBMITTING_MOVE',
-                         'TOGGLE_MOVE_SUBMISSION_ERROR']),
+        ...mapMutations(['TOGGLE_SUBMITTING_MOVE']),
         ...mapMutations('sessionStorage', ['CREATE_GAME',
                                            'LOAD_PGN']),
         ...mapActions('sessionStorage', ['SEND_MESSAGE']),
@@ -298,19 +296,23 @@ export default {
             verboseLegalMoves.forEach(square => legalMoves.push(square.to));
             return legalMoves;
         },
-        createMessagePayload () {
-            // give dummy game the current game state
-            let currentGameState = this.GAME_PGN(this.topicId);
-            this.dummyGame = new Chess();
-            this.dummyGame.load_pgn(currentGameState);
+        createMoveMessagePayload (promo=false) {
+            let newMove = {};
             
             // make the move on the dummy board and grab the new pgn
-            let newMove = {
-                'from': this.activeSquare,
-                'to': this.targetSquare
-            };
+            if (promo) {                
+                newMove = {
+                    'from': this.activeSquare,
+                    'to': this.targetSquare,
+                    'promotion': this.promotion
+                };
+            } else {
+                newMove = {
+                    'from': this.activeSquare,
+                    'to': this.targetSquare
+                };
+           }
             
-            // TODO: add another move validation here? error handling?
             this.dummyGame.move(newMove);
             let newPgn = this.dummyGame.pgn();
             
@@ -328,18 +330,39 @@ export default {
             
             return messagePayload;
         },
+        isPromotion () {
+            let newMove = {
+                'from': this.activeSquare,
+                'to': this.targetSquare,
+            };
+            
+            let promoCheck = this.dummyGame.moves({ verbose: true })
+                  .filter((move) => move.from === newMove.from && 
+                          move.to === newMove.to &&
+                          moves.flags.includes('p')).length > 0;
+
+            return promoCheck;
+        },
         async submitMove () {
             this.$v.$touch();
             if (!this.$v.$invalid) {
                 this.TOGGLE_SUBMITTING_MOVE(true);
-                this.TOGGLE_MOVE_SUBMISSION_ERROR(false);
                 
-                let messagePayload = await this.createMessagePayload();
-                const response = await this.SEND_MESSAGE(messagePayload);
+                // give dummy game the current game state
+                let currentGameState = this.GAME_PGN(this.topicId);
+                this.dummyGame = new Chess();
+                this.dummyGame.load_pgn(currentGameState);
+                
+                // check for promotion and spawn promo modal if so
+                if (this.isPromotion) {
+                    // TODO: open up the modal before continuing
+                } else {
+                    let messagePayload = await this.createMoveMessagePayload();
+                    const response = await this.SEND_MESSAGE(messagePayload);
+                }
                 
                 if (!response.success) {
                     this.TOGGLE_SUBMITTING_MOVE(false);
-                    this.TOGGLE_MOVE_SUBMISSION_ERROR(true);
                 }
             }
         },

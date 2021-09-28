@@ -58,8 +58,7 @@ export default {
     },
 
     computed: {
-        ...mapState(['SUBMITTING_MOVE',
-                     'MOVE_SUBMISSION_ERROR']),
+        ...mapState(['SUBMITTING_MOVE']),
         submittingMove () {
             return this.SUBMITTING_MOVE;
         }
@@ -74,11 +73,9 @@ export default {
     },
     
     methods: {
-        ...mapMutations(['TOGGLE_SUBMITTING_MOVE',
-                        'TOGGLE_MOVE_SUBMISSION_ERROR']),
+        ...mapMutations(['TOGGLE_SUBMITTING_MOVE']),
         ...mapActions('sessionStorage', ['SEND_MESSAGE']),
         async submitResign() {
-            this.TOGGLE_MOVE_SUBMISSION_ERROR(false);
             this.TOGGLE_SUBMITTING_MOVE(true);
             
             let messagePayload = {
@@ -90,7 +87,6 @@ export default {
 
             if (!response.success) {
                 this.TOGGLE_SUBMITTING_MOVE(false);
-                this.TOGGLE_MOVE_SUBMISSION_ERROR(true);
             }
         }
     }
