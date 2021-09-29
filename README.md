@@ -43,4 +43,3 @@ Once the application is deemed secure and serviceable, the client will be pointe
 ## Credits
 
 - The chess sprites are from [Daniela De Lena's spritesheet.](https://dilena.de/chess-artwork-pieces-and-board-art-assets)
-- Special thanks to the [Hashgraph Dev Discord](https://discord.com/invite/2jGMqdQuWR) and, of course, Stack Overflow.
