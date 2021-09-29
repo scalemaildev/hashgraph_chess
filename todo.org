@@ -1,6 +1,6 @@
 * NOW
-** TODO One last big cleanup and refactoring run
 * FUTURE
+** TODO One last big cleanup and refactoring run
 ** TODO Change player validation to use public key method
 ** TODO Handle the 'matches' page? (redirect)
 ** TODO Replace grid input method with clickable css elements
