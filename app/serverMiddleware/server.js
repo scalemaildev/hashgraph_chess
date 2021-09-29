@@ -9,6 +9,10 @@ const io = require("socket.io")(3001, {
 });
 
 // IO
+io.engine.on("headers", (headers) => {
+  headers["Access-Control-Allow-Private-Network"] = true;
+});
+
 io.on('connection', socket => {
     console.log('New socket connection ...');
 
