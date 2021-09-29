@@ -11,12 +11,12 @@
     </v-col>
   </v-row>
   <v-row>
-    <v-col cols="12" align="center" justify="center">
+    <v-col cols="12">
       <v-btn block @click="createNewMatch">
         New Match
       </v-btn>
     </v-col>
-    <v-col cols="12" align="center" justify="center">
+    <v-col cols="12">
       <v-btn block @click="joinMatch">
         Join Match
       </v-btn>

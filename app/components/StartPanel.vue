@@ -1,5 +1,5 @@
 <template>
-<v-container class="content-body">
+<v-container class="content-body pb-2">
   <v-row>
     <v-col cols="12" align="center">
       <h1>Welcome to ♄ashgraph Chess.</h1>
@@ -12,13 +12,12 @@
     </v-col>
   </v-row>
   <InitClientForm />
-  <v-row justify="center" class="mt-3 pt-2">
-    <v-spacer />
-    <v-col cols="2" align="center">
+  <v-row class="mt-3 pt-2">
+    <v-col cols="12" align="center">
       <a href="https://github.com/scalemaildev/hashgraph_chess"
-         style="text-decoration: none;">GitHub Repo</a>
+         style="text-decoration: none;
+                font-size: 0.8em;">GitHub Repo</a>
     </v-col>
-    <v-spacer />
   </v-row>
 </v-container>  
 </template>

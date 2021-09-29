@@ -1,18 +1,16 @@
 .main-layout {    
     background: no-repeat left bottom url("~/static/background.jpg");
     background-color: #000000;
-    background-size: 80vh;
+    background-size: 45% !important;
     color: #e0e0e0;
     font-family: "baskerville-urw",serif;
     font-size: 1.1rem;
-    bottom: 0 !important;
-    min-height: 112vh;
+    bottom: 0;
+    min-height: 100% !important;
 }
 
 .navbar-wrapper {
     font-size: 1.15rem;
-    z-index: 99;
-    flex-wrap: wrap;
 }
 
 .navbar-backing {
@@ -21,16 +19,16 @@
 
 .match-header {
     margin-top: 1% !important;
-    margin-bottom: 0.3% !important;
+    padding-bottom: 0% !important;
+    margin-bottom: 0% !important;
 }
 
 .content-body {
     background-color: rgba(18, 32, 59, 0.8);
     border: 1px solid #0c2547;
-    min-height: 50% !important;
     max-width: 80% !important;
-    margin-top: 10vh !important;
-    margin-bottom: 10vh !important;
+    margin-top: 2% !important;
+    margin-bottom: 2% !important;
     padding-left: 4% !important;
     padding-right: 4% !important;
     padding-top: 2.5% !important;
@@ -47,7 +45,8 @@
 .gamePanel-wrapper {
     background-color: rgba(18, 32, 59, 0.8);
     border: 1px solid #0c2547;
-    min-height: 98vh !important;
+    min-height: 97vh !important;
+    margin-top: 2% !important;
     padding-left: 4% !important;
     padding-right: 4% !important;
     padding-top: 2.5% !important;
@@ -57,25 +56,25 @@
 .chatPanel-wrapper {
     background-color: rgba(18, 32, 59, 0.8);
     border: 1px solid #0c2547;
-    height: 98vh !important;
+    min-height: 97vh !important;
+    margin-top: 2% !important;
     padding-left: 4% !important;
     padding-right: 4% !important;
     padding-top: 2.5% !important;
-    padding-bottom: 2.5% !important;
-    margin-bottom: 3% !important;
 }
 
 .chatPanel-window {
-    height: 76vh !important;
+    height: 75vh !important;
     overflow: auto !important;
     padding-bottom: 0 !important;
     margin-bottom: 0 !important;
 }
 
 .chatPanel-box {
-    height: 5vh !important;
+    height: 3vh !important;
     padding-top: 0 !important;
     margin-top: 0 !important;
+    margin-bottom: 0 !important;
 }
 
 .content-spaced-small {
