@@ -1,19 +1,13 @@
-FROM node:14.9
+FROM node:16.10-buster-slim
 
-RUN mkdir -p /var/www/hashgraph_chess/app
-WORKDIR /var/www/hashgraph_chess/app
+RUN apt-get update
 
-COPY package*.json ./
-RUN npm install
+ENV APP_ROOT /app
 
-COPY . .
+WORKDIR ${APP_ROOT}
+COPY . ${APP_ROOT}
 
+RUN npm ci
 RUN npm run build
 
-EXPOSE 3000
-
-ENV NUXT_HOST=0.0.0.0
-
-ENV NUXT_PORT=3000
-
-CMD [ "npm", "start" ]
+ENV HOST 0.0.0.0
