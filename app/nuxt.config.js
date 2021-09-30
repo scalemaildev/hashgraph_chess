@@ -45,6 +45,11 @@ export default {
     ],
 
     io: {
+        server: {
+            cors: {
+                origin: "*"
+            }
+        },
         sockets: [{     
             default: true,
             name: 'mainSocket',
