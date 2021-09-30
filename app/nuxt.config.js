@@ -31,8 +31,6 @@ export default {
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
 
-    serverMiddleware: ["~/serverMiddleware/server.js"],
-
     // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
     buildModules: [
         // https://go.nuxtjs.dev/vuetify
@@ -50,7 +48,7 @@ export default {
         sockets: [{     
             default: true,
             name: 'mainSocket',
-            url: 'http://localhost:3001',
+            url: 'http://localhost:3000',
             vuex: {
                 actions: [{ newHCSMessage: 'sessionStorage/PROCESS_MESSAGE' }]
             }
