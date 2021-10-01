@@ -49,11 +49,13 @@ export default {
             cors: {
                 origin: "*"
             },
+            extraHeaders: {
+                "Access-Control-Request-Private-Network": true
+            }
         },
         sockets: [{     
             default: true,
             name: 'mainSocket',
-            url: 'http://localhost:3000',
             vuex: {
                 actions: [{ newHCSMessage: 'sessionStorage/PROCESS_MESSAGE' }]
             }

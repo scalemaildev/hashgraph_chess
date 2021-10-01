@@ -1,6 +1,10 @@
 const hashgraph = require('./hashgraph');
 
-export default function(socket, io) { 
+export default function(socket, io) {
+    io.engine.on("headers", (headers) => {
+        headers["Access-Control-Allow-Private-Network"] = true;
+    });
+    
     return Object.freeze({
         initHashgraphClient (context) {
             let response = hashgraph.initHashgraphClient(context.accountId, context.privateKey);
