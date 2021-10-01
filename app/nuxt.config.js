@@ -48,7 +48,7 @@ export default {
         server: {
             cors: {
                 origin: "*"
-            }
+            },
         },
         sockets: [{     
             default: true,
