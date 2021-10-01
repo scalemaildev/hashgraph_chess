@@ -49,6 +49,9 @@ export default {
             cors: {
                 origin: "*"
             },
+            extraHeaders: {
+                "Access-Control-Request-Private-Network": true
+            }
         },
         sockets: [{     
             default: true,
