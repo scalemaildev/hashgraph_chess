@@ -67,11 +67,15 @@ export const mutations = {
 
     /* Game Board */
     SET_BOARD_STATE(state, newBoardStateData) {
-        state.MATCHES[newBoardStateData.topicId].boardState = newBoardStateData.newBoardState;
+        let topicId = newBoardStateData.topicId;
+        let newBoardState = newBoardStateData.newBoardState;
+        
+        state.MATCHES[topicId].boardState = newBoardState;
     },
     LOAD_PGN(state, boardData) {
         let topicId = boardData.topicId;
         let newPgn = boardData.newPgn;
+        
         state.GAME_INSTANCES[topicId].load_pgn(newPgn);
     },
 
