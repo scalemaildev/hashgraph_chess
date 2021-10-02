@@ -9,7 +9,7 @@
       </v-col>
         <v-col cols="12" align="center" justify="center" class="pt-0 mt-0">
           <div v-if="warning">
-            <span style="color: red;"><h4>This appears to be taking longer than usual</h4></span>
+            <span style="color: red;"><h4>This appears to be taking longer than usual.</h4></span>
           </div>
         </v-col>
     </v-row>
