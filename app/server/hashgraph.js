@@ -17,8 +17,16 @@ var subscriptions = {};
 
 function initHashgraphClient(newAccountId, newPrivateKey) {
     try {
-        // Testnet only as for right now. Can add Mainnet in prod
-        HederaClient = Client.forTestnet();
+        HederaClient = Client.forTestnet(); // Testnet only as for right now. Can add Mainnet in prod
+
+        // use a specific mirror node if it's defined
+        if (process.env.MIRROR_NODE_URL) {
+            console.log('Using specified mirror node: ' + process.env.MIRROR_NODE_URL);
+            HederaClient.setMirrorNetwork(process.env.MIRROR_NODE_URL);
+        } else {
+            console.log('Using default mirror node');
+        }
+        
         let accountId = AccountId.fromString(newAccountId);
         let privateKey = PrivateKey.fromString(newPrivateKey);
         HederaClient.setOperator(accountId, privateKey);
