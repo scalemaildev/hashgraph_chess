@@ -1,6 +1,11 @@
 import colors from 'vuetify/es5/util/colors';
 
 export default {
+    // Environment Variables    
+    privateRuntimeConfig: {
+        mirrorNodeUrl: process.env.MIRROR_NODE_URL
+    },
+    
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
         title: 'Hashgraph Chess',

@@ -19,6 +19,9 @@ function initHashgraphClient(newAccountId, newPrivateKey) {
     try {
         // Testnet only as for right now. Can add Mainnet in prod
         HederaClient = Client.forTestnet();
+        console.log(process.env.MIRROR_NODE_URL);
+        console.log(process.env.mirrorNodeUrl);
+        HederaClient.setMirrorNetwork(process.env.mirrorNodeUrl);
         let accountId = AccountId.fromString(newAccountId);
         let privateKey = PrivateKey.fromString(newPrivateKey);
         HederaClient.setOperator(accountId, privateKey);
