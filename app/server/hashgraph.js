@@ -21,7 +21,10 @@ function initHashgraphClient(newAccountId, newPrivateKey) {
 
         // use a specific mirror node if it's defined
         if (process.env.MIRROR_NODE_URL) {
+            console.log('Using specified mirror node: ' + process.env.MIRROR_NODE_URL);
             HederaClient.setMirrorNetwork(process.env.MIRROR_NODE_URL);
+        } else {
+            console.log('Using default mirror node');
         }
         
         let accountId = AccountId.fromString(newAccountId);
