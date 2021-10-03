@@ -1,5 +1,10 @@
 <template>
 <v-container fluid class="gamePanel-wrapper">
+  <v-row>
+    <v-col cols="12" align="center" class="mb-1">
+      <h3>{{ userTypeString }}</h3>
+    </v-col>
+  </v-row>
   <ChessBoard
     :userType="userType"
     :displayedBoardState="displayedBoardState"
@@ -229,6 +234,15 @@ export default {
         },
         playerResigned () {
             return this.GAME_RESIGNED_STATUS(this.topicId);
+        },
+        userTypeString () {
+            if (this.userType == 'w') {
+                return 'You are the white player';
+            } else if (this.userType == 'b') {
+                return 'You are the black player';
+            } else {
+                return 'You are an observer';
+            }
         }
     },
     
