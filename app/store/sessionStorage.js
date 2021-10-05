@@ -205,6 +205,7 @@ export const actions = {
             eventName: 'subscribeToTopic',
             topicId: topicId
         });
+        console.log(response.responseMessage);
         return response;
     },
     async SEND_MESSAGE({ state }, messagePayload) {

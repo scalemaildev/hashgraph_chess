@@ -118,12 +118,12 @@ async function subscribeToTopic(io, topicIdString) {
         subscriptions[topicIdString] = sub;
         return {
             success: true,
-            responseMessage: 'Subscribed to topic'
+            responseMessage: `Subscribed to topic ${topicId}`
         };
     } catch (error) {
         return {
             success: false,
-            responseMessage: 'Failed to subscribe'
+            responseMessage: `Failed to subscribe to topic ${topicId}`
         };
     }
 }
