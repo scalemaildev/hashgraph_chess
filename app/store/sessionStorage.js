@@ -1,9 +1,10 @@
 import Chess from 'chess.js';
+const { Client, AccountId, PrivateKey } = require("@hashgraph/sdk");
 
 /* State */
 export const state = () => ({
+    HEDERA_CLIENT: null,
     ACCOUNT_ID: '',
-    PRIVATE_KEY: '',
     ACTIVE_PANEL: 'loadingPanel',
     LOCK_BUTTON: false,
     MATCHES: {},
@@ -13,11 +14,22 @@ export const state = () => ({
 /* MUTATIONS */
 export const mutations = {
     /* Toggles and Settings */
+    SET_CLIENT(state, accountInfo) {        
+        state.HEDERA_CLIENT = Client.forTestnet(); // Testnet only as for right now. Can add Mainnet in prod
+        state.HEDERA_CLIENT.setOperator(accountInfo.accountId, accountInfo.privateKey);
+        
+        // use a specific mirror node if it's defined
+        if (process.env.MIRROR_NODE_URL) { // switch to private runtime
+            HederaClient.setMirrorNetwork(process.env.MIRROR_NODE_URL);
+        }
+    },
+    UNSET_CLIENT(state) {
+        state.HEDERA_CLIENT = null;
+        state.ACCOUNT_ID = '';
+        state.ACTIVE_PANEL = 'startPanel';
+    },
     SET_ACCOUNT_ID(state, accountId) {
         state.ACCOUNT_ID = accountId;
-    },
-    SET_PRIVATE_KEY(state, privateKey) {
-        state.PRIVATE_KEY = privateKey;
     },
     TOGGLE_LOCK_BUTTON(state, bool) {
         state.LOCK_BUTTON = bool;
@@ -159,20 +171,22 @@ export const mutations = {
 export const actions = {
     /* Hashgraph Client */
     async INIT_HASHGRAPH_CLIENT({ commit }, context) {
-        const response = await this.dispatch(
-            'ASYNC_EMIT', {
-                eventName: 'initHashgraphClient',
-                accountId: context.accountId,
-                privateKey: context.privateKey
-            });
-
-        if (response.success) {
-            commit('SET_ACCOUNT_ID', context.accountId);
-            commit('SET_PRIVATE_KEY', context.privateKey);
-            commit('TOGGLE_LOCK_BUTTON', true);
+        try {
+            let accountInfo = {
+                accountId: AccountId.fromString(context.accountId),
+                privateKey: PrivateKey.fromString(context.privateKey)
+            };
+            commit('SET_CLIENT', accountInfo);
+            return {
+                success: true,
+                responseMessage: 'Hedera Hashgraph client initialized'
+            };
+        } catch (error) {
+            return {
+                success: false,
+                responseMessage: 'Hedera Hashgraph client failed to initialize'
+            };
         }
-        
-        return response;
     },
     async UNSET_CLIENT({ commit }) {
         // dispatch a method to clear the hashgraph client server-side
@@ -182,7 +196,6 @@ export const actions = {
 
         if (response.success) {
             commit('SET_ACCOUNT_ID', '');
-            commit('SET_PRIVATE_KEY', '');
             commit('TOGGLE_LOCK_BUTTON', false);
             commit('SET_ACTIVE_PANEL', 'startPanel');
         } else {

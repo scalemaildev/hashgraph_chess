@@ -3,56 +3,13 @@ const TextDecoder = require("text-encoding").TextDecoder;
 
 /* Hashgraph SDK */
 const {
-    Client,
-    AccountId,
-    PrivateKey,
     TopicId,
     TopicCreateTransaction,
     TopicMessageQuery,
     TopicMessageSubmitTransaction,
 } = require("@hashgraph/sdk");
 
-var HederaClient;
 var subscriptions = {};
-
-function initHashgraphClient(newAccountId, newPrivateKey) {
-    try {
-        HederaClient = Client.forTestnet(); // Testnet only as for right now. Can add Mainnet in prod
-
-        // use a specific mirror node if it's defined
-        if (process.env.MIRROR_NODE_URL) {
-            HederaClient.setMirrorNetwork(process.env.MIRROR_NODE_URL);
-        }
-        
-        let accountId = AccountId.fromString(newAccountId);
-        let privateKey = PrivateKey.fromString(newPrivateKey);
-        HederaClient.setOperator(accountId, privateKey);
-        return {
-            success: true,
-            responseMessage: 'Hedera Hashgraph client initialized'
-        };
-    } catch (error) {
-        return {
-            success: false,
-            responseMessage: 'Hedera Hashgraph client failed to initialize'
-        };
-    }
-}
-
-function unsetClient() {
-    try {
-        HederaClient = null;
-        return {
-            success: true,
-            responseMessage: 'Hedera Hashgraph client has been unset'
-        };
-    } catch (error) {
-        return {
-            success: false,
-            responseMessage: 'Failed to unset the Hedera Hashgraph client somehow'
-        };
-    }
-}
 
 async function createNewTopic() {
     try {
@@ -127,8 +84,6 @@ async function subscribeToTopic(io, topicIdString) {
 }
 
 module.exports = {
-    initHashgraphClient,
-    unsetClient,
     createNewTopic,
     sendHCSMessage,
     subscribeToTopic,

@@ -27,11 +27,11 @@ export default {
     computed: {
         ...mapState('sessionStorage', ['ACTIVE_PANEL',
                                        'ACCOUNT_ID',
-                                       'PRIVATE_KEY'])
+                                       'HEDERA_CLIENT'])
     },
 
     mounted() {
-        if (!!this.ACCOUNT_ID && !!this.PRIVATE_KEY) {
+        if (!!this.HEDERA_CLIENT) {
             this.$nextTick(() => {
                 this.restoreClient();
             });
