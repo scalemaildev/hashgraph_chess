@@ -75,7 +75,8 @@ export const mutations = {
     LOAD_PGN(state, boardData) {
         let topicId = boardData.topicId;
         let newPgn = boardData.newPgn;
-        
+
+        // TODO add a check here?
         state.GAME_INSTANCES[topicId].load_pgn(newPgn);
     },
 
