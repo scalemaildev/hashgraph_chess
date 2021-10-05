@@ -19,7 +19,7 @@ export const mutations = {
         state.HEDERA_CLIENT.setOperator(accountInfo.accountId, accountInfo.privateKey);
         
         // use a specific mirror node if it's defined
-        if (process.env.MIRROR_NODE_URL) { // switch to private runtime
+        if (process.env.MIRROR_NODE_URL) {
             HederaClient.setMirrorNetwork(process.env.MIRROR_NODE_URL);
         }
     },
@@ -27,6 +27,7 @@ export const mutations = {
         state.HEDERA_CLIENT = null;
         state.ACCOUNT_ID = '';
         state.ACTIVE_PANEL = 'startPanel';
+        state.LOCK_BUTTON = false;
     },
     SET_ACCOUNT_ID(state, accountId) {
         state.ACCOUNT_ID = accountId;
