@@ -68,11 +68,14 @@ export default {
     },
     
     mounted() {
-        this.SUBSCRIBE_TO_TOPIC(this.topicId);
+        this.subscribeToTopic();
     },
     
     methods: {
-        ...mapActions('sessionStorage', ['SUBSCRIBE_TO_TOPIC'])
+        ...mapActions('sessionStorage', ['SUBSCRIBE_TO_TOPIC']),
+        async subscribeToTopic() {
+            let response = await this.SUBSCRIBE_TO_TOPIC(this.topicId);
+        }
     }
 }
 </script>

@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
   
 export default {
     computed: {
@@ -19,7 +19,7 @@ export default {
     },
     
     methods: {
-        ...mapActions('sessionStorage', ['UNSET_CLIENT']),
+        ...mapMutations('sessionStorage', ['UNSET_CLIENT']),
         unsetClient() {
             this.UNSET_CLIENT();
             this.$router.push('/');

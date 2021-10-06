@@ -91,7 +91,10 @@ export default {
     },
     
     methods: {
-        ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL']),
+        ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL',
+                                           'SET_ACCOUNT_ID',
+                                           'SET_PRIVATE_KEY',
+                                           'TOGGLE_LOCK_BUTTON']),
         ...mapActions('sessionStorage', ['INIT_HASHGRAPH_CLIENT']),
         submit () {
             this.$v.$touch();
@@ -108,6 +111,9 @@ export default {
             });
             
             if (response.success) {
+                this.SET_ACCOUNT_ID(this.accountId);
+                this.SET_PRIVATE_KEY(this.privateKey);
+                this.TOGGLE_LOCK_BUTTON(true);
                 this.accountId = "";
                 this.privateKey = "";
                 this.SET_ACTIVE_PANEL('clientPanel');
@@ -115,8 +121,6 @@ export default {
                 this.privateKey = "";
                 this.clientError = true;
             }
-            
-            console.log(response.responseMessage);
         },
     }
 }
