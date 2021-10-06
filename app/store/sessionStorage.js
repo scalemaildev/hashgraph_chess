@@ -6,7 +6,7 @@ const { Client,
         TopicCreateTransaction,
         TopicMessageSubmitTransaction } = require("@hashgraph/sdk");
 
-const HederaClient = Client.forTestnet();
+var HederaClient;
 
 /* State */
 export const state = () => ({
@@ -21,7 +21,8 @@ export const state = () => ({
 /* MUTATIONS */
 export const mutations = {
     /* State Toggles and Setters */
-    UNSET_CLIENT_INFO(state) {
+    UNSET_CLIENT(state) {
+        HederaClient = null;
         state.ACCOUNT_ID = '';
         state.PRIVATE_KEY = '';
         state.ACTIVE_PANEL = 'startPanel';
@@ -175,6 +176,7 @@ export const actions = {
         try {
             let accountId = AccountId.fromString(context.accountId);
             let privateKey = PrivateKey.fromString(context.privateKey);
+            HederaClient = Client.forTestnet();
             HederaClient.setOperator(accountId, privateKey);
             return {
                 success: true,
