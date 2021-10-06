@@ -31,11 +31,8 @@ async function subscribeToTopic(io, topicIdString) {
     const topicId = TopicId.fromString(topicIdString);
 
     // when the page is refreshed, pre-existing subs still remain
-    if (!!subscriptions[topicIdString]) {
-        return {
-            success: true,
-            responseMessage: `Already subbed to topic ${topicId}`
-        };
+    if (subscriptions[topicIdString]) {
+        subscriptions[topicIdString].unsubscribe();
     }
 
     try {

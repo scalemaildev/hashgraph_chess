@@ -196,7 +196,7 @@ export const actions = {
     },
     
     /* Topic Subscription and Messages */
-    async SUBSCRIBE_TO_TOPIC({ commit }, topicId) {
+    async SUBSCRIBE_TO_TOPIC({ commit, state }, topicId) {
         //if we're subbing to a topic, clear out any pre-existing data for it
         commit('CLEAR_MATCH_OBJECT', topicId);
         commit('CLEAR_GAME_INSTANCE', topicId);
@@ -233,8 +233,13 @@ export const actions = {
         }
     },
     // not to be mistaken for PROCESS_CHAT_MESSAGE
-    PROCESS_MESSAGE({ commit }, messageResponse) {
+    PROCESS_MESSAGE({ commit, state }, messageResponse) {
         let messageData = JSON.parse(messageResponse);
+
+        //filter out irrelevant subs
+        if (messageData.messageType != 'matchCreation' && !state.MATCHES[messageData.topicId]) {
+            return;
+        }
         
         switch(messageData.messageType) {
         case 'matchCreation':
