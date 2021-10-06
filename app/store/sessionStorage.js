@@ -20,13 +20,8 @@ export const state = () => ({
 export const mutations = {
     /* Client Helpers */
     SET_CLIENT(state, accountInfo) {
-        state.HEDERA_CLIENT = Client.forTestnet(); // Testnet only as for right now. Can add Mainnet in prod
+        state.HEDERA_CLIENT = Client.forTestnet();
         state.HEDERA_CLIENT.setOperator(accountInfo.accountId, accountInfo.privateKey);
-        
-        // use a specific mirror node if it's defined
-        if (process.env.MIRROR_NODE_URL) {
-            HederaClient.setMirrorNetwork(process.env.MIRROR_NODE_URL);
-        }
     },
     UNSET_CLIENT(state) {
         state.HEDERA_CLIENT = null;
@@ -213,13 +208,8 @@ export const actions = {
         return response;
     },
     async SEND_MESSAGE({ state }, messageObject) {
-        let client = Client.forTestnet(); // Testnet only as for right now. Can add Mainnet in prod
+        let client = Client.forTestnet();
         client.setOperator(state.ACCOUNT_ID, state.PRIVATE_KEY);
-        
-        // use a specific mirror node if it's defined
-        if (process.env.MIRROR_NODE_URL) {
-            client.setMirrorNetwork(process.env.MIRROR_NODE_URL);
-        }
         
         let messagePayload = JSON.stringify(messageObject);
 
@@ -264,13 +254,8 @@ export const actions = {
 
     /* Topic and Match Creation */
     async CREATE_TOPIC({ state }) {
-        let client = Client.forTestnet(); // Testnet only as for right now. Can add Mainnet in prod
+        let client = Client.forTestnet();
         client.setOperator(state.ACCOUNT_ID, state.PRIVATE_KEY);
-        
-        // use a specific mirror node if it's defined
-        if (process.env.MIRROR_NODE_URL) {
-            client.setMirrorNetwork(process.env.MIRROR_NODE_URL);
-        }
         
         const tx = await new TopicCreateTransaction().execute(client);
         const topicReceipt = await tx.getReceipt(client);

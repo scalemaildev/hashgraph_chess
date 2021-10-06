@@ -3,9 +3,27 @@ const TextDecoder = require("text-encoding").TextDecoder;
 
 /* Hashgraph SDK */
 const {
+    Client,
     TopicId,
     TopicMessageQuery,
 } = require("@hashgraph/sdk");
+
+var serverClient;
+
+if (!process.env.SERVER_CLIENT_ID || !process.env.SERVER_CLIENT_KEY) {
+    console.warn('No info found for server-side hashgraph client!');
+} else {
+    // Testnet only as for right now. Can add Mainnet in prod
+    serverClient = Client.forTestnet();
+    serverClient.setOperator(process.env.SERVER_CLIENT_ID, process.env.SERVER_CLIENT_KEY);
+    
+    // use a specific mirror node if it's defined
+    if (process.env.MIRROR_NODE_URL) {
+        serverClient.setMirrorNetwork(process.env.MIRROR_NODE_URL);
+    }
+
+    console.log('Created server-side client...');
+}
 
 var subscriptions = {};
 
@@ -21,7 +39,7 @@ async function subscribeToTopic(io, topicIdString) {
         let sub = new TopicMessageQuery()
             .setTopicId(topicId)
             .setStartTime(0)
-            .subscribe(HederaClient, res => {
+            .subscribe(serverClient, res => {
                 let contents = new TextDecoder("utf-8").decode(res.contents);
                 io.emit('newHCSMessage', contents);
             });
