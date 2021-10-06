@@ -19,9 +19,9 @@ export default {
     },
     
     methods: {
-        ...mapMutations('sessionStorage', ['UNSET_CLIENT']),
+        ...mapMutations('sessionStorage', ['UNSET_CLIENT_INFO']),
         unsetClient() {
-            this.UNSET_CLIENT();
+            this.UNSET_CLIENT_INFO();
             this.$router.push('/');
         }
     },

@@ -6,9 +6,10 @@ const { Client,
         TopicCreateTransaction,
         TopicMessageSubmitTransaction } = require("@hashgraph/sdk");
 
+const HederaClient = Client.forTestnet();
+
 /* State */
 export const state = () => ({
-    HEDERA_CLIENT: null,
     ACCOUNT_ID: '',
     PRIVATE_KEY: '',
     ACTIVE_PANEL: 'loadingPanel',
@@ -19,19 +20,13 @@ export const state = () => ({
 
 /* MUTATIONS */
 export const mutations = {
-    /* Client Helpers */
-    SET_CLIENT(state, accountInfo) {
-        state.HEDERA_CLIENT = Client.forTestnet();
-        state.HEDERA_CLIENT.setOperator(accountInfo.accountId, accountInfo.privateKey);
-    },
-    UNSET_CLIENT(state) {
-        state.HEDERA_CLIENT = null;
+    /* State Toggles and Setters */
+    UNSET_CLIENT_INFO(state) {
         state.ACCOUNT_ID = '';
         state.PRIVATE_KEY = '';
         state.ACTIVE_PANEL = 'startPanel';
         state.LOCK_BUTTON = false;
     },
-    /* State Toggles and Setters */
     SET_ACCOUNT_ID(state, accountId) {
         state.ACCOUNT_ID = accountId;
     },
@@ -178,11 +173,9 @@ export const actions = {
     /* Hedera Hashgraph Client */
     async INIT_HASHGRAPH_CLIENT({ commit }, context) {
         try {
-            let accountInfo = {
-                accountId: AccountId.fromString(context.accountId),
-                privateKey: PrivateKey.fromString(context.privateKey)
-            };
-            commit('SET_CLIENT', accountInfo);
+            let accountId = AccountId.fromString(context.accountId);
+            let privateKey = PrivateKey.fromString(context.privateKey);
+            HederaClient.setOperator(accountId, privateKey);
             return {
                 success: true,
                 responseMessage: 'Hedera Hashgraph client initialized'
@@ -209,9 +202,6 @@ export const actions = {
         return response;
     },
     async SEND_MESSAGE({ state }, messageData) {
-        let client = Client.forTestnet();
-        client.setOperator(state.ACCOUNT_ID, state.PRIVATE_KEY);
-
         messageData['operator'] = state.ACCOUNT_ID;
         let messagePayload = JSON.stringify(messageData);
         
@@ -219,7 +209,7 @@ export const actions = {
             await new TopicMessageSubmitTransaction({
                 topicId: TopicId.fromString(messageData.topicId),
                 message: messagePayload})
-                .execute(client);
+                .execute(HederaClient);
 
             return {
                 success: true,
@@ -260,12 +250,9 @@ export const actions = {
     },
 
     /* Topic and Match Creation */
-    async CREATE_TOPIC({ state }) {
-        let client = Client.forTestnet();
-        client.setOperator(state.ACCOUNT_ID, state.PRIVATE_KEY);
-        
-        const tx = await new TopicCreateTransaction().execute(client);
-        const topicReceipt = await tx.getReceipt(client);
+    async CREATE_TOPIC() {
+        const tx = await new TopicCreateTransaction().execute(HederaClient);
+        const topicReceipt = await tx.getReceipt(HederaClient);
         const newTopicId = topicReceipt.topicId.toString();
 
         return newTopicId;
