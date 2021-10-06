@@ -2,6 +2,7 @@ import Chess from 'chess.js';
 const { Client,
         AccountId,
         PrivateKey,
+        TopicId,
         TopicCreateTransaction,
         TopicMessageSubmitTransaction } = require("@hashgraph/sdk");
 
@@ -204,15 +205,15 @@ export const actions = {
             eventName: 'subscribeToTopic',
             topicId: topicId
         });
-        console.log(response.responseMessage);
+        
         return response;
     },
-    async SEND_MESSAGE({ state }, messageObject) {
+    async SEND_MESSAGE({ state }, data) {
         let client = Client.forTestnet();
         client.setOperator(state.ACCOUNT_ID, state.PRIVATE_KEY);
-        
-        let messagePayload = JSON.stringify(messageObject);
 
+        let messagePayload = JSON.stringify(data.context);
+        
         try {
             await new TopicMessageSubmitTransaction({
                 topicId: TopicId.fromString(data.context.topicId),
@@ -275,7 +276,7 @@ export const actions = {
                 playerBlack: context.playerBlack,
             };
 
-            await this.dispatch('sessionStorage/SEND_MESSAGE', {
+            this.dispatch('sessionStorage/SEND_MESSAGE', {
                 context: newMatchData
             });
             
