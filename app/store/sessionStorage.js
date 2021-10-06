@@ -1,14 +1,7 @@
 import Chess from 'chess.js';
-const { Client,
-        AccountId,
-        PrivateKey,
-        TopicId,
-        TopicCreateTransaction,
-        TopicMessageSubmitTransaction } = require("@hashgraph/sdk");
 
 /* State */
 export const state = () => ({
-    HEDERA_CLIENT: null,
     ACCOUNT_ID: '',
     PRIVATE_KEY: '',
     ACTIVE_PANEL: 'loadingPanel',
@@ -19,33 +12,21 @@ export const state = () => ({
 
 /* MUTATIONS */
 export const mutations = {
-    /* Client Helpers */
-    SET_CLIENT(state, accountInfo) {
-        state.HEDERA_CLIENT = Client.forTestnet();
-        state.HEDERA_CLIENT.setOperator(accountInfo.accountId, accountInfo.privateKey);
-    },
-    UNSET_CLIENT(state) {
-        state.HEDERA_CLIENT = null;
-        state.ACCOUNT_ID = '';
-        state.PRIVATE_KEY = '';
-        state.ACTIVE_PANEL = 'startPanel';
-        state.LOCK_BUTTON = false;
-    },
-    /* State Toggles and Setters */
+    /* Toggles and Settings */
     SET_ACCOUNT_ID(state, accountId) {
         state.ACCOUNT_ID = accountId;
     },
     SET_PRIVATE_KEY(state, privateKey) {
         state.PRIVATE_KEY = privateKey;
     },
-    SET_ACTIVE_PANEL(state, newPanel) {
-        state.ACTIVE_PANEL = newPanel;
-    },
     TOGGLE_LOCK_BUTTON(state, bool) {
         state.LOCK_BUTTON = bool;
     },
+    SET_ACTIVE_PANEL(state, newPanel) {
+        state.ACTIVE_PANEL = newPanel;
+    },
     
-    /* Map Object Creation and Clearing */
+    /* Creation and Clearing */
     CREATE_GAME_INSTANCE(state, topicId) {
         state.GAME_INSTANCES[topicId] = new Chess();
     },
@@ -94,8 +75,7 @@ export const mutations = {
     LOAD_PGN(state, boardData) {
         let topicId = boardData.topicId;
         let newPgn = boardData.newPgn;
-
-        // TODO add a check here?
+        
         state.GAME_INSTANCES[topicId].load_pgn(newPgn);
     },
 
@@ -170,33 +150,53 @@ export const mutations = {
         }
 
         state.MATCHES[topicId].resigned = resignedPlayer;
-    },
+    }
 };
 
 /* Actions */
+// All actions should use ASYNC_EMIT and return the response in all cases
 export const actions = {
-    /* Hedera Hashgraph Client */
+    /* Hashgraph Client */
     async INIT_HASHGRAPH_CLIENT({ commit }, context) {
-        try {
-            let accountInfo = {
-                accountId: AccountId.fromString(context.accountId),
-                privateKey: PrivateKey.fromString(context.privateKey)
-            };
-            commit('SET_CLIENT', accountInfo);
-            return {
-                success: true,
-                responseMessage: 'Hedera Hashgraph client initialized'
-            };
-        } catch (error) {
-            return {
-                success: false,
-                responseMessage: 'Hedera Hashgraph client failed to initialize'
-            };
+        const response = await this.dispatch(
+            'ASYNC_EMIT', {
+                eventName: 'initHashgraphClient',
+                accountId: context.accountId,
+                privateKey: context.privateKey
+            });
+
+        if (response.success) {
+            commit('SET_ACCOUNT_ID', context.accountId);
+            commit('SET_PRIVATE_KEY', context.privateKey);
+            commit('TOGGLE_LOCK_BUTTON', true);
+        }
+        
+        return response;
+    },
+    async UNSET_CLIENT({ commit }) {
+        // dispatch a method to clear the hashgraph client server-side
+        const response = await this.dispatch('ASYNC_EMIT', {
+            'eventName': 'unsetClient'
+        });
+
+        if (response.success) {
+            commit('SET_ACCOUNT_ID', '');
+            commit('SET_PRIVATE_KEY', '');
+            commit('TOGGLE_LOCK_BUTTON', false);
+            commit('SET_ACTIVE_PANEL', 'startPanel');
+        } else {
+            console.error(response.responseMessage);
         }
     },
-    
+
     /* Topic Subscription and Messages */
-    async SUBSCRIBE_TO_TOPIC({ commit, state }, topicId) {
+    async CREATE_NEW_TOPIC() {
+        let response = await this.dispatch('ASYNC_EMIT', {
+            eventName: 'createNewTopic'
+        });
+        return response;
+    },
+    async SUBSCRIBE_TO_TOPIC({ commit }, topicId) {
         //if we're subbing to a topic, clear out any pre-existing data for it
         commit('CLEAR_MATCH_OBJECT', topicId);
         commit('CLEAR_GAME_INSTANCE', topicId);
@@ -205,41 +205,19 @@ export const actions = {
             eventName: 'subscribeToTopic',
             topicId: topicId
         });
-        
+        console.log(response.responseMessage);
         return response;
     },
-    async SEND_MESSAGE({ state }, messageData) {
-        let client = Client.forTestnet();
-        client.setOperator(state.ACCOUNT_ID, state.PRIVATE_KEY);
-
-        messageData['operator'] = state.ACCOUNT_ID;
-        let messagePayload = JSON.stringify(messageData);
-        
-        try {
-            await new TopicMessageSubmitTransaction({
-                topicId: TopicId.fromString(messageData.topicId),
-                message: messagePayload})
-                .execute(client);
-
-            return {
-                success: true,
-                responseMessage: 'Sent message to HCS'
-            };
-        } catch (error) {
-            return {
-                success: false,
-                responseMessage: 'Failed to send message to HCS'
-            };
-        }
+    async SEND_MESSAGE({ state }, messagePayload) {
+        let response = await this.dispatch('ASYNC_EMIT', {
+            eventName: 'sendHCSMessage',
+            operator: state.ACCOUNT_ID,
+            context: messagePayload
+        });
+        return response;
     },
-    // not to be mistaken for PROCESS_CHAT_MESSAGE
-    PROCESS_MESSAGE({ commit, state }, messageResponse) {
+    PROCESS_MESSAGE({ commit }, messageResponse) {
         let messageData = JSON.parse(messageResponse);
-
-        //filter out irrelevant subs
-        if (messageData.messageType != 'matchCreation' && !state.MATCHES[messageData.topicId]) {
-            return;
-        }
         
         switch(messageData.messageType) {
         case 'matchCreation':
@@ -259,43 +237,26 @@ export const actions = {
         }
     },
 
-    /* Topic and Match Creation */
-    async CREATE_TOPIC({ state }) {
-        let client = Client.forTestnet();
-        client.setOperator(state.ACCOUNT_ID, state.PRIVATE_KEY);
-        
-        const tx = await new TopicCreateTransaction().execute(client);
-        const topicReceipt = await tx.getReceipt(client);
-        const newTopicId = topicReceipt.topicId.toString();
-
-        return newTopicId;
-    },
+    /* Match and Game Board */
     async CREATE_MATCH({ state }, context) {
-        try {
-            let newTopicId = await this.dispatch('sessionStorage/CREATE_TOPIC');
+        const response = await this.dispatch('sessionStorage/CREATE_NEW_TOPIC');
 
+        if (response.success) {
             let newMatchData = {
                 messageType: 'matchCreation',
-                topicId: newTopicId,
-                operator: state.ACCOUNT_ID,
+                topicId: response.newTopicId,
                 playerWhite: context.playerWhite,
                 playerBlack: context.playerBlack,
             };
-
-            this.dispatch('sessionStorage/SEND_MESSAGE', newMatchData);
             
-            return {
-                success: true,
-                responseMessage: 'Created new topic ' + newTopicId,
-                newTopicId: newTopicId,
-            };
-        } catch (error) {
-            return {
-                success: false,
-                responseMessage: 'Failed to create a new topic',
-                errorMessage: error
-            };
+            this.dispatch('ASYNC_EMIT', {
+                eventName: 'sendHCSMessage',
+                operator: state.ACCOUNT_ID,
+                context: newMatchData
+            });
         }
+
+        return response;
     },
 };
 
