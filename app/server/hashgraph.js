@@ -19,10 +19,11 @@ if (!process.env.SERVER_CLIENT_ID || !process.env.SERVER_CLIENT_KEY) {
     
     // use a specific mirror node if it's defined
     if (process.env.MIRROR_NODE_URL) {
+        console.log('Using specified mirror node: ' + process.env.MIRROR_NODE_URL);
         serverClient.setMirrorNetwork(process.env.MIRROR_NODE_URL);
     }
 
-    console.log('Created server-side client...');
+    console.log('Successfully created server-side hashgraph client...');
 }
 
 var subscriptions = {};
