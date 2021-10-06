@@ -13,7 +13,7 @@ export const mutations = {
 
 /* Actions */
 export const actions = {
-    ASYNC_EMIT({ commit }, context) {
+    ASYNC_EMIT({}, context) {
         if (!context.eventName) {
             console.error('No eventName in asyncEmit invocation!');
             return -1;

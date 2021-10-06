@@ -48,8 +48,16 @@ export default {
         sockets: [{     
             default: true,
             name: 'mainSocket',
+            url: process.env.HOST_URL || "http://localhost:3000",
             vuex: {
                 actions: [{ newHCSMessage: 'sessionStorage/PROCESS_MESSAGE' }]
+            },
+            namespaces: {
+                '/matches': {
+                    listeners: [
+                        'newHCSMessage' // this should trigger the vuex action
+                    ]
+                }
             }
         }],
     },

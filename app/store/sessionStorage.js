@@ -172,7 +172,7 @@ export const mutations = {
 /* Actions */
 export const actions = {
     /* Hedera Hashgraph Client */
-    async INIT_HASHGRAPH_CLIENT({ commit }, context) {
+    async INIT_HASHGRAPH_CLIENT({}, context) {
         try {
             let accountId = AccountId.fromString(context.accountId);
             let privateKey = PrivateKey.fromString(context.privateKey);
@@ -191,7 +191,7 @@ export const actions = {
     },
     
     /* Topic Subscription and Messages */
-    async SUBSCRIBE_TO_TOPIC({ commit, state }, topicId) {
+    async SUBSCRIBE_TO_TOPIC({ commit }, topicId) {
         //if we're subbing to a topic, clear out any pre-existing data for it
         commit('CLEAR_MATCH_OBJECT', topicId);
         commit('CLEAR_GAME_INSTANCE', topicId);
