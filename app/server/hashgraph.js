@@ -4,6 +4,8 @@ const TextDecoder = require("text-encoding").TextDecoder;
 /* Hashgraph SDK */
 const {
     Client,
+    AccountId,
+    PrivateKey,
     TopicId,
     TopicMessageQuery,
 } = require("@hashgraph/sdk");
@@ -22,7 +24,41 @@ if (!process.env.SERVER_CLIENT_ID || !process.env.SERVER_CLIENT_KEY) {
     }
 }
 
+var userClients = {};
 var subscriptions = {};
+
+function initUserClient(accountInfo) {
+    let accountId = AccountId.fromString(accountInfo.accountId);
+    let privateKey = PrivateKey.fromString(accountInfo.privateKey);
+
+    if (userClients[accountId]) {
+        return {
+            success: false,
+            responseMessage: 'This account is already active'
+        };
+    }
+
+    try {
+        userClients[accountId] = Client.forTestnet();
+        userClients[accountId].setOperator(accountId, privateKey);
+        return {
+            success: true,
+            responseMessage: `Initialized server-side client for ${accountId}`
+        };
+    } catch (error) {
+        return {
+            success: false,
+            responseMessage: `Failed to initialize server-side client for ${accountId}`,
+            errorMessage: error
+        };
+    }
+}
+
+function clearUserClient(accountId) {
+    if (userClients[accountId]) {
+        delete userClients[accountId];
+    }
+}
 
 async function subscribeToTopic(io, topicIdString) {
     const topicId = TopicId.fromString(topicIdString);
@@ -54,5 +90,7 @@ async function subscribeToTopic(io, topicIdString) {
 }
 
 module.exports = {
-    subscribeToTopic,
+    initUserClient,
+    clearUserClient,
+    subscribeToTopic
 };
