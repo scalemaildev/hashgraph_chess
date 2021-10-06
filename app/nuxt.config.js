@@ -53,10 +53,15 @@ export default {
                 actions: [{ newHCSMessage: 'sessionStorage/PROCESS_MESSAGE' }]
             },
             namespaces: {
-                '/matches': {
-                    listeners: [
-                        'newHCSMessage' // this should trigger the vuex action
-                    ]
+                // TODO: add CRUD handling for 'matches' when implemented
+                //'matches': {},
+                '/match': {
+                    // TODO: add emitter handling for join/leave match methods
+                    //emitters: [
+                        //'joinMatch + joinMsg --> matchInfo',
+                        //'leaveMatch + leaveMsg'
+                    //],
+                    listeners: [ 'newHCSMessage' ]
                 }
             }
         }],
