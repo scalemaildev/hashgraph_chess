@@ -197,14 +197,17 @@ export const actions = {
     },
     
     /* Topic Subscription and Messages */
-    async SUBSCRIBE_TO_TOPIC({ commit }, topicId) {
+    async SUBSCRIBE_TO_TOPIC({ state, commit }, topicId) {
         //if we're subbing to a topic, clear out any pre-existing data for it
         commit('CLEAR_MATCH_OBJECT', topicId);
         commit('CLEAR_GAME_INSTANCE', topicId);
         
         const response = await this.dispatch('ASYNC_EMIT', {
             eventName: 'subscribeToTopic',
-            topicId: topicId
+            subInfo: {
+                topicId: topicId,
+                accountId: state.ACCOUNT_ID
+            }
         });
         
         return response;

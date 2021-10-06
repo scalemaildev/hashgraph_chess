@@ -73,8 +73,8 @@ export default {
     
     methods: {
         ...mapActions('sessionStorage', ['SUBSCRIBE_TO_TOPIC']),
-        async subscribeToTopic() {
-            let response = await this.SUBSCRIBE_TO_TOPIC(this.topicId);
+        subscribeToTopic() {
+            this.SUBSCRIBE_TO_TOPIC(this.topicId);
         }
     }
 }

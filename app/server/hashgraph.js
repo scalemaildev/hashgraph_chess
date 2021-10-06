@@ -39,8 +39,11 @@ function initUserClient(accountInfo) {
     }
 
     try {
-        userClients[accountId] = Client.forTestnet();
-        userClients[accountId].setOperator(accountId, privateKey);
+        userClients[accountId] = {
+            client: Client.forTestnet(),
+            subscriptions: {}
+        };
+        userClients[accountId]['client'].setOperator(accountId, privateKey);
         return {
             success: true,
             responseMessage: `Initialized client for ${accountId}`
@@ -60,23 +63,25 @@ function clearUserClient(accountId) {
     }
 }
 
-async function subscribeToTopic(io, topicIdString) {
-    const topicId = TopicId.fromString(topicIdString);
+async function subscribeToTopic(io, subInfo) {
+    console.log(subInfo);
+    let topicId = TopicId.fromString(subInfo.topicId);
+    let accountId = subInfo.accountId;
 
     // when the page is refreshed, pre-existing subs still remain
-    if (subscriptions[topicIdString]) {
-        subscriptions[topicIdString].unsubscribe();
+    if (userClients[accountId]['subscriptions'][subInfo.topicId]) {
+        userClients[accountId]['subscriptions'][subInfo.topicId].unsubscribe();
     }
 
     try {
         let sub = new TopicMessageQuery()
             .setTopicId(topicId)
             .setStartTime(0)
-            .subscribe(serverClient, res => {
+            .subscribe(userClients[accountId].client, res => {
                 let contents = new TextDecoder("utf-8").decode(res.contents);
                 io.emit('newHCSMessage', contents);
             });
-        subscriptions[topicIdString] = sub;
+        userClients[accountId]['subscriptions'][subInfo.topicId] = sub;
         return {
             success: true,
             responseMessage: `Subscribed to topic ${topicId}`
