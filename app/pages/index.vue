@@ -32,7 +32,7 @@ export default {
     },
 
     mounted() {
-        if (!!this.HEDERA_CLIENT) {
+        if (!!this.ACCOUNT_ID && !!this.PRIVATE_KEY) {
             this.$nextTick(() => {
                 this.restoreClient();
             });
