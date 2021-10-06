@@ -93,6 +93,7 @@ export default {
     methods: {
         ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL',
                                            'SET_ACCOUNT_ID',
+                                           'SET_PRIVATE_KEY',
                                            'TOGGLE_LOCK_BUTTON']),
         ...mapActions('sessionStorage', ['INIT_HASHGRAPH_CLIENT']),
         submit () {
@@ -111,6 +112,7 @@ export default {
             
             if (response.success) {
                 this.SET_ACCOUNT_ID(this.accountId);
+                this.SET_PRIVATE_KEY(this.privateKey);
                 this.TOGGLE_LOCK_BUTTON(true);
                 this.accountId = "";
                 this.privateKey = "";

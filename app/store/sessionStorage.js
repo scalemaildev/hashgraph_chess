@@ -1,10 +1,15 @@
 import Chess from 'chess.js';
-const { Client, AccountId, PrivateKey } = require("@hashgraph/sdk");
+const { Client,
+        AccountId,
+        PrivateKey,
+        TopicCreateTransaction,
+        TopicMessageSubmitTransaction } = require("@hashgraph/sdk");
 
 /* State */
 export const state = () => ({
     HEDERA_CLIENT: null,
     ACCOUNT_ID: '',
+    PRIVATE_KEY: '',
     ACTIVE_PANEL: 'loadingPanel',
     LOCK_BUTTON: false,
     MATCHES: {},
@@ -13,8 +18,8 @@ export const state = () => ({
 
 /* MUTATIONS */
 export const mutations = {
-    /* Toggles and Settings */
-    SET_CLIENT(state, accountInfo) {        
+    /* Client Helpers */
+    SET_CLIENT(state, accountInfo) {
         state.HEDERA_CLIENT = Client.forTestnet(); // Testnet only as for right now. Can add Mainnet in prod
         state.HEDERA_CLIENT.setOperator(accountInfo.accountId, accountInfo.privateKey);
         
@@ -26,20 +31,25 @@ export const mutations = {
     UNSET_CLIENT(state) {
         state.HEDERA_CLIENT = null;
         state.ACCOUNT_ID = '';
+        state.PRIVATE_KEY = '';
         state.ACTIVE_PANEL = 'startPanel';
         state.LOCK_BUTTON = false;
     },
+    /* State Toggles and Setters */
     SET_ACCOUNT_ID(state, accountId) {
         state.ACCOUNT_ID = accountId;
     },
-    TOGGLE_LOCK_BUTTON(state, bool) {
-        state.LOCK_BUTTON = bool;
+    SET_PRIVATE_KEY(state, privateKey) {
+        state.PRIVATE_KEY = privateKey;
     },
     SET_ACTIVE_PANEL(state, newPanel) {
         state.ACTIVE_PANEL = newPanel;
     },
+    TOGGLE_LOCK_BUTTON(state, bool) {
+        state.LOCK_BUTTON = bool;
+    },
     
-    /* Creation and Clearing */
+    /* Map Object Creation and Clearing */
     CREATE_GAME_INSTANCE(state, topicId) {
         state.GAME_INSTANCES[topicId] = new Chess();
     },
@@ -164,13 +174,12 @@ export const mutations = {
         }
 
         state.MATCHES[topicId].resigned = resignedPlayer;
-    }
+    },
 };
 
 /* Actions */
-// All actions should use ASYNC_EMIT and return the response in all cases
 export const actions = {
-    /* Hashgraph Client */
+    /* Hedera Hashgraph Client */
     async INIT_HASHGRAPH_CLIENT({ commit }, context) {
         try {
             let accountInfo = {
@@ -189,28 +198,8 @@ export const actions = {
             };
         }
     },
-    async UNSET_CLIENT({ commit }) {
-        // dispatch a method to clear the hashgraph client server-side
-        const response = await this.dispatch('ASYNC_EMIT', {
-            'eventName': 'unsetClient'
-        });
-
-        if (response.success) {
-            commit('SET_ACCOUNT_ID', '');
-            commit('TOGGLE_LOCK_BUTTON', false);
-            commit('SET_ACTIVE_PANEL', 'startPanel');
-        } else {
-            console.error(response.responseMessage);
-        }
-    },
-
+    
     /* Topic Subscription and Messages */
-    async CREATE_NEW_TOPIC() {
-        let response = await this.dispatch('ASYNC_EMIT', {
-            eventName: 'createNewTopic'
-        });
-        return response;
-    },
     async SUBSCRIBE_TO_TOPIC({ commit }, topicId) {
         //if we're subbing to a topic, clear out any pre-existing data for it
         commit('CLEAR_MATCH_OBJECT', topicId);
@@ -223,14 +212,35 @@ export const actions = {
         console.log(response.responseMessage);
         return response;
     },
-    async SEND_MESSAGE({ state }, messagePayload) {
-        let response = await this.dispatch('ASYNC_EMIT', {
-            eventName: 'sendHCSMessage',
-            operator: state.ACCOUNT_ID,
-            context: messagePayload
-        });
-        return response;
+    async SEND_MESSAGE({ state }, messageObject) {
+        let client = Client.forTestnet(); // Testnet only as for right now. Can add Mainnet in prod
+        client.setOperator(state.ACCOUNT_ID, state.PRIVATE_KEY);
+        
+        // use a specific mirror node if it's defined
+        if (process.env.MIRROR_NODE_URL) {
+            client.setMirrorNetwork(process.env.MIRROR_NODE_URL);
+        }
+        
+        let messagePayload = JSON.stringify(messageObject);
+
+        try {
+            await new TopicMessageSubmitTransaction({
+                topicId: TopicId.fromString(data.context.topicId),
+                message: messagePayload})
+                .execute(client);
+
+            return {
+                success: true,
+                responseMessage: 'Sent message to HCS'
+            };
+        } catch (error) {
+            return {
+                success: false,
+                responseMessage: 'Failed to send message to HCS'
+            };
+        }
     },
+    // not to be mistaken for PROCESS_CHAT_MESSAGE
     PROCESS_MESSAGE({ commit }, messageResponse) {
         let messageData = JSON.parse(messageResponse);
         
@@ -252,26 +262,50 @@ export const actions = {
         }
     },
 
-    /* Match and Game Board */
-    async CREATE_MATCH({ state }, context) {
-        const response = await this.dispatch('sessionStorage/CREATE_NEW_TOPIC');
+    /* Topic and Match Creation */
+    async CREATE_TOPIC({ state }) {
+        let client = Client.forTestnet(); // Testnet only as for right now. Can add Mainnet in prod
+        client.setOperator(state.ACCOUNT_ID, state.PRIVATE_KEY);
+        
+        // use a specific mirror node if it's defined
+        if (process.env.MIRROR_NODE_URL) {
+            client.setMirrorNetwork(process.env.MIRROR_NODE_URL);
+        }
+        
+        const tx = await new TopicCreateTransaction().execute(client);
+        const topicReceipt = await tx.getReceipt(client);
+        const newTopicId = topicReceipt.topicId.toString();
 
-        if (response.success) {
+        return newTopicId;
+    },
+    async CREATE_MATCH({ state }, context) {
+        try {
+            let newTopicId = await this.dispatch('sessionStorage/CREATE_TOPIC');
+
             let newMatchData = {
                 messageType: 'matchCreation',
-                topicId: response.newTopicId,
+                topicId: newTopicId,
+                operator: state.ACCOUNT_ID,
                 playerWhite: context.playerWhite,
                 playerBlack: context.playerBlack,
             };
-            
-            this.dispatch('ASYNC_EMIT', {
-                eventName: 'sendHCSMessage',
-                operator: state.ACCOUNT_ID,
+
+            await this.dispatch('sessionStorage/SEND_MESSAGE', {
                 context: newMatchData
             });
+            
+            return {
+                success: true,
+                responseMessage: 'Created new topic ' + newTopicId,
+                newTopicId: newTopicId,
+            };
+        } catch (error) {
+            return {
+                success: false,
+                responseMessage: 'Failed to create a new topic',
+                errorMessage: error
+            };
         }
-
-        return response;
     },
 };
 

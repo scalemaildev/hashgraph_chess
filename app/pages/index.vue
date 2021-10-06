@@ -27,6 +27,7 @@ export default {
     computed: {
         ...mapState('sessionStorage', ['ACTIVE_PANEL',
                                        'ACCOUNT_ID',
+                                       'PRIVATE_KEY',
                                        'HEDERA_CLIENT'])
     },
 
@@ -44,7 +45,7 @@ export default {
         ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL']),
         ...mapActions('sessionStorage', ['INIT_HASHGRAPH_CLIENT']),
         async restoreClient() {
-            await this.INIT_HASHGRAPH_CLIENT({
+            let response = await this.INIT_HASHGRAPH_CLIENT({
                 accountId: this.ACCOUNT_ID,
                 privateKey: this.PRIVATE_KEY
             });
