@@ -208,15 +208,16 @@ export const actions = {
         
         return response;
     },
-    async SEND_MESSAGE({ state }, data) {
+    async SEND_MESSAGE({ state }, messageData) {
         let client = Client.forTestnet();
         client.setOperator(state.ACCOUNT_ID, state.PRIVATE_KEY);
 
-        let messagePayload = JSON.stringify(data.context);
+        messageData['operator'] = state.ACCOUNT_ID;
+        let messagePayload = JSON.stringify(messageData);
         
         try {
             await new TopicMessageSubmitTransaction({
-                topicId: TopicId.fromString(data.context.topicId),
+                topicId: TopicId.fromString(messageData.topicId),
                 message: messagePayload})
                 .execute(client);
 
@@ -276,9 +277,7 @@ export const actions = {
                 playerBlack: context.playerBlack,
             };
 
-            this.dispatch('sessionStorage/SEND_MESSAGE', {
-                context: newMatchData
-            });
+            this.dispatch('sessionStorage/SEND_MESSAGE', newMatchData);
             
             return {
                 success: true,
