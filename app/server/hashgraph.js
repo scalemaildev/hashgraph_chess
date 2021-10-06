@@ -43,12 +43,12 @@ function initUserClient(accountInfo) {
         userClients[accountId].setOperator(accountId, privateKey);
         return {
             success: true,
-            responseMessage: `Initialized server-side client for ${accountId}`
+            responseMessage: `Initialized client for ${accountId}`
         };
     } catch (error) {
         return {
             success: false,
-            responseMessage: `Failed to initialize server-side client for ${accountId}`,
+            responseMessage: `Failed to initialize client for ${accountId}`,
             errorMessage: error
         };
     }

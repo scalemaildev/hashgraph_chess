@@ -172,16 +172,22 @@ export const mutations = {
 /* Actions */
 export const actions = {
     /* Hedera Hashgraph Client */
-    async INIT_HASHGRAPH_CLIENT({}, context) {
+    async INIT_HASHGRAPH_CLIENT({ state }, context) {
         try {
             let accountId = AccountId.fromString(context.accountId);
             let privateKey = PrivateKey.fromString(context.privateKey);
             HederaClient = Client.forTestnet();
             HederaClient.setOperator(accountId, privateKey);
-            return {
-                success: true,
-                responseMessage: 'Hedera Hashgraph client initialized'
-            };
+
+            const response = await this.dispatch('ASYNC_EMIT', {
+                eventName: 'initUserClient',
+                accountInfo: {
+                    accountId: context.accountId,
+                    privateKey: context.privateKey
+                }
+            });
+            
+            return response;
         } catch (error) {
             return {
                 success: false,
