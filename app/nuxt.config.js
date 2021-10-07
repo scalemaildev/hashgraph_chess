@@ -34,14 +34,14 @@ export default {
     // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
     buildModules: [
         // https://go.nuxtjs.dev/vuetify
-        '@nuxtjs/vuetify',
-        '@nuxtjs/axios'
+        '@nuxtjs/vuetify'
     ],
 
     // Modules: https://go.nuxtjs.dev/config-modules
     modules: [
         'nuxt-vuex-localstorage',
         '@nuxt/image',
+        '@nuxtjs/axios'
     ],
 
     axios: {
