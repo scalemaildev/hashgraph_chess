@@ -38,7 +38,7 @@ function initUserClient(context) {
 function clearUserClient(socketId) {
     if (userClients[socketId]) {
         delete userClients[socketId];
-    }
+    };
 }
 
 async function subscribeToTopic(io, subInfo) {    
