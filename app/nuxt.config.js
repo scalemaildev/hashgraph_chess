@@ -46,11 +46,11 @@ export default {
 
     axios: {
         proxy: true,
-        retry: { retries: 3 }
+        retry: true
     },
 
     proxy: {
-        '/api/': 'https://testnet.mirrornode.hedera.com/'
+        '/api/': process.env.MIRROR_NODE_URL
     },
 
     // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

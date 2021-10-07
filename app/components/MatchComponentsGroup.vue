@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
     props: ['topicId'],
@@ -68,10 +68,12 @@ export default {
     },
     
     mounted() {
+        this.CREATE_TOPIC_MESSAGE_COUNT(this.topicId);
         this.queryTopic();
     },
     
     methods: {
+        ...mapMutations('sessionStorage', ['CREATE_TOPIC_MESSAGE_COUNT']),
         ...mapActions('sessionStorage', ['QUERY_TOPIC']),
         queryTopic() {
             this.QUERY_TOPIC(this.topicId);
