@@ -35,35 +35,22 @@ export default {
     buildModules: [
         // https://go.nuxtjs.dev/vuetify
         '@nuxtjs/vuetify',
+        '@nuxtjs/axios'
     ],
 
     // Modules: https://go.nuxtjs.dev/config-modules
     modules: [
-        'nuxt-socket-io',
         'nuxt-vuex-localstorage',
-        '@nuxt/image'
+        '@nuxt/image',
     ],
 
-    io: {
-        sockets: [{     
-            default: true,
-            name: 'mainSocket',
-            vuex: {
-                actions: [{ newHCSMessage: 'sessionStorage/PROCESS_MESSAGE' }]
-            },
-            namespaces: {
-                // TODO: add CRUD handling for 'matches' when implemented
-                //'matches': {},
-                '/match': {
-                    // TODO: add emitter handling for join/leave match methods
-                    //emitters: [
-                        //'joinMatch + joinMsg --> matchInfo',
-                        //'leaveMatch + leaveMsg'
-                    //],
-                    listeners: [ 'newHCSMessage' ]
-                }
-            }
-        }],
+    axios: {
+        proxy: true,
+        retry: true
+    },
+
+    proxy: {
+        '/api/': process.env.MIRROR_NODE_URL
     },
 
     // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

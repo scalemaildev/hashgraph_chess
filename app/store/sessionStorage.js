@@ -1,4 +1,10 @@
+/* Utils */
+const TextDecoder = require("text-encoding").TextDecoder;
+
+/* Chess */
 import Chess from 'chess.js';
+
+/* Hashgraph */
 const { Client,
         AccountId,
         PrivateKey,
@@ -15,7 +21,8 @@ export const state = () => ({
     ACTIVE_PANEL: 'loadingPanel',
     LOCK_BUTTON: false,
     MATCHES: {},
-    GAME_INSTANCES: {}
+    GAME_INSTANCES: {},
+    TOPIC_MESSAGE_COUNTS: {}
 });
 
 /* MUTATIONS */
@@ -41,12 +48,15 @@ export const mutations = {
         state.LOCK_BUTTON = bool;
     },
     
-    /* Map Object Creation and Clearing */
+    /* Map Object Creation */
+    CREATE_TOPIC_MESSAGE_COUNT(state, topicId) {
+        state.TOPIC_MESSAGE_COUNTS[topicId] = 0;
+    },
+    INCREMENT_TOPIC_MESSAGE_COUNT(state, topicId) {
+        state.TOPIC_MESSAGE_COUNTS[topicId]++;
+    },
     CREATE_GAME_INSTANCE(state, topicId) {
         state.GAME_INSTANCES[topicId] = new Chess();
-    },
-    CLEAR_GAME_INSTANCE(state, topicId) {
-        this._vm.$set(state.GAME_INSTANCES, topicId, {});
     },
     CREATE_MATCH_OBJECT(state, messageData) {
         let topicId = messageData.topicId;
@@ -63,7 +73,6 @@ export const mutations = {
         this.commit('sessionStorage/CREATE_GAME_INSTANCE', topicId);
         
         this._vm.$set(state.MATCHES, topicId, {
-            created: true,
             playerWhite: playerWhite,
             playerBlack: playerBlack,
             userType: userType,
@@ -73,11 +82,9 @@ export const mutations = {
             }],
             pgns: [''],
             boardState: [],
-            resigned: false
+            resigned: false,
+            created: true
         });
-    },
-    CLEAR_MATCH_OBJECT(state, topicId) {
-        this._vm.$set(state.MATCHES, topicId, {});
     },
 
     /* Game Board */
@@ -178,16 +185,10 @@ export const actions = {
             let privateKey = PrivateKey.fromString(context.privateKey);
             HederaClient = Client.forTestnet();
             HederaClient.setOperator(accountId, privateKey);
-
-            const response = await this.dispatch('ASYNC_EMIT', {
-                eventName: 'initUserClient',
-                accountInfo: {
-                    accountId: context.accountId,
-                    privateKey: context.privateKey
-                }
-            });
-
-            return response;
+            return {
+                success: true,
+                responseMessage: 'Initialized Hedera Hashgraph client'
+            };
         } catch (error) {
             return {
                 success: false,
@@ -197,17 +198,15 @@ export const actions = {
     },
     
     /* Topic Subscription and Messages */
-    async SUBSCRIBE_TO_TOPIC({ commit }, topicId) {
-        //if we're subbing to a topic, clear out any pre-existing data for it
-        commit('CLEAR_MATCH_OBJECT', topicId);
-        commit('CLEAR_GAME_INSTANCE', topicId);
-        
-        let response = await this.dispatch('ASYNC_EMIT', {
-            eventName: 'subscribeToTopic',
-            topicId: topicId
-        });
-        
-        return response;
+    async QUERY_TOPIC({}, topicId) {
+        try {
+            let response = await this.$axios.$get(`/api/v1/topics/${topicId}/messages/`);
+            response.messages.forEach(message => {
+                this.dispatch('sessionStorage/PROCESS_MESSAGE', message);
+            });
+        } catch (error) {
+            return; // just ignore the 404 queries for now
+        }
     },
     async SEND_MESSAGE({ state }, messageData) {
         messageData['operator'] = state.ACCOUNT_ID;
@@ -231,29 +230,34 @@ export const actions = {
         }
     },
     // not to be mistaken for PROCESS_CHAT_MESSAGE
-    PROCESS_MESSAGE({ commit, state }, messageResponse) {
-        let messageData = JSON.parse(messageResponse);
+    PROCESS_MESSAGE({ commit, state }, messagePayload) {
+        let topicId = messagePayload.topic_id;
+        let msgIndex = messagePayload.sequence_number;
+        let rawMessage = new TextDecoder("utf-8").decode(Buffer.from(messagePayload.message, 'base64'));
+        let messageObject = JSON.parse(rawMessage);
 
-        //filter out irrelevant subs
-        if (messageData.messageType != 'matchCreation' && !state.MATCHES[messageData.topicId]) {
+        // ignore messages whose sequence number we already have seen
+        if (state.TOPIC_MESSAGE_COUNTS[topicId] >= msgIndex) {
             return;
+        } else {
+            commit('INCREMENT_TOPIC_MESSAGE_COUNT', topicId);
         }
         
-        switch(messageData.messageType) {
+        switch(messageObject.messageType) {
         case 'matchCreation':
-            commit('CREATE_MATCH_OBJECT', messageData);
+            commit('CREATE_MATCH_OBJECT', messageObject);
             break;
         case 'chatMessage':
-            commit('PROCESS_CHAT_MESSAGE', messageData);
+            commit('PROCESS_CHAT_MESSAGE', messageObject);
             break;
         case 'chessMove':
-            commit('PROCESS_CHESS_MOVE', messageData);
+            commit('PROCESS_CHESS_MOVE', messageObject);
             break;
         case 'resignPlayer':
-            commit('PROCESS_RESIGN', messageData);
+            commit('PROCESS_RESIGN', messageObject);
             break;
         default:
-            console.log('Got unknown message type: ' + messageData.messageType);
+            console.log('Got unknown message type: ' + messageObject.messageType);
         }
     },
 
@@ -299,6 +303,11 @@ export const getters = {
     MATCH_DATA: (state) => {
         return topicId => {
             return state.MATCHES[topicId];
+        };
+    },
+    TOPIC_MESSAGE_COUNT: (state) => {
+        return topicId => {
+            return state.TOPIC_MESSAGE_COUNTS[topicId];
         };
     },
     MATCH_MESSAGES: (state) => {

@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div v-if="!matchDataLoaded || !gameDataLoaded" class="content-spaced-mid">
+  <div v-if="!matchDataLoaded" class="content-spaced-mid">
     <LoadingPanel loadingText="SUBSCRIBING"
                   warningTime=12000 />
   </div>
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
     props: ['topicId'],
@@ -30,20 +30,14 @@ export default {
     data () {
         return {
             matchDataLoaded: false,
-            gameDataLoaded: false,
             subscriptionTimeout: false
         }
     },
     
     computed: {
-        ...mapState('sessionStorage', ['ACCOUNT_ID']),
-        ...mapGetters('sessionStorage', ['MATCH_DATA',
-                                        'GAME_INSTANCE']),
+        ...mapGetters('sessionStorage', ['MATCH_DATA']),
         matchData () {
             return this.MATCH_DATA(this.topicId);
-        },
-        gameData () {
-            return this.GAME_INSTANCE(this.topicId);
         },
         userType() {
             return this.MATCH_DATA(this.topicId).userType;
@@ -52,30 +46,24 @@ export default {
     
     watch: {
         matchData (newMatchData, oldMatchData) {
-            if (!newMatchData.created) {
-                this.matchDataLoaded = false;
-            } else {
+            if (newMatchData.created) {
                 this.matchDataLoaded = true;
-            }
-        },
-        gameData (newGameData, oldGameData) {
-            if (!newGameData) {
-                this.gameDataLoaded = false;
             } else {
-                this.gameDataLoaded = true;
+                this.matchDataLoaded = false;
             }
         }
     },
     
     mounted() {
-        this.subscribeToTopic();
+        this.CREATE_TOPIC_MESSAGE_COUNT(this.topicId);
+        window.setInterval(() => {
+            this.QUERY_TOPIC(this.topicId);
+        }, 4000)
     },
     
     methods: {
-        ...mapActions('sessionStorage', ['SUBSCRIBE_TO_TOPIC']),
-        subscribeToTopic() {
-            this.SUBSCRIBE_TO_TOPIC(this.topicId);
-        }
+        ...mapMutations('sessionStorage', ['CREATE_TOPIC_MESSAGE_COUNT']),
+        ...mapActions('sessionStorage', ['QUERY_TOPIC'])
     }
 }
 </script>
