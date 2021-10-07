@@ -14,7 +14,14 @@ export default function(socket, io) {
             io.emit('initUserClient', response);
         },
         async subscribeToTopic (context) {
-            let response = await hashgraph.subscribeToTopic(io, context.subInfo);
+            let topicId = context.topicId;
+            let socketId = socket.id;
+            
+            let response = await hashgraph.subscribeToTopic(io, {
+                topicId: topicId,
+                socketId: socketId
+            });
+            
             io.emit('subscribeToTopic', response);
         }
     });

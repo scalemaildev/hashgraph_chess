@@ -10,41 +10,17 @@ const {
     TopicMessageQuery,
 } = require("@hashgraph/sdk");
 
-
-// temporary solution for server-side hashgraph clients and subs
-var serverClient;
-if (!process.env.SERVER_CLIENT_ID || !process.env.SERVER_CLIENT_KEY) {
-    console.warn('No info found for server-side hashgraph client!');
-} else {
-    serverClient = Client.forTestnet();
-    serverClient.setOperator(process.env.SERVER_CLIENT_ID, process.env.SERVER_CLIENT_KEY);
-    // use a specific mirror node if it's defined
-    if (process.env.MIRROR_NODE_URL) {
-        serverClient.setMirrorNetwork(process.env.MIRROR_NODE_URL);
-    }
-}
-
+// temporary workaround for server-side hedera clients;
 var userClients = {};
-var subscriptions = {};
 
-function initUserClient(accountInfo) {
-    let accountId = AccountId.fromString(accountInfo.accountId);
-    let privateKey = PrivateKey.fromString(accountInfo.privateKey);
-    let socketId = accountInfo.socketId;
-
-    if (userClients[socketId]) {
-        return {
-            success: false,
-            responseMessage: 'This account is already active'
-        };
-    }
+function initUserClient(context) {
+    let accountId = AccountId.fromString(context.accountId);
+    let privateKey = PrivateKey.fromString(context.privateKey);
+    let socketId = context.socketId;
 
     try {
-        userClients[socketId] = {
-            client: Client.forTestnet(),
-            subscriptions: {}
-        };
-        userClients[socketId]['client'].setOperator(accountId, privateKey);
+        userClients[socketId] = Client.forTestnet();
+        userClients[socketId].setOperator(accountId, privateKey);
         
         return {
             success: true,
@@ -65,25 +41,18 @@ function clearUserClient(socketId) {
     }
 }
 
-async function subscribeToTopic(io, subInfo) {
-    console.log(subInfo);
+async function subscribeToTopic(io, subInfo) {    
+    let socketId = subInfo.socketId;
     let topicId = TopicId.fromString(subInfo.topicId);
-    let accountId = subInfo.accountId;
-
-    // when the page is refreshed, pre-existing subs still remain
-    if (userClients[accountId]['subscriptions'][subInfo.topicId]) {
-        userClients[accountId]['subscriptions'][subInfo.topicId].unsubscribe();
-    }
 
     try {
-        let sub = new TopicMessageQuery()
+        new TopicMessageQuery()
             .setTopicId(topicId)
             .setStartTime(0)
-            .subscribe(userClients[accountId].client, res => {
+            .subscribe(userClients[socketId], res => {
                 let contents = new TextDecoder("utf-8").decode(res.contents);
                 io.emit('newHCSMessage', contents);
             });
-        userClients[accountId]['subscriptions'][subInfo.topicId] = sub;
         return {
             success: true,
             responseMessage: `Subscribed to topic ${topicId}`

@@ -186,7 +186,7 @@ export const actions = {
                     privateKey: context.privateKey
                 }
             });
-            
+
             return response;
         } catch (error) {
             return {
@@ -197,17 +197,14 @@ export const actions = {
     },
     
     /* Topic Subscription and Messages */
-    async SUBSCRIBE_TO_TOPIC({ state, commit }, topicId) {
+    async SUBSCRIBE_TO_TOPIC({ commit }, topicId) {
         //if we're subbing to a topic, clear out any pre-existing data for it
         commit('CLEAR_MATCH_OBJECT', topicId);
         commit('CLEAR_GAME_INSTANCE', topicId);
         
-        const response = await this.dispatch('ASYNC_EMIT', {
+        let response = await this.dispatch('ASYNC_EMIT', {
             eventName: 'subscribeToTopic',
-            subInfo: {
-                topicId: topicId,
-                accountId: state.ACCOUNT_ID
-            }
+            topicId: topicId
         });
         
         return response;
