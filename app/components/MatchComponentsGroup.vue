@@ -69,15 +69,14 @@ export default {
     
     mounted() {
         this.CREATE_TOPIC_MESSAGE_COUNT(this.topicId);
-        this.queryTopic();
+        window.setInterval(() => {
+            this.QUERY_TOPIC(this.topicId);
+        }, 5000)
     },
     
     methods: {
         ...mapMutations('sessionStorage', ['CREATE_TOPIC_MESSAGE_COUNT']),
-        ...mapActions('sessionStorage', ['QUERY_TOPIC']),
-        queryTopic() {
-            this.QUERY_TOPIC(this.topicId);
-        }
+        ...mapActions('sessionStorage', ['QUERY_TOPIC'])
     }
 }
 </script>
