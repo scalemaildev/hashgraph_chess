@@ -25,7 +25,7 @@ import { mapState, mapMutations, mapActions } from 'vuex';
 
 export default {
     async asyncData({ params }) {
-        const topicId = params.slug;
+        const topicId = params.match;
         
         return { topicId }
     },

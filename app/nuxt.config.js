@@ -50,6 +50,18 @@ export default {
             name: 'mainSocket',
             vuex: {
                 actions: [{ newHCSMessage: 'sessionStorage/PROCESS_MESSAGE' }]
+            },
+            namespaces: {
+                // TODO: add CRUD handling for 'matches' when implemented
+                //'matches': {},
+                '/match': {
+                    // TODO: add emitter handling for join/leave match methods
+                    //emitters: [
+                        //'joinMatch + joinMsg --> matchInfo',
+                        //'leaveMatch + leaveMsg'
+                    //],
+                    listeners: [ 'newHCSMessage' ]
+                }
             }
         }],
     },

@@ -4,47 +4,55 @@ const TextDecoder = require("text-encoding").TextDecoder;
 /* Hashgraph SDK */
 const {
     Client,
+    AccountId,
+    PrivateKey,
     TopicId,
     TopicMessageQuery,
 } = require("@hashgraph/sdk");
 
-var serverClient;
+// temporary workaround for server-side hedera clients;
+var userClients = {};
 
-if (!process.env.SERVER_CLIENT_ID || !process.env.SERVER_CLIENT_KEY) {
-    console.warn('No info found for server-side hashgraph client!');
-} else {
-    // Testnet only as for right now. Can add Mainnet in prod
-    serverClient = Client.forTestnet();
-    serverClient.setOperator(process.env.SERVER_CLIENT_ID, process.env.SERVER_CLIENT_KEY);
-    
-    // use a specific mirror node if it's defined
-    if (process.env.MIRROR_NODE_URL) {
-        console.log('Using specified mirror node: ' + process.env.MIRROR_NODE_URL);
-        serverClient.setMirrorNetwork(process.env.MIRROR_NODE_URL);
-    }
-
-    console.log('Successfully created server-side hashgraph client...');
-}
-
-var subscriptions = {};
-
-async function subscribeToTopic(io, topicIdString) {
-    const topicId = TopicId.fromString(topicIdString);
-
-    // when the page is refreshed, pre-existing subs still remain
-    if (subscriptions[topicIdString]) {
-        subscriptions[topicIdString].unsubscribe();
-    }
+function initUserClient(context) {
+    let accountId = AccountId.fromString(context.accountId);
+    let privateKey = PrivateKey.fromString(context.privateKey);
+    let socketId = context.socketId;
 
     try {
-        let sub = new TopicMessageQuery()
+        userClients[socketId] = Client.forTestnet();
+        userClients[socketId].setOperator(accountId, privateKey);
+        
+        return {
+            success: true,
+            responseMessage: `Initialized client for ${accountId}`
+        };
+    } catch (error) {
+        return {
+            success: false,
+            responseMessage: `Failed to initialize client for ${accountId}`,
+            errorMessage: error
+        };
+    }
+}
+
+function clearUserClient(socketId) {
+    if (userClients[socketId]) {
+        delete userClients[socketId];
+    };
+}
+
+async function subscribeToTopic(io, subInfo) {    
+    let socketId = subInfo.socketId;
+    let topicId = TopicId.fromString(subInfo.topicId);
+
+    try {
+        new TopicMessageQuery()
             .setTopicId(topicId)
             .setStartTime(0)
-            .subscribe(serverClient, res => {
+            .subscribe(userClients[socketId], res => {
                 let contents = new TextDecoder("utf-8").decode(res.contents);
                 io.emit('newHCSMessage', contents);
             });
-        subscriptions[topicIdString] = sub;
         return {
             success: true,
             responseMessage: `Subscribed to topic ${topicId}`
@@ -58,5 +66,7 @@ async function subscribeToTopic(io, topicIdString) {
 }
 
 module.exports = {
-    subscribeToTopic,
+    initUserClient,
+    clearUserClient,
+    subscribeToTopic
 };
