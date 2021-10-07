@@ -30,8 +30,9 @@ var subscriptions = {};
 function initUserClient(accountInfo) {
     let accountId = AccountId.fromString(accountInfo.accountId);
     let privateKey = PrivateKey.fromString(accountInfo.privateKey);
+    let socketId = accountInfo.socketId;
 
-    if (userClients[accountId]) {
+    if (userClients[socketId]) {
         return {
             success: false,
             responseMessage: 'This account is already active'
@@ -39,11 +40,12 @@ function initUserClient(accountInfo) {
     }
 
     try {
-        userClients[accountId] = {
+        userClients[socketId] = {
             client: Client.forTestnet(),
             subscriptions: {}
         };
-        userClients[accountId]['client'].setOperator(accountId, privateKey);
+        userClients[socketId]['client'].setOperator(accountId, privateKey);
+        
         return {
             success: true,
             responseMessage: `Initialized client for ${accountId}`
@@ -57,9 +59,9 @@ function initUserClient(accountInfo) {
     }
 }
 
-function clearUserClient(accountId) {
-    if (userClients[accountId]) {
-        delete userClients[accountId];
+function clearUserClient(socketId) {
+    if (userClients[socketId]) {
+        delete userClients[socketId];
     }
 }
 

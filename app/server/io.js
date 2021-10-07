@@ -1,13 +1,17 @@
 const hashgraph = require('./hashgraph');
 
 export default function(socket, io) {
+    socket.on('disconnect', () => {
+        hashgraph.clearUserClient(socket.id);
+    });
+    
     return Object.freeze({
         async initUserClient (context) {
-            let response = hashgraph.initUserClient(context.accountInfo);
+            let messagePayload = context.accountInfo;
+            messagePayload['socketId'] = socket.id;
+            
+            let response = hashgraph.initUserClient(messagePayload);
             io.emit('initUserClient', response);
-        },
-        async clearUserClient (context) {
-            hashgraph.clearUserClient(context.accountId);
         },
         async subscribeToTopic (context) {
             let response = await hashgraph.subscribeToTopic(io, context.subInfo);

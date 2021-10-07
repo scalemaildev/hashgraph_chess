@@ -172,7 +172,7 @@ export const mutations = {
 /* Actions */
 export const actions = {
     /* Hedera Hashgraph Client */
-    async INIT_HASHGRAPH_CLIENT({ state }, context) {
+    async INIT_HASHGRAPH_CLIENT({}, context) {
         try {
             let accountId = AccountId.fromString(context.accountId);
             let privateKey = PrivateKey.fromString(context.privateKey);
