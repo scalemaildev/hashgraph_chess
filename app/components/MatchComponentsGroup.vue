@@ -68,13 +68,13 @@ export default {
     },
     
     mounted() {
-        this.subscribeToTopic();
+        this.queryTopic();
     },
     
     methods: {
-        ...mapActions('sessionStorage', ['SUBSCRIBE_TO_TOPIC']),
-        subscribeToTopic() {
-            this.SUBSCRIBE_TO_TOPIC(this.topicId);
+        ...mapActions('sessionStorage', ['QUERY_TOPIC']),
+        queryTopic() {
+            this.QUERY_TOPIC(this.topicId);
         }
     }
 }

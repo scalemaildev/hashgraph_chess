@@ -45,9 +45,6 @@ export const mutations = {
     CREATE_GAME_INSTANCE(state, topicId) {
         state.GAME_INSTANCES[topicId] = new Chess();
     },
-    CLEAR_GAME_INSTANCE(state, topicId) {
-        this._vm.$set(state.GAME_INSTANCES, topicId, {});
-    },
     CREATE_MATCH_OBJECT(state, messageData) {
         let topicId = messageData.topicId;
         let playerWhite = messageData.playerWhite;
@@ -75,9 +72,6 @@ export const mutations = {
             boardState: [],
             resigned: false
         });
-    },
-    CLEAR_MATCH_OBJECT(state, topicId) {
-        this._vm.$set(state.MATCHES, topicId, {});
     },
 
     /* Game Board */
@@ -178,16 +172,10 @@ export const actions = {
             let privateKey = PrivateKey.fromString(context.privateKey);
             HederaClient = Client.forTestnet();
             HederaClient.setOperator(accountId, privateKey);
-
-            const response = await this.dispatch('ASYNC_EMIT', {
-                eventName: 'initUserClient',
-                accountInfo: {
-                    accountId: context.accountId,
-                    privateKey: context.privateKey
-                }
-            });
-
-            return response;
+            return {
+                success: true,
+                responseMessage: 'Initialized Hedera Hashgraph client'
+            };
         } catch (error) {
             return {
                 success: false,
@@ -197,15 +185,12 @@ export const actions = {
     },
     
     /* Topic Subscription and Messages */
-    async SUBSCRIBE_TO_TOPIC({ commit }, topicId) {
-        //if we're subbing to a topic, clear out any pre-existing data for it
-        commit('CLEAR_MATCH_OBJECT', topicId);
-        commit('CLEAR_GAME_INSTANCE', topicId);
+    async QUERY_TOPIC({}, topicId) {
+
         
-        let response = await this.dispatch('ASYNC_EMIT', {
-            eventName: 'subscribeToTopic',
-            topicId: topicId
-        });
+        // rest api call here?
+        // https://testnet.mirrornode.hedera.com
+        // /api/v1/topics/:topicId/messages/
         
         return response;
     },
