@@ -12,9 +12,9 @@ The app can be run locally via either its compose file, or the usual "npm instal
 
 ### How It Works
 
-- Players initialize the Hedera Hashgraph client by inputting their account information. This client allows the user to submit moves and chat messages to the HCS via the application. 
-- Each match is an HCS topic consisting of moves and chat messages.
-- When connected to a match page, the app regularly queries that HCS topic via a REST api to get new messages.
+- Players initialize the Hedera Hashgraph client by inputting their account information. This client allows the user to submit moves and chat messages to the HCS using their account. The cost of submitting a message is $0.0001 USD an d the cost of creating a topic is $0.01 USD. But since this application is on the Testnet, no actual costs are incurred.
+- Each match is an HCS topic, whose messages consist of chess moves and chat messages. The application processes these into the game state and chat window.
+- When connected to a match page, the app regularly (every 4 seconds) queries that HCS topic via a mirror node REST api.
 - The game state is stored in vuex, making it readily accessible from any component via a plethora of mutations, actions, and getters. Most of the data is stored in session storage, meaning it persists within a tab even after a page refresh.
 - A dummy game is used client-side to display board states, and validate moves before sending them to the HCS. Instead of sending individual moves to the HCS, the [Portable Game Notation](https://en.wikipedia.org/wiki/Portable_Game_Notation) from the dummy game is sent. The canonical game state is only updated when it receives a new PGN from the topic. This is done to prevent deviation in game states.
 
