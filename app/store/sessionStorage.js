@@ -50,7 +50,7 @@ export const mutations = {
     
     /* Map Object Creation */
     CREATE_TOPIC_MESSAGE_COUNT(state, topicId) {
-        state.TOPIC_MESSAGE_COUNTS[topicId] = 1; // sequences start at 1 not 0
+        state.TOPIC_MESSAGE_COUNTS[topicId] = 0;
     },
     INCREMENT_TOPIC_MESSAGE_COUNT(state, topicId) {
         state.TOPIC_MESSAGE_COUNTS[topicId]++;
@@ -73,7 +73,6 @@ export const mutations = {
         this.commit('sessionStorage/CREATE_GAME_INSTANCE', topicId);
         
         this._vm.$set(state.MATCHES, topicId, {
-            created: true,
             playerWhite: playerWhite,
             playerBlack: playerBlack,
             userType: userType,
@@ -83,7 +82,8 @@ export const mutations = {
             }],
             pgns: [''],
             boardState: [],
-            resigned: false
+            resigned: false,
+            created: true
         });
     },
 
@@ -204,8 +204,6 @@ export const actions = {
         response.messages.forEach(message => {
             this.dispatch('sessionStorage/PROCESS_MESSAGE', message);
         });
-        
-        return response;
     },
     async SEND_MESSAGE({ state }, messageData) {
         messageData['operator'] = state.ACCOUNT_ID;
@@ -235,8 +233,8 @@ export const actions = {
         let rawMessage = new TextDecoder("utf-8").decode(Buffer.from(messagePayload.message, 'base64'));
         let messageObject = JSON.parse(rawMessage);
 
-        //filter out seen messages        
-        if (state.TOPIC_MESSAGE_COUNTS[topicId] < msgIndex) {
+        // ignore messages whose sequence number we already have seen
+        if (state.TOPIC_MESSAGE_COUNTS[topicId] >= msgIndex) {
             return;
         } else {
             commit('INCREMENT_TOPIC_MESSAGE_COUNT', topicId);
@@ -302,6 +300,11 @@ export const getters = {
     MATCH_DATA: (state) => {
         return topicId => {
             return state.MATCHES[topicId];
+        };
+    },
+    TOPIC_MESSAGE_COUNT: (state) => {
+        return topicId => {
+            return state.TOPIC_MESSAGE_COUNTS[topicId];
         };
     },
     MATCH_MESSAGES: (state) => {
