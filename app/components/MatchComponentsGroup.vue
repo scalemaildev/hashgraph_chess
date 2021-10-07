@@ -58,7 +58,7 @@ export default {
         this.CREATE_TOPIC_MESSAGE_COUNT(this.topicId);
         window.setInterval(() => {
             this.QUERY_TOPIC(this.topicId);
-        }, 5000)
+        }, 4000)
     },
     
     methods: {

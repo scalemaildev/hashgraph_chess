@@ -198,12 +198,15 @@ export const actions = {
     },
     
     /* Topic Subscription and Messages */
-    async QUERY_TOPIC({}, topicId) {        
-        let response = await this.$axios.$get(`/api/v1/topics/${topicId}/messages/`);
-
-        response.messages.forEach(message => {
-            this.dispatch('sessionStorage/PROCESS_MESSAGE', message);
-        });
+    async QUERY_TOPIC({}, topicId) {
+        try {
+            let response = await this.$axios.$get(`/api/v1/topics/${topicId}/messages/`);
+            response.messages.forEach(message => {
+                this.dispatch('sessionStorage/PROCESS_MESSAGE', message);
+            });
+        } catch (error) {
+            return; // just ignore the 404 queries for now
+        }
     },
     async SEND_MESSAGE({ state }, messageData) {
         messageData['operator'] = state.ACCOUNT_ID;
