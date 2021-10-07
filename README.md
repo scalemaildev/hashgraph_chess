@@ -12,10 +12,11 @@ The app can be run locally via either its compose file, or the usual "npm instal
 
 ### How It Works
 
-*This Needs Updating*
-
+- Players initialize the Hedera Hashgraph client by inputting their account information. This client allows the user to submit moves and chat messages to the HCS via the application. 
+- Each match is an HCS topic consisting of moves and chat messages.
+- When connected to a match page, the app regularly queries that HCS topic via a REST api to get new messages.
 - The game state is stored in vuex, making it readily accessible from any component via a plethora of mutations, actions, and getters. Most of the data is stored in session storage, meaning it persists within a tab even after a page refresh.
-- A dummy game is used client-side to display board states, and validate moves before sending them to the HCS. Instead of sending individual moves to the HCS, the [Portable Game Notation](https://en.wikipedia.org/wiki/Portable_Game_Notation) from the dummy game is sent. The canonical game state is only updated when it receives a PGN from the topic subscription. This is done to prevent deviation in game states.
+- A dummy game is used client-side to display board states, and validate moves before sending them to the HCS. Instead of sending individual moves to the HCS, the [Portable Game Notation](https://en.wikipedia.org/wiki/Portable_Game_Notation) from the dummy game is sent. The canonical game state is only updated when it receives a new PGN from the topic. This is done to prevent deviation in game states.
 
 ## Future Steps
 
