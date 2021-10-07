@@ -187,10 +187,8 @@ export const actions = {
     /* Topic Subscription and Messages */
     async QUERY_TOPIC({}, topicId) {
 
-        
-        // rest api call here?
-        // https://testnet.mirrornode.hedera.com
-        // /api/v1/topics/:topicId/messages/
+        let response = await this.$axios.$get(`/api/v1/topics/${topicId}/messages/`);
+        console.log(response.messages);
         
         return response;
     },

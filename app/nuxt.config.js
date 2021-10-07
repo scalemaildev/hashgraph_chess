@@ -44,6 +44,15 @@ export default {
         '@nuxt/image',
     ],
 
+    axios: {
+        proxy: true,
+        retry: { retries: 3 }
+    },
+
+    proxy: {
+        '/api/': 'https://testnet.mirrornode.hedera.com/'
+    },
+
     // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
     vuetify: {
         customVariables: ['~/assets/variables.scss'],
