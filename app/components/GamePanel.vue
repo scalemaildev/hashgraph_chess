@@ -1,10 +1,5 @@
 <template>
 <v-container fluid class="gamePanel-wrapper">
-  <v-row>
-    <v-col cols="12" align="center" class="mb-1">
-      <h3>{{ userTypeString }}</h3>
-    </v-col>
-  </v-row>
   <ChessBoard
     :userType="userType"
     :displayedBoardState="displayedBoardState"
@@ -378,10 +373,18 @@ export default {
             // otherwise set the string to the current player's turn
             if (this.GAME_TURN(this.topicId) == 'w') {
                 this.currentTurn = 'w';
-                turnStatusString = 'White to Move';
+                if (this.userType == 'w') {
+                    turnStatusString = 'Your Move, White';
+                } else {
+                    turnStatusString = 'White to Move';
+                }
             } else {
                 this.currentTurn = 'b';
-                turnStatusString = 'Black to Move';
+                if (this.userType == 'b') {
+                    turnStatusString = 'Your Move, Black';
+                } else {
+                    turnStatusString = 'Black to Move';
+                }
             }
 
             return turnStatusString;
