@@ -64,12 +64,13 @@ import { validationMixin } from 'vuelidate';
 import { required, helpers } from 'vuelidate/lib/validators';
 
 const accountIdRegex = helpers.regex('accountIdRegex', /0.0.[0-9]{3,}/);
+const notSameAccount = (value, vm) => { return vm.ACCOUNT_ID != vm.opponentAccountId }
 
 export default {
     mixins: [validationMixin],
     
     validations: {
-        opponentAccountId: { required, accountIdRegex },
+        opponentAccountId: { required, accountIdRegex, notSameAccount },
     },
     
     data () {
@@ -88,6 +89,7 @@ export default {
             if (!this.$v.opponentAccountId.$dirty) return errors
             !this.$v.opponentAccountId.required && errors.push("An Opponent's Account ID is required.")
             !this.$v.opponentAccountId.accountIdRegex && errors.push('Account ID should look like 0.0.xxx.')
+            !this.$v.opponentAccountId.notSameAccount && errors.push("You can't play with yourself")
             return errors;
         },
     },

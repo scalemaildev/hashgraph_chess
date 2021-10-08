@@ -30,7 +30,7 @@ export default {
     data () {
         return {
             matchDataLoaded: false,
-            subscriptionTimeout: false
+            initialTurnIndex: 0,
         }
     },
     
@@ -46,7 +46,7 @@ export default {
     
     watch: {
         matchData (newMatchData, oldMatchData) {
-            if (newMatchData.created) {
+            if (newMatchData.initialQueryComplete) {
                 this.matchDataLoaded = true;
             } else {
                 this.matchDataLoaded = false;
