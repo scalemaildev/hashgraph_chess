@@ -286,6 +286,10 @@ export default {
     created () {
         this.setupGameState();
     },
+
+    mounted () {
+        this.turnIndex = this.GAME_HISTORY(this.topicId).length;
+    },
     
     methods: {
         ...mapMutations(['TOGGLE_SUBMITTING_MOVE']),

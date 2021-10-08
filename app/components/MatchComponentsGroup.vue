@@ -30,7 +30,7 @@ export default {
     data () {
         return {
             matchDataLoaded: false,
-            subscriptionTimeout: false
+            initialTurnIndex: 0,
         }
     },
     
