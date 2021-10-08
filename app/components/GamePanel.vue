@@ -229,15 +229,6 @@ export default {
         playerResigned () {
             return this.GAME_RESIGNED_STATUS(this.topicId);
         },
-        userTypeString () {
-            if (this.userType == 'w') {
-                return 'You are the white player';
-            } else if (this.userType == 'b') {
-                return 'You are the black player';
-            } else {
-                return 'You are an observer';
-            }
-        }
     },
     
     watch: {
@@ -288,8 +279,7 @@ export default {
     
     methods: {
         ...mapMutations(['TOGGLE_SUBMITTING_MOVE']),
-        ...mapMutations('sessionStorage', ['CREATE_GAME',
-                                           'LOAD_PGN']),
+        ...mapMutations('sessionStorage', ['LOAD_PGN']),
         ...mapActions('sessionStorage', ['SEND_MESSAGE']),
         
         /* Setup */

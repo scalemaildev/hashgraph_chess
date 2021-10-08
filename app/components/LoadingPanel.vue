@@ -33,7 +33,7 @@ export default {
     
     methods: {
         timeSubscription () {
-            let timer = null;
+            let timer;
             timer = setTimeout(this.toggleWarning, this.warningTime);
         },
         toggleWarning () {
