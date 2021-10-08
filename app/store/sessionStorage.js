@@ -47,6 +47,9 @@ export const mutations = {
     TOGGLE_LOCK_BUTTON(state, bool) {
         state.LOCK_BUTTON = bool;
     },
+    TOGGLE_INITIAL_QUERY_COMPLETE(state, topicId) {
+        state.MATCHES[topicId].initialQueryComplete = true;
+    },
 
     /* Topic Message Counts */
     CREATE_TOPIC_MESSAGE_COUNT(state, topicId) {
@@ -85,7 +88,7 @@ export const mutations = {
             pgns: [''],
             boardState: [],
             resigned: false,
-            created: true
+            initialQueryComplete: false
         });
     },
 
@@ -199,12 +202,22 @@ export const actions = {
     },
     
     /* Topic Subscription and Messages */
-    async QUERY_TOPIC({}, topicId) {
+    async QUERY_TOPIC({ state, commit }, topicId) {
         try {
+            // is this our initial query of the topic?
+            let initialQuery = true;
+            if (state.TOPIC_MESSAGE_COUNTS[topicId] > 0) {
+                initialQuery = false;
+            }
+            
             let response = await this.$axios.$get(`/api/v1/topics/${topicId}/messages/`);
             response.messages.forEach(message => {
                 this.dispatch('sessionStorage/PROCESS_MESSAGE', message);
             });
+
+            if (initialQuery) {
+                commit('TOGGLE_INITIAL_QUERY_COMPLETE', topicId);
+            }
 
             return {
                 success: true,

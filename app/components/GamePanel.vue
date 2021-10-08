@@ -191,7 +191,7 @@ export default {
             isLatestTurnDisplayed: true,
             inCheck: false,
             isGameOver: false,
-            turnIndex: 0, // this does not begin at 0
+            turnIndex: 0,
             prevMoves: false,
             nextMoves: false,
             displayedBoardState: {},
