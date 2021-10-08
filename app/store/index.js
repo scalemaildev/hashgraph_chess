@@ -1,7 +1,6 @@
 /* State */
 export const state = () => ({
-    SUBMITTING_MOVE: false,
-    LEGAL_MOVES: []
+    SUBMITTING_MOVE: false
 });
 
 /* Mutations */

@@ -1,10 +1,10 @@
-/* Utils */
+/* UTILS */
 const TextDecoder = require("text-encoding").TextDecoder;
 
-/* Chess */
+/* CHESS.JS */
 import Chess from 'chess.js';
 
-/* Hashgraph */
+/* HEDERA */
 const { Client,
         AccountId,
         PrivateKey,
@@ -14,7 +14,7 @@ const { Client,
 
 var HederaClient;
 
-/* State */
+/* STATE */
 export const state = () => ({
     ACCOUNT_ID: '',
     PRIVATE_KEY: '',
@@ -27,7 +27,7 @@ export const state = () => ({
 
 /* MUTATIONS */
 export const mutations = {
-    /* State Toggles and Setters */
+    /* Setters and Toggles */
     UNSET_CLIENT(state) {
         HederaClient = null;
         state.ACCOUNT_ID = '';
@@ -47,14 +47,16 @@ export const mutations = {
     TOGGLE_LOCK_BUTTON(state, bool) {
         state.LOCK_BUTTON = bool;
     },
-    
-    /* Map Object Creation */
+
+    /* Topic Message Counts */
     CREATE_TOPIC_MESSAGE_COUNT(state, topicId) {
         state.TOPIC_MESSAGE_COUNTS[topicId] = 0;
     },
     INCREMENT_TOPIC_MESSAGE_COUNT(state, topicId) {
         state.TOPIC_MESSAGE_COUNTS[topicId]++;
     },
+    
+    /* Map Object Creation */
     CREATE_GAME_INSTANCE(state, topicId) {
         state.GAME_INSTANCES[topicId] = new Chess();
     },
@@ -94,11 +96,10 @@ export const mutations = {
         
         state.MATCHES[topicId].boardState = newBoardState;
     },
-    LOAD_PGN(state, boardData) {
-        let topicId = boardData.topicId;
-        let newPgn = boardData.newPgn;
+    LOAD_PGN(state, pgnData) {
+        let topicId = pgnData.topicId;
+        let newPgn = pgnData.newPgn;
 
-        // TODO add a check here?
         state.GAME_INSTANCES[topicId].load_pgn(newPgn);
     },
 
@@ -204,8 +205,16 @@ export const actions = {
             response.messages.forEach(message => {
                 this.dispatch('sessionStorage/PROCESS_MESSAGE', message);
             });
+
+            return {
+                success: true,
+                responseMessage: `Queried topic: ${topicId}`
+            };
         } catch (error) {
-            return; // just ignore the 404 queries for now
+            return {
+                success: false,
+                responseMessage: `Failed to query topic: ${topicId}`
+            };
         }
     },
     async SEND_MESSAGE({ state }, messageData) {
@@ -305,19 +314,9 @@ export const getters = {
             return state.MATCHES[topicId];
         };
     },
-    TOPIC_MESSAGE_COUNT: (state) => {
-        return topicId => {
-            return state.TOPIC_MESSAGE_COUNTS[topicId];
-        };
-    },
     MATCH_MESSAGES: (state) => {
         return topicId => {
             return state.MATCHES[topicId].messages;
-        };
-    },
-    MATCH_PGNS: (state) => {
-        return topicId => {
-            return state.MATCHES[topicId].pgns;
         };
     },
     LATEST_MATCH_PGN: (state) => {

@@ -202,7 +202,6 @@ export default {
     computed: {
         ...mapState(['SUBMITTING_MOVE']),
         ...mapGetters('sessionStorage', ['LATEST_MATCH_PGN',
-                                         'MATCH_PGNS',
                                          'GAME_PGN',
                                          'GAME_STATE',
                                          'GAME_TURN',

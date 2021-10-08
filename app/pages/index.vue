@@ -44,8 +44,8 @@ export default {
     methods: {
         ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL']),
         ...mapActions('sessionStorage', ['INIT_HASHGRAPH_CLIENT']),
-        async restoreClient() {
-            let response = await this.INIT_HASHGRAPH_CLIENT({
+        restoreClient() {
+            this.INIT_HASHGRAPH_CLIENT({
                 accountId: this.ACCOUNT_ID,
                 privateKey: this.PRIVATE_KEY
             });
