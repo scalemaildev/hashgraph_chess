@@ -5,8 +5,8 @@
       <h1>Create A New Match</h1>
     </v-col>
     <v-col cols="12" align="center" justify="center">
-      <p>From this panel, you can create a new chess match. You'll need to know your opponent's <strong>Account ID</strong> in order to create the match. Other players can join your match as observers, but only you and your opponent will be able to move pieces and send chat messages.</p>
-      <p>After creating the match, you'll be given a <strong>Topic ID</strong>. To invite your opponent to the match, give them this ID. They can enter it in the <strong>Join Game</strong> panel to enter the match.</p>
+      <p>From this panel, you can create a new chess match. You'll need to know your opponent's <strong>Account ID</strong> in order to create the match. Other players can join your match as observers, but only you and your opponent will be able to move pieces or send chat messages.</p>
+      <p>After creating the match, you'll be given a <strong>Topic ID</strong>. To invite your opponent to the match, give them this ID. They can enter it on the <strong>Join Game</strong> panel to enter the match.</p>
     </v-col>    
   </v-row>
   <!-- MATCH CREATION FORM -->

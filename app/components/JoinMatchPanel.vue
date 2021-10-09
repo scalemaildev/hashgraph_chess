@@ -5,7 +5,8 @@
       <h1>Join A Match</h1>
     </v-col>
     <v-col cols="12" align="center" justify="center">
-      <p>From this panel, you can join a chess match. You'll need to know the match's <strong>Topic ID.</strong> You can still join a match if you aren't one of its players, but doing so will restrict you to observer mode.</p>
+      <p>From this panel, you can join a chess match. You'll need to know the match's <strong>Topic ID.</strong></p>
+      <p>You can still join a match if you aren't one of its players, but doing so will restrict you to observer mode.</p>
     </v-col>    
   </v-row>
   <div>
@@ -44,7 +45,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex';
+import { mapMutations } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required, helpers } from 'vuelidate/lib/validators';
 

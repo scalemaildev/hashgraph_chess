@@ -29,8 +29,7 @@ export default {
     
     data () {
         return {
-            matchDataLoaded: false,
-            initialTurnIndex: 0,
+            matchDataLoaded: false
         }
     },
     
