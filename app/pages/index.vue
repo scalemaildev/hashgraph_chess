@@ -43,9 +43,9 @@ export default {
     
     methods: {
         ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL']),
-        ...mapActions('sessionStorage', ['INIT_HASHGRAPH_CLIENT']),
+        ...mapActions('sessionStorage', ['INIT_HEDERA_CLIENT']),
         restoreClient() {
-            this.INIT_HASHGRAPH_CLIENT({
+            this.INIT_HEDERA_CLIENT({
                 accountId: this.ACCOUNT_ID,
                 privateKey: this.PRIVATE_KEY
             });

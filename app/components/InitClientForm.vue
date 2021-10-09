@@ -95,17 +95,17 @@ export default {
                                            'SET_ACCOUNT_ID',
                                            'SET_PRIVATE_KEY',
                                            'TOGGLE_LOCK_BUTTON']),
-        ...mapActions('sessionStorage', ['INIT_HASHGRAPH_CLIENT']),
+        ...mapActions('sessionStorage', ['INIT_HEDERA_CLIENT']),
         submit () {
             this.$v.$touch();
             if (!this.$v.$invalid) {
-                this.initHashgraphClient();
+                this.initHederaClient();
             }
         },
-        async initHashgraphClient () {
+        async initHederaClient () {
             this.clientError = false;
             
-            const response = await this.INIT_HASHGRAPH_CLIENT({
+            const response = await this.INIT_HEDERA_CLIENT({
                 'accountId': this.accountId,
                 'privateKey': this.privateKey
             });

@@ -182,8 +182,8 @@ export const mutations = {
 
 /* Actions */
 export const actions = {
-    /* Hedera Hashgraph Client */
-    async INIT_HASHGRAPH_CLIENT({}, context) {
+    /* Hedera Client */
+    async INIT_HEDERA_CLIENT({}, context) {
         try {
             let accountId = AccountId.fromString(context.accountId);
             let privateKey = PrivateKey.fromString(context.privateKey);
@@ -191,12 +191,12 @@ export const actions = {
             HederaClient.setOperator(accountId, privateKey);
             return {
                 success: true,
-                responseMessage: 'Initialized Hedera Hashgraph client'
+                responseMessage: 'Initialized Hedera client'
             };
         } catch (error) {
             return {
                 success: false,
-                responseMessage: 'Hedera Hashgraph client failed to initialize'
+                responseMessage: 'Hedera client failed to initialize'
             };
         }
     },
