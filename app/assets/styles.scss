@@ -1,12 +1,23 @@
 .main-layout {    
     background: no-repeat left bottom url("~/static/background.jpg");
     background-color: #000000;
-    background-size: 45% !important;
+    background-size: 45%;
     color: #e0e0e0;
     font-family: "baskerville-urw",serif;
     font-size: 1.1rem;
     bottom: 0;
-    min-height: 100% !important;
+    min-height: 100%;
+}
+
+.main-layout-mobile {
+    background: no-repeat left bottom url("~/static/background.jpg");
+    background-color: #000000;
+    background-size: 110%;
+    color: #e0e0e0;
+    font-family: "baskerville-urw",serif;
+    font-size: 1.1rem;
+    bottom: 0;
+    min-height: 100%;
 }
 
 .navbar-wrapper {
@@ -46,7 +57,7 @@
 .gamePanel-wrapper {
     background-color: rgba(18, 32, 59, 0.8);
     border: 1px solid #0c2547;
-    min-height: 105vh !important;
+    min-height: 100vh !important;
     margin-top: 2% !important;
     padding-left: 4% !important;
     padding-right: 4% !important;
@@ -57,7 +68,7 @@
 .chatPanel-wrapper {
     background-color: rgba(18, 32, 59, 0.8);
     border: 1px solid #0c2547;
-    min-height: 105vh !important;
+    min-height: 100vh !important;
     margin-top: 2% !important;
     padding-left: 4% !important;
     padding-right: 4% !important;
@@ -65,7 +76,7 @@
 }
 
 .chatPanel-window {
-    height: 84vh !important;
+    height: 79vh !important;
     overflow: auto !important;
     padding-bottom: 0 !important;
     margin-bottom: 0 !important;
