@@ -9,9 +9,19 @@
 
 <script>
 export default {
+    data: () => {
+        return {
+            isMounted: false
+        }
+    },
+    
+    mounted() {
+        this.isMounted = true;
+    },
+    
     computed: {
         mainLayoutSize() {
-            return this.$vuetify.breakpoint.xs ? "main-layout-mobile" : "main-layout"
+            return this.isMounted && this.$vuetify.breakpoint.xs ? "main-layout-mobile" : "main-layout"
         }
     }
 }
