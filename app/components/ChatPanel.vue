@@ -5,16 +5,10 @@
      <h3>Player Chat</h3>
     </v-col>
   </v-row>
-  <v-row style="margin-top: 0;">
-    <v-col cols="12">
-      <MessagesWindow :topicId="topicId" />
-    </v-col>
-      <v-col cols="12">
-        <div v-show="userType != 'o'">
-          <MessageBox :topicId="topicId" />
-        </div>
-      </v-col>
-  </v-row>
+  <MessagesWindow :topicId="topicId" />
+  <div v-show="userType != 'o'">
+    <MessageBox :topicId="topicId" />
+  </div>
 </v-container>
 </template>
 

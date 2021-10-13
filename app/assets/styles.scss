@@ -60,18 +60,18 @@
 
 .content-body.chat-panel {
     min-height: 100vh;
+    padding-bottom: 0 !important;
 }
 
 .chatPanel-window {
-    height: 79vh !important;
-    overflow: auto !important;
-    padding-bottom: 0 !important;
-    margin-bottom: 0 !important;
+    height: 83vh;
+    overflow: auto;
+    padding-bottom: 0;
+    margin-bottom: 0;
 }
 
 .chatPanel-box {
-    height: 1vh !important;
-    padding-top: 0 !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
+    height: 2vh;
+    padding-top: 0;
+    margin-top: 0;
 }
