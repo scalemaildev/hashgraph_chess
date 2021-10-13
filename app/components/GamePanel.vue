@@ -166,9 +166,9 @@ import { validationMixin } from 'vuelidate';
 import { required, helpers } from 'vuelidate/lib/validators';
 import Chess from 'chess.js';
 
-const squareRegex = helpers.regex('squareRegex', /^[a-h][1-8]$/);
-var legalActiveSquare = (value, vm) => { return vm.getLegalMoves(vm.activeSquare).length > 0 };
-var legalTargetSquare = (value, vm) => { return vm.getLegalMoves(vm.activeSquare).includes(vm.targetSquare) };
+const squareRegex = helpers.regex('squareRegex', /^[a-hA-H][1-8]$/);
+var legalActiveSquare = (value, vm) => { return vm.getLegalMoves(vm.activeSquare.toLowerCase()).length > 0 };
+var legalTargetSquare = (value, vm) => { return vm.getLegalMoves(vm.activeSquare.toLowerCase()).includes(vm.targetSquare) };
 
 export default {
     props: ['topicId', 'userType'],
@@ -436,7 +436,7 @@ export default {
             // we want the 'to' field from the verbose array
             let verboseLegalMoves = this.GAME_LEGAL_MOVES({
                 topicId: this.topicId,
-                square: square
+                square: square.toLowerCase()
             });
             
             let legalMoves = [];
@@ -449,13 +449,13 @@ export default {
             // make the move on the dummy board and grab the new pgn
             if (promo) {
                 newMove = {
-                    'from': this.activeSquare,
+                    'from': this.activeSquare.toLowerCase(),
                     'to': this.targetSquare,
                     'promotion': this.promotion
                 };
             } else {
                 newMove = {
-                    'from': this.activeSquare,
+                    'from': this.activeSquare.toLowerCase(),
                     'to': this.targetSquare
                 };
             }
@@ -479,7 +479,7 @@ export default {
         },
         isPromotion () {
             let newMove = {
-                'from': this.activeSquare,
+                'from': this.activeSquare.toLowerCase(),
                 'to': this.targetSquare,
             };
             
