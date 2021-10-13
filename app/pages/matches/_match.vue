@@ -1,5 +1,5 @@
 <template>
-<div>
+<div style="max-width: 100vw;">
   <div align="center" justify="center" class="match-header">
     <h1>Match ID: {{ this.topicId }}</h1>
   </div>
