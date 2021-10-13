@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-container fluid>
     <v-row>
       <v-col cols="12" align="center" justify="center">
         <v-progress-circular indeterminate />
@@ -13,7 +13,7 @@
           </div>
         </v-col>
     </v-row>
-  </div>
+  </v-container>
 </template>
 
 <script>
