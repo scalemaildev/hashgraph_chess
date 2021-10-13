@@ -7,11 +7,11 @@
   <div v-else>
     <v-container fluid style="padding: 0;">
       <v-row justify="space-between" class="matchComponents-wrapper">
-        <v-col cols="12" md="6">
+        <v-col cols="12" md="6" style="padding-top: 0;">
           <GamePanel :topicId="topicId"
                      :userType="userType" />
         </v-col>
-        <v-col cols="12" md="6">
+        <v-col cols="12" md="6" style="padding-top: 0;">
           <ChatPanel :topicId="topicId"
                      :userType="userType" />
         </v-col>
