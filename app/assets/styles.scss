@@ -7,7 +7,6 @@
     font-size: 1.1rem;
     bottom: 0;
     min-height: 100vh;
-    max-width: 100vw;
 }
 
 .main-layout.mobile {
@@ -40,6 +39,8 @@
 
 .spaced-mid {
     padding-top: 25vh;
+    max-width: 80vw !important;
+    max-height: 80vh !important;
 }
 
 .match-header {
