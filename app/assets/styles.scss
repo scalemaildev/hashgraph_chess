@@ -60,7 +60,10 @@
 
 .content-body.chat-panel {
     min-height: 100vh;
-    padding-bottom: 0 !important;
+    padding-bottom: 1vh !important;
+    padding-left: 1vw !important;
+    padding-right: 1vw !important;
+    padding-top: 1vh !important;
 }
 
 .chatPanel-window {
