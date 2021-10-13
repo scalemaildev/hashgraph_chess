@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
   <v-row no-gutters align="center" class="flex-column d-flex">
     <nuxt-img src="/game/border_top.png" :style="horzFrameSize"/>
     <div class="d-flex" style="position: relative">

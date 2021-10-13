@@ -5,8 +5,8 @@
                   warningTime=12000 />
   </div>
   <div v-else>
-    <v-container fluid class="matchComponents-wrapper">
-      <v-row fluid justify='space-between'>
+    <v-container fluid style="padding: 0;">
+      <v-row justify="space-between" class="matchComponents-wrapper">
         <v-col cols="12" md="6">
           <GamePanel :topicId="topicId"
                      :userType="userType" />
