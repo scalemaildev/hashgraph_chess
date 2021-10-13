@@ -9,15 +9,8 @@
     min-height: 100%;
 }
 
-.main-layout-mobile {
-    background: no-repeat left bottom url("~/static/background.jpg");
-    background-color: #000000;
-    background-size: 110%;
-    color: #e0e0e0;
-    font-family: "baskerville-urw",serif;
-    font-size: 1.1rem;
-    bottom: 0;
-    min-height: 100%;
+.main-layout.mobile {
+    background-size: 110% !important;
 }
 
 .navbar-wrapper {
@@ -29,21 +22,29 @@
 }
 
 .match-header {
-    margin-top: 1% !important;
-    padding-bottom: 0% !important;
-    margin-bottom: 0% !important;
+    margin-top: 1vh;
+    padding-bottom: 0;
+    margin-bottom: 0;
 }
 
 .content-body {
     background-color: rgba(18, 32, 59, 0.8);
     border: 1px solid #0c2547;
     max-width: 80% !important;
-    margin-top: 2% !important;
+    margin-top: 2vh;
     margin-bottom: 2% !important;
     padding-left: 4% !important;
     padding-right: 4% !important;
     padding-top: 2.5% !important;
     padding-bottom: 2.5% !important;
+}
+
+.content-spaced-small {
+    padding-top: 4% !important;
+}
+
+.content-spaced-mid {
+    padding-top: 10vh !important;
 }
 
 .matchComponents-wrapper {
@@ -87,12 +88,4 @@
     padding-top: 0 !important;
     margin-top: 0 !important;
     margin-bottom: 0 !important;
-}
-
-.content-spaced-small {
-    padding-top: 4% !important;
-}
-
-.content-spaced-mid {
-    padding-top: 10vh !important;
 }

@@ -1,6 +1,6 @@
 <template>
 <v-app dark>
-  <v-main class="text-center" v-bind:class="mainLayoutSize">
+  <v-main class="text-center main-layout" v-bind:class="mobileLayout">
     <v-container class="content-body">
       <v-row class="content-padded">
         <v-col>
@@ -46,10 +46,10 @@ export default {
     mounted() {
         this.isMounted = true;
     },
-
+    
     computed: {
-        mainLayoutSize() {
-            return this.isMounted && this.$vuetify.breakpoint.xs ? "main-layout-mobile" : "main-layout"
+        mobileLayout() {
+            return this.isMounted && this.$vuetify.breakpoint.xs ? "mobile" : ""
         }
     },
     
@@ -58,8 +58,8 @@ export default {
               this.error.statusCode === 404 ? this.pageNotFound : this.otherError
         return {
             title
+        }
     }
-  }
 }
 </script>
 

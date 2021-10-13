@@ -1,10 +1,10 @@
 <template>
 <v-app dark>
-  <v-main v-bind:class="mainLayoutSize">
+  <v-main class="main-layout" v-bind:class="mobileLayout">
     <Navbar />
     <Nuxt />
   </v-main>
-  </v-app>
+</v-app>
 </template>
 
 <script>
@@ -20,8 +20,8 @@ export default {
     },
     
     computed: {
-        mainLayoutSize() {
-            return this.isMounted && this.$vuetify.breakpoint.xs ? "main-layout-mobile" : "main-layout"
+        mobileLayout() {
+            return this.isMounted && this.$vuetify.breakpoint.xs ? "mobile" : ""
         }
     }
 }
