@@ -6,7 +6,7 @@
     font-family: "baskerville-urw",serif;
     font-size: 1.1rem;
     bottom: 0;
-    min-height: 100%;
+    min-height: 100vh;
 }
 
 .main-layout.mobile {
@@ -21,30 +21,28 @@
     color: #e0e0e0;
 }
 
-.match-header {
-    margin-top: 1vh;
-    padding-bottom: 0;
-    margin-bottom: 0;
-}
-
 .content-body {
     background-color: rgba(18, 32, 59, 0.8);
     border: 1px solid #0c2547;
-    max-width: 80% !important;
-    margin-top: 2vh;
-    margin-bottom: 2% !important;
-    padding-left: 4% !important;
-    padding-right: 4% !important;
-    padding-top: 2.5% !important;
-    padding-bottom: 2.5% !important;
+    max-width: 85vw;
+    margin-top: 2.5vh;
+    margin-bottom: 2.5vh;
+    padding-left: 4vw;
+    padding-right: 4vw;
+    padding-top: 2.5vh;
+    padding-bottom: 2.5vh;
 }
 
-.content-spaced-small {
-    padding-top: 4% !important;
+.spaced-small {
+    padding-top: 8vh;
 }
 
-.content-spaced-mid {
-    padding-top: 10vh !important;
+.spaced-mid {
+    padding-top: 25vh;
+}
+
+.match-header {
+    margin-top: 1vh;
 }
 
 .matchComponents-wrapper {
@@ -52,28 +50,16 @@
     margin-left: 0 !important;
     padding-right: 0 !important;
     margin-right: 0 !important;
-    margin-bottom: 2.5% !important;
+    margin-bottom: 2.5vh !important;
+    padding-top: 0 !important;
 }
 
-.gamePanel-wrapper {
-    background-color: rgba(18, 32, 59, 0.8);
-    border: 1px solid #0c2547;
-    min-height: 100vh !important;
-    margin-top: 2% !important;
-    padding-left: 4% !important;
-    padding-right: 4% !important;
-    padding-top: 2.5% !important;
-    padding-bottom: 2.5% !important;
+.content-body.game-panel {
+    min-height: 100vh;
 }
 
-.chatPanel-wrapper {
-    background-color: rgba(18, 32, 59, 0.8);
-    border: 1px solid #0c2547;
-    min-height: 100vh !important;
-    margin-top: 2% !important;
-    padding-left: 4% !important;
-    padding-right: 4% !important;
-    padding-top: 2.5% !important;
+.content-body.chat-panel {
+    min-height: 100vh;
 }
 
 .chatPanel-window {

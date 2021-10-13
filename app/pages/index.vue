@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div v-show="ACTIVE_PANEL == 'loadingPanel'" class="content-spaced-mid">
+  <div v-show="ACTIVE_PANEL == 'loadingPanel'" class="spaced-mid">
     <LoadingPanel loadingText='LOADING'
                   warningTime=10000 />
     </v-row>

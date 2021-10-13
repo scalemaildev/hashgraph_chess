@@ -2,7 +2,7 @@
 <v-app dark>
   <v-main class="text-center main-layout" v-bind:class="mobileLayout">
     <v-container class="content-body">
-      <v-row class="content-padded">
+      <v-row>
         <v-col>
           <h1 v-if="error.statusCode === 404">
             {{ pageNotFound }}

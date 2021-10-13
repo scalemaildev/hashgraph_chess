@@ -1,5 +1,5 @@
 <template>
-<v-container fluid class="gamePanel-wrapper">
+<v-container fluid class="content-body game-panel">
   <ChessBoard
     :userType="userType"
     :displayedBoardState="displayedBoardState"

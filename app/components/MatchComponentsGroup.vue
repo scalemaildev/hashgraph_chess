@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div v-if="!matchDataLoaded" class="content-spaced-mid">
+  <div v-if="!matchDataLoaded" class="spaced-mid">
     <LoadingPanel loadingText="SUBSCRIBING"
                   warningTime=12000 />
   </div>

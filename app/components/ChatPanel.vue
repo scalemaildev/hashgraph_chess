@@ -1,5 +1,5 @@
 <template>
-<v-container fluid class="chatPanel-wrapper">
+<v-container fluid class="content-body chat-panel">
   <v-row style="margin-bottom: 0;">
     <v-col align="center" style="margin-bottom: 0; padding-bottom: 0;">
      <h3>Player Chat</h3>
