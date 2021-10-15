@@ -59,24 +59,25 @@
 }
 
 .content-body.chat-panel {
-    min-height: 100vh;
-    padding-bottom: 0 !important;
-    padding-left: 1vw !important;
-    padding-right: 1vw !important;
-    padding-top: 2vh !important;
+    height: 100vh;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-end;
+    padding: 2vh 1vw 0 !important;
 }
 
 .chatPanel-window {
-    height: 79vh;
     overflow: auto;
+    flex-grow: 1;
     padding-bottom: 0 !important;
     margin-bottom: 0 !important;
+    width: 100%;
 }
 
 .chatPanel-box {
-    height: 1vh;
     padding-top: 0 !important;
     margin-top: 0 !important;
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
+    width: 100%;
 }
