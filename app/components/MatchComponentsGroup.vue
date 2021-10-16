@@ -1,17 +1,17 @@
 <template>
 <div>
-  <div v-if="!matchDataLoaded" class="content-spaced-mid">
+  <div v-if="!matchDataLoaded" class="spaced-mid">
     <LoadingPanel loadingText="SUBSCRIBING"
                   warningTime=12000 />
   </div>
   <div v-else>
-    <v-container fluid class="matchComponents-wrapper">
-      <v-row fluid justify='space-between'>
-        <v-col xs="12" sm="12" md="6" lg="6" xl="6">
+    <v-container fluid style="padding: 0;">
+      <v-row justify="space-between" class="matchComponents-wrapper">
+        <v-col cols="12" md="6" style="padding-top: 0;">
           <GamePanel :topicId="topicId"
                      :userType="userType" />
         </v-col>
-        <v-col xs="12" sm="12" md="6" lg="6" xl="6">
+        <v-col cols="12" md="6" style="padding-top: 0;">
           <ChatPanel :topicId="topicId"
                      :userType="userType" />
         </v-col>

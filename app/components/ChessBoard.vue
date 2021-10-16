@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
   <v-row no-gutters align="center" class="flex-column d-flex">
     <nuxt-img src="/game/border_top.png" :style="horzFrameSize"/>
     <div class="d-flex" style="position: relative">
@@ -34,7 +34,7 @@ export default {
         },
         horzFrameSize() {
             switch (this.$vuetify.breakpoint.name) {
-            case 'xs': return { width: '340px', height: '10px' }
+            case 'xs': return { width: '300px', height: '10px' }
             case 'sm': return { width: '384px', height: '14px' }
             case 'md': return { width: '340px', height: '10px' }
             case 'lg': return { width: '384px', height: '14px' }
@@ -43,7 +43,7 @@ export default {
         },
         vertFrameSize() {
             switch (this.$vuetify.breakpoint.name) {
-            case 'xs': return { width: '10px', height: '320px' }
+            case 'xs': return { width: '10px', height: '280px' }
             case 'sm': return { width: '12px', height: '360px' }
             case 'md': return { width: '10px', height: '320px' }
             case 'lg': return { width: '12px', height: '360px' }
@@ -65,7 +65,7 @@ export default {
         },
         getTileEdge() {
             switch (this.$vuetify.breakpoint.name) {
-            case 'xs': return '40px'
+            case 'xs': return '35px'
             case 'sm': return '45px'
             case 'md': return '40px'
             case 'lg': return '45px'

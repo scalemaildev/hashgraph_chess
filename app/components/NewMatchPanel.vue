@@ -41,7 +41,7 @@
       </v-col>
     </v-row>    
   </div>
-  <div v-if="matchCreationError" class="content-spaced-small">
+  <div v-if="matchCreationError" class="spaced-small">
     <v-row align="center" justify="center">
       <v-col cols="12" align="center" justify="center">
         <span style="color: red;"><h3>An error occurred creating the match:</h3></span>
@@ -50,7 +50,7 @@
     </v-row>
   </div>
   <!-- LOADING -->
-  <div v-if="creatingMatch" class="content-spaced-small">
+  <div v-if="creatingMatch" class="spaced-small">
     <LoadingPanel loadingText="CREATING MATCH"
                   warningTime=12000 />
   </div>

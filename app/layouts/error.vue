@@ -1,8 +1,8 @@
 <template>
 <v-app dark>
-  <v-main class="main-layout text-center">
+  <v-main class="text-center main-layout" v-bind:class="mobileLayout">
     <v-container class="content-body">
-      <v-row class="content-padded">
+      <v-row>
         <v-col>
           <h1 v-if="error.statusCode === 404">
             {{ pageNotFound }}
@@ -26,31 +26,45 @@
 
 <script>
 export default {
-  layout: 'empty',
-  props: {
-    error: {
-      type: Object,
-      default: null
+    layout: 'empty',
+    
+    props: {
+        error: {
+            type: Object,
+            default: null
+        }
+    },
+    
+    data () {
+        return {
+            pageNotFound: '404 Not Found',
+            otherError: 'An error occurred',
+            isMounted: false
+        }
+    },
+    
+    mounted() {
+        this.isMounted = true;
+    },
+    
+    computed: {
+        mobileLayout() {
+            return this.isMounted && this.$vuetify.breakpoint.xs ? "mobile" : ""
+        }
+    },
+    
+    head () {
+        const title =
+              this.error.statusCode === 404 ? this.pageNotFound : this.otherError
+        return {
+            title
+        }
     }
-  },
-  data () {
-    return {
-      pageNotFound: '404 Not Found',
-      otherError: 'An error occurred'
-    }
-  },
-  head () {
-    const title =
-      this.error.statusCode === 404 ? this.pageNotFound : this.otherError
-    return {
-      title
-    }
-  }
 }
 </script>
 
 <style scoped>
 h1 {
-  font-size: 40px;
+    font-size: 40px;
 }
 </style>
