@@ -74,7 +74,7 @@ export default {
         async submitResign() {
             this.TOGGLE_SUBMITTING_MOVE(true);
             
-            let messagePayload = {
+            var messagePayload = {
 	        messageType: 'resignPlayer',
                 topicId: this.topicId
             };
