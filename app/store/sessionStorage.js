@@ -64,10 +64,10 @@ export const mutations = {
         state.GAME_INSTANCES[topicId] = new Chess();
     },
     CREATE_MATCH_OBJECT(state, messageData) {
-        let topicId = messageData.topicId;
-        let playerWhite = messageData.playerWhite;
-        let playerBlack = messageData.playerBlack;
-        let userType = 'o';
+        var topicId = messageData.topicId;
+        var playerWhite = messageData.playerWhite;
+        var playerBlack = messageData.playerBlack;
+        var userType = 'o';
 
         if (state.ACCOUNT_ID == playerWhite) {
             userType = 'w';
@@ -94,24 +94,24 @@ export const mutations = {
 
     /* Game Board */
     SET_BOARD_STATE(state, newBoardStateData) {
-        let topicId = newBoardStateData.topicId;
-        let newBoardState = newBoardStateData.newBoardState;
+        var topicId = newBoardStateData.topicId;
+        var newBoardState = newBoardStateData.newBoardState;
         
         state.MATCHES[topicId].boardState = newBoardState;
     },
     LOAD_PGN(state, pgnData) {
-        let topicId = pgnData.topicId;
-        let newPgn = pgnData.newPgn;
+        var topicId = pgnData.topicId;
+        var newPgn = pgnData.newPgn;
 
         state.GAME_INSTANCES[topicId].load_pgn(newPgn);
     },
 
     /* Message and Move Processing */
     PROCESS_CHAT_MESSAGE(state, messageData) {
-        let topicId = messageData.topicId;
-        let message = messageData.message;
-        let operator = messageData.operator;
-        let match = state.MATCHES[topicId];
+        var topicId = messageData.topicId;
+        var message = messageData.message;
+        var operator = messageData.operator;
+        var match = state.MATCHES[topicId];
 
         // filter out non-players
         if (operator != match.playerWhite && operator != match.playerBlack) {
@@ -120,7 +120,7 @@ export const mutations = {
         }
 
         // filter out blank messages
-        if (message == '' || message == ' ') {
+        if (message.trim() == '') {
             console.warn('Rejected an empty chat message from: ' + operator);
             return;
         }
@@ -131,10 +131,10 @@ export const mutations = {
         });
     },
     PROCESS_CHESS_MOVE(state, messageData) {
-        let topicId = messageData.topicId;
-        let newPgn = messageData.newPgn;
-        let operator = messageData.operator;
-        let match = state.MATCHES[topicId];
+        var topicId = messageData.topicId;
+        var newPgn = messageData.newPgn;
+        var operator = messageData.operator;
+        var match = state.MATCHES[topicId];
 
         // filter out moves after game is over (game_over() or resigned match)
         if (state.GAME_INSTANCES[topicId].game_over() || state.MATCHES[topicId.resigned]) {
@@ -148,11 +148,9 @@ export const mutations = {
         }
 
         // filter out double moves
-        if (state.MATCHES[topicId].pgns.length > 0) {
-            if (operator == state.MATCHES[topicId].pgns.at(-1).operator ) {
-                console.warn('Rejected a double move from: ' + operator);
-                return;
-            }
+        if (state.MATCHES[topicId].pgns.length > 0 && operator == state.MATCHES[topicId].pgns.at(-1).operator) {
+            console.warn('Rejected a double move from: ' + operator);
+            return;
         }
         
         state.MATCHES[topicId].pgns.push({
@@ -161,11 +159,11 @@ export const mutations = {
         });
     },
     PROCESS_RESIGN(state, messageData) {
-        let topicId = messageData.topicId;
-        let operator = messageData.operator;
-        let playerWhite = state.MATCHES[topicId].playerWhite;
-        let playerBlack = state.MATCHES[topicId].playerBlack;
-        let resignedPlayer = '';
+        var topicId = messageData.topicId;
+        var operator = messageData.operator;
+        var playerWhite = state.MATCHES[topicId].playerWhite;
+        var playerBlack = state.MATCHES[topicId].playerBlack;
+        var resignedPlayer = '';
 
         if (operator == playerWhite) {
             resignedPlayer = 'w';
@@ -173,6 +171,7 @@ export const mutations = {
             resignedPlayer = 'b';
         } else {
             // somehow got a non-player resignation
+            console.warn('Rejected a resignation attempt from non-player: ' + operator);
             return;
         }
 
@@ -185,8 +184,8 @@ export const actions = {
     /* Hedera Client */
     async INIT_HEDERA_CLIENT({}, context) {
         try {
-            let accountId = AccountId.fromString(context.accountId);
-            let privateKey = PrivateKey.fromString(context.privateKey);
+            var accountId = AccountId.fromString(context.accountId);
+            var privateKey = PrivateKey.fromString(context.privateKey);
             HederaClient = Client.forTestnet();
             HederaClient.setOperator(accountId, privateKey);
             return {
@@ -205,10 +204,7 @@ export const actions = {
     async QUERY_TOPIC({ state, commit }, topicId) {
         try {
             // is this our initial query of the topic?
-            let initialQuery = true;
-            if (state.TOPIC_MESSAGE_COUNTS[topicId] > 0) {
-                initialQuery = false;
-            }
+            var initialQuery = (state.TOPIC_MESSAGE_COUNTS[topicId] > 0) ? false : true;            
             
             let response = await this.$axios.$get(`/api/v1/topics/${topicId}/messages/`);
             response.messages.forEach(message => {
@@ -232,7 +228,7 @@ export const actions = {
     },
     async SEND_MESSAGE({ state }, messageData) {
         messageData['operator'] = state.ACCOUNT_ID;
-        let messagePayload = JSON.stringify(messageData);
+        var messagePayload = JSON.stringify(messageData);
         
         try {
             await new TopicMessageSubmitTransaction({
@@ -253,12 +249,12 @@ export const actions = {
     },
     // not to be mistaken for PROCESS_CHAT_MESSAGE
     PROCESS_MESSAGE({ commit, state }, messagePayload) {
-        let topicId = messagePayload.topic_id;
-        let msgIndex = messagePayload.sequence_number;
-        let rawMessage = new TextDecoder("utf-8").decode(Buffer.from(messagePayload.message, 'base64'));
-        let messageObject = JSON.parse(rawMessage);
+        var topicId = messagePayload.topic_id;
+        var msgIndex = messagePayload.sequence_number;
+        var rawMessage = new TextDecoder("utf-8").decode(Buffer.from(messagePayload.message, 'base64'));
+        var messageObject = JSON.parse(rawMessage);
 
-        // ignore messages whose sequence number we already have seen
+        // ignore messages whose sequence number we have already seen
         if (state.TOPIC_MESSAGE_COUNTS[topicId] >= msgIndex) {
             return;
         } else {
@@ -293,9 +289,9 @@ export const actions = {
     },
     async CREATE_MATCH({ state }, context) {
         try {
-            let newTopicId = await this.dispatch('sessionStorage/CREATE_TOPIC');
+            var newTopicId = await this.dispatch('sessionStorage/CREATE_TOPIC');
 
-            let newMatchData = {
+            var newMatchData = {
                 messageType: 'matchCreation',
                 topicId: newTopicId,
                 operator: state.ACCOUNT_ID,
@@ -364,7 +360,7 @@ export const getters = {
     },
     GAME_HISTORY(state) {
         return topicId => {
-            let initState = [''];
+            var initState = [''];
             return initState.concat(state.GAME_INSTANCES[topicId].history());
         };
     },
@@ -376,7 +372,7 @@ export const getters = {
     GAME_RESIGNED_STATUS(state) {
         return topicId => {
             // check if either player resigned
-            let resignedPlayer = state.MATCHES[topicId].resigned;
+            var resignedPlayer = state.MATCHES[topicId].resigned;
             
             if (resignedPlayer == 'w') {
                 return 'Game Result: Resignation - Black Wins';
@@ -393,7 +389,7 @@ export const getters = {
             if (state.GAME_INSTANCES[topicId].game_over()) {
                 // check specific game over type
                 if (state.GAME_INSTANCES[topicId].in_checkmate()) {
-                    let currentTurn = state.GAME_INSTANCES[topicId].turn();
+                    var currentTurn = state.GAME_INSTANCES[topicId].turn();
                     if (currentTurn == 'w') {
                         return 'Game Result: Checkmate - Black Wins';
                     } else {
