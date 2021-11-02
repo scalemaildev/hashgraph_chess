@@ -204,7 +204,7 @@ export const actions = {
     async QUERY_TOPIC({ state, commit }, topicId) {
         try {
             // is this our initial query of the topic?
-            var initialQuery = (state.TOPIC_MESSAGE_COUNTS[topicId] > 0) ? false : true;            
+            var initialQuery = (state.TOPIC_MESSAGE_COUNTS[topicId] > 0) ? false : true;
             
             let response = await this.$axios.$get(`/api/v1/topics/${topicId}/messages/`);
             response.messages.forEach(message => {
