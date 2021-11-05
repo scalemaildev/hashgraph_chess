@@ -244,7 +244,7 @@ export default {
             });
             
             // display the latest game state on our dummy board
-            this.turnIndex = this.GAME_HISTORY(this.topicId).length;
+            this.turnIndex = this.GAME_HISTORY(this.topicId).length; // no -1 due to pgn ele
             this.displayTurn(this.turnIndex);
             
             // check if the game is in check or over
@@ -278,7 +278,7 @@ export default {
     },
 
     mounted () {
-        this.turnIndex = this.GAME_HISTORY(this.topicId).length;
+        this.turnIndex = this.GAME_HISTORY(this.topicId).length; // no -1 due to pgn ele
     },
     
     methods: {
