@@ -2,7 +2,7 @@
 <v-container class="content-body pb-2">
   <v-row>
     <v-col cols="12" align="center">
-      <h1>Welcome to Hashgraph Chess.</h1>
+      <h1>Welcome to Hashgraph Chess</h1>
     </v-col>
   </v-row>
   <v-row>
