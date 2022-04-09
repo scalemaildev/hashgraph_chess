@@ -236,7 +236,7 @@ export default {
     },
     
     watch: {
-        latestMatchPgn (newMatchPgn, oldMatchPgn) {
+        latestMatchPgn (newMatchPgn) {
             // load new pgn into our vuex game state
             this.LOAD_PGN({
                 topicId: this.topicId,
@@ -254,7 +254,7 @@ export default {
             // if we were submitting the move, it came back
             this.TOGGLE_SUBMITTING_MOVE(false);
         },
-        turnIndex (newTurnIndex, oldTurnIndex) {
+        turnIndex (newTurnIndex) {
             // is this the first move?
             if (newTurnIndex == 1) {
                 this.prevMoves = false;

@@ -44,7 +44,7 @@ export default {
     },
     
     watch: {
-        matchData (newMatchData, oldMatchData) {
+        matchData (newMatchData) {
             if (newMatchData.initialQueryComplete) {
                 this.matchDataLoaded = true;
             } else {

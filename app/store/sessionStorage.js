@@ -206,7 +206,7 @@ export const actions = {
             // is this our initial query of the topic?
             var initialQuery = (state.TOPIC_MESSAGE_COUNTS[topicId] > 0) ? false : true;
             
-            let response = await this.$axios.$get(`/api/v1/topics/${topicId}/messages/`);
+            let response = await this.$axios.$get(`/api/v1/topics/${topicId}/messages/?limit=100`);
             response.messages.forEach(message => {
                 this.dispatch('sessionStorage/PROCESS_MESSAGE', message);
             });
