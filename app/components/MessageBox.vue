@@ -22,7 +22,7 @@ export default {
     methods: {
         ...mapActions('sessionStorage', ['SEND_MESSAGE']),
         async sendMessage() {
-            let messagePayload = {
+            var messagePayload = {
 	        messageType: 'chatMessage',
                 topicId: this.topicId,
 	        message: this.chatMessage

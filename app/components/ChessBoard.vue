@@ -28,7 +28,7 @@ export default {
     
     computed: {
         pieceStyle() {
-            let edge = this.getTileEdge();
+            var edge = this.getTileEdge();
             
             return { width: edge, height: edge };
         },
@@ -54,12 +54,12 @@ export default {
     
     methods: {
         getTile(row, col) {
-            let piece = this.displayedBoardState[row - 1][col - 1];
+            var piece = this.displayedBoardState[row - 1][col - 1];
             return `/game/${piece}.png`;
         },
         getTileBg(row, col) {
-            let bg = (col + row) % 2 === 0 ? "url('/game/b.png')" : "url('/game/g.png')";
-            let edge = this.getTileEdge();
+            var bg = (col + row) % 2 === 0 ? "url('/game/b.png')" : "url('/game/g.png')";
+            var edge = this.getTileEdge();
             
             return { width: edge, height: edge, background: bg };
         },

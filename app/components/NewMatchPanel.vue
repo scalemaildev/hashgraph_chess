@@ -118,9 +118,9 @@ export default {
 
             if (response.success) {
                 this.opponentAccountId = "";
-                let topicId = response.newTopicId;
+                var topicId = response.newTopicId;
                 console.log(response.responseMessage);
-                let newMatchUrl = "/matches/" + topicId;
+                var newMatchUrl = "/matches/" + topicId;
                 this.$router.push(newMatchUrl);
             } else {
                 console.error(response.errorMessage);

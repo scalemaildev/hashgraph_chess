@@ -236,7 +236,7 @@ export default {
     },
     
     watch: {
-        latestMatchPgn (newMatchPgn, oldMatchPgn) {
+        latestMatchPgn (newMatchPgn) {
             // load new pgn into our vuex game state
             this.LOAD_PGN({
                 topicId: this.topicId,
@@ -244,7 +244,7 @@ export default {
             });
             
             // display the latest game state on our dummy board
-            this.turnIndex = this.GAME_HISTORY(this.topicId).length;
+            this.turnIndex = this.GAME_HISTORY(this.topicId).length; // no -1 due to pgn ele
             this.displayTurn(this.turnIndex);
             
             // check if the game is in check or over
@@ -254,7 +254,7 @@ export default {
             // if we were submitting the move, it came back
             this.TOGGLE_SUBMITTING_MOVE(false);
         },
-        turnIndex (newTurnIndex, oldTurnIndex) {
+        turnIndex (newTurnIndex) {
             // is this the first move?
             if (newTurnIndex == 1) {
                 this.prevMoves = false;
@@ -278,7 +278,7 @@ export default {
     },
 
     mounted () {
-        this.turnIndex = this.GAME_HISTORY(this.topicId).length;
+        this.turnIndex = this.GAME_HISTORY(this.topicId).length; // no -1 due to pgn ele
     },
     
     methods: {
@@ -288,7 +288,7 @@ export default {
         
         /* Setup */
         initTranslatedGameState() {
-            let blankBoard = {};
+            var blankBoard = {};
             
             for (let i = 0; i <= 7; i++) {
                 blankBoard[i] = Array(8).fill('blank');
@@ -305,7 +305,7 @@ export default {
             
             // load current pgn if it exists
             if (this.matchDataFound()) {
-                let latestPgn = this.LATEST_MATCH_PGN(this.topicId);
+                var latestPgn = this.LATEST_MATCH_PGN(this.topicId);
                 this.turnIndex = this.GAME_HISTORY(this.topicId).length;
                 this.LOAD_PGN({
                     topicId: this.topicId,
@@ -325,7 +325,7 @@ export default {
         /* Chess Board and History */
         translateGameState (gameState) {
             // need the object of arrays to be filled
-            let newBoardState = {};
+            var newBoardState = {};
             for (let i = 0; i <= 7; i++) {
                 newBoardState[i] = Array(8);
             }
@@ -334,8 +334,8 @@ export default {
             for (let row = 0; row < gameState.length; row++) {
                 for (let col = 0; col < gameState[row].length; col++) {
                     if (!!gameState[row][col]) {
-                        let pieceType = gameState[row][col].type;
-                        let pieceColor = gameState[row][col].color;
+                        var pieceType = gameState[row][col].type;
+                        var pieceColor = gameState[row][col].color;
                         
                         newBoardState[row][col] = pieceColor + pieceType;
                     } else {
@@ -348,7 +348,7 @@ export default {
             this.displayedBoardState = newBoardState;
         },
         turnStatus () {
-            let turnStatusString = '';
+            var turnStatusString = '';
 
             // first check if a player resigned
             if (this.playerResigned) {
@@ -406,7 +406,7 @@ export default {
             this.turnIndex = this.GAME_HISTORY(this.topicId).length;
         },
         displayTurn (turnIndex) {
-            let gameHistory = this.GAME_HISTORY(this.topicId).slice(0, turnIndex);
+            var gameHistory = this.GAME_HISTORY(this.topicId).slice(0, turnIndex);
 
             if (turnIndex < this.GAME_HISTORY(this.topicId).length) {
                 this.isLatestTurnDisplayed = false;
@@ -434,12 +434,12 @@ export default {
         /* Moves */
         getLegalMoves (square) {
             // we want the 'to' field from the verbose array
-            let verboseLegalMoves = this.GAME_LEGAL_MOVES({
+            var verboseLegalMoves = this.GAME_LEGAL_MOVES({
                 topicId: this.topicId,
                 square: square.toLowerCase()
             });
             
-            let legalMoves = [];
+            var legalMoves = [];
             verboseLegalMoves.forEach(square => legalMoves.push(square.to));
             return legalMoves;
         },
@@ -461,9 +461,9 @@ export default {
             }
             
             this.dummyGame.move(newMove);
-            let newPgn = this.dummyGame.pgn();
+            var newPgn = this.dummyGame.pgn();
             
-            let messagePayload = {
+            var messagePayload = {
 	        messageType: 'chessMove',
                 topicId: this.topicId,
                 newPgn: newPgn
@@ -478,12 +478,12 @@ export default {
             return messagePayload;
         },
         isPromotion () {
-            let newMove = {
+            var newMove = {
                 'from': this.activeSquare.toLowerCase(),
                 'to': this.targetSquare,
             };
             
-            let promoCheck = this.dummyGame.moves({ verbose: true })
+            var promoCheck = this.dummyGame.moves({ verbose: true })
                 .filter((move) => move.from === newMove.from && 
                         move.to === newMove.to &&
                         move.flags.includes('p')).length > 0;
@@ -499,13 +499,13 @@ export default {
                 this.TOGGLE_SUBMITTING_MOVE(true);
                 
                 // give dummy game the current game state
-                let currentGameState = this.GAME_PGN(this.topicId);
+                var currentGameState = this.GAME_PGN(this.topicId);
                 this.dummyGame = new Chess();
                 this.dummyGame.load_pgn(currentGameState);
                 
                 // check for promotion and spawn promo modal if so
                 if (this.isPromotion()) {
-                    this.promotion = 'q'; // default to queen
+                    this.promotion = 'q'; // default to queen (everyone picks queen anyway)
                     this.promoDialog = true;
                 } else {
                     this.confirmMove();
@@ -515,7 +515,7 @@ export default {
         async confirmMove (promo=false) {
             this.promoDialog = false;
             // pass whether its a promo move to the message payload
-            let messagePayload = await this.createMoveMessagePayload(promo);
+            var messagePayload = await this.createMoveMessagePayload(promo);
             const response = await this.SEND_MESSAGE(messagePayload);
             
             if (!response.success) {
