@@ -229,7 +229,15 @@ export const actions = {
 
             commit('SET_PRIVATE_KEY', initData.privKey);
 
-            await hashconnect.connect();
+            let connection = await hashconnect.connect();
+
+            let pairingString = hashconnect.generatePairingString(connection, "testnet", false);
+
+            hashconnect.foundExtensionEvent.once((walletMetadata) => {
+                console.log(walletMetadata);
+            });
+            
+            hashconnect.findLocalWallets();
         } else {
             console.log('found local data');
             commit('SET_PRIVATE_KEY', state.HC_DATA.privKey);
