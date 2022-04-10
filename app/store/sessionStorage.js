@@ -4,6 +4,9 @@ const TextDecoder = require("text-encoding").TextDecoder;
 /* CHESS.JS */
 import Chess from 'chess.js';
 
+/* HASHCONNECT */
+import { HashConnect } from "hashconnect";
+
 /* HEDERA */
 const { Client,
         AccountId,
