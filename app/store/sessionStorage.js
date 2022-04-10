@@ -6,6 +6,11 @@ import Chess from 'chess.js';
 
 /* HASHCONNECT */
 import { HashConnect } from "hashconnect";
+let appMetaData = {
+    name: "Hashgraph Chess",
+    description: "Play chess over the Hedera Consensus Service",
+    icon: "https://hashgraphchessbeta.scalemail.com/favicon.png"
+};
 
 /* HEDERA */
 const { Client,
@@ -25,7 +30,8 @@ export const state = () => ({
     LOCK_BUTTON: false,
     MATCHES: {},
     GAME_INSTANCES: {},
-    TOPIC_MESSAGE_COUNTS: {}
+    TOPIC_MESSAGE_COUNTS: {},
+    HC_DATA: {}
 });
 
 /* MUTATIONS */
@@ -37,6 +43,16 @@ export const mutations = {
         state.PRIVATE_KEY = '';
         state.ACTIVE_PANEL = 'startPanel';
         state.LOCK_BUTTON = false;
+    },
+    GET_LOCAL_DATA(state) {
+        let foundData = localStorage.getItem("hashconnectData");
+
+        if(foundData){
+            state.HC_DATA = JSON.parse(foundData);
+            return true;
+        } else {
+            return false;
+        }
     },
     SET_ACCOUNT_ID(state, accountId) {
         state.ACCOUNT_ID = accountId;
@@ -200,6 +216,17 @@ export const actions = {
                 success: false,
                 responseMessage: 'Hedera client failed to initialize'
             };
+        }
+    },
+
+    async INIT_HASH_CONNECT({}) {
+        let hashconnect = new HashConnect();
+        let foundData = commit('GET_LOCAL_DATA');
+
+        if (!foundData) {
+            console.log('no local data found');
+        } else {
+            console.log('found local data');
         }
     },
     

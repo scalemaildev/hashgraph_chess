@@ -25,10 +25,10 @@ export default {
                                            'SET_ACCOUNT_ID',
                                            'SET_PRIVATE_KEY',
                                            'TOGGLE_LOCK_BUTTON']),
-        ...mapActions('sessionStorage', ['INIT_HEDERA_CLIENT']),
+        ...mapActions('sessionStorage', ['INIT_HASH_CONNECT']),
         
         async initHederaClient() {
-            console.log('hi');
+            this.INIT_HASH_CONNECT();
         },
         
         /*
