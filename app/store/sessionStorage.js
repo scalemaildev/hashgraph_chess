@@ -219,14 +219,21 @@ export const actions = {
         }
     },
 
-    async INIT_HASH_CONNECT({}) {
+    async INIT_HASH_CONNECT({ state, commit }) {
         let hashconnect = new HashConnect();
         let foundData = commit('GET_LOCAL_DATA');
 
         if (!foundData) {
             console.log('no local data found');
+            let initData = await hashconnect.init(appMetaData);
+
+            commit('SET_PRIVATE_KEY', initData.privKey);
+
+            await hashconnect.connect();
         } else {
             console.log('found local data');
+            commit('SET_PRIVATE_KEY', state.HC_DATA.privKey);
+            await hashconnect.init(appMetaData, state.PRIVATE_KEY);
         }
     },
     
