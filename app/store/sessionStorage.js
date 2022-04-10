@@ -6,11 +6,12 @@ import Chess from 'chess.js';
 
 /* HASHCONNECT */
 import { HashConnect } from "hashconnect";
-let appMetaData = {
+var appMetaData = {
     name: "Hashgraph Chess",
     description: "Play chess over the Hedera Consensus Service",
     icon: "" //TODO add from S3
 };
+
 
 /* HEDERA */
 const { TopicId,
@@ -185,21 +186,30 @@ export const mutations = {
 /* Actions */
 export const actions = {
     async INIT_HASH_CONNECT({ state, commit }) {
-        let hashconnect = new HashConnect();
+        try {
+            let hashconnect = new HashConnect();
         
-        let initData = await hashconnect.init(appMetaData);
+            let initData = await hashconnect.init(appMetaData);
 
-        commit('SET_PRIVATE_KEY', initData.privKey);
+            commit('SET_PRIVATE_KEY', initData.privKey);
+            
+            let connection = await hashconnect.connect();
+            let pairingString = hashconnect.generatePairingString(connection, "testnet", false);
 
-        let connection = await hashconnect.connect();
-
-        hashconnect.foundExtensionEvent.once((walletMetadata) => {
-            console.log(walletMetadata);
-        });
+            hashconnect.foundExtensionEvent.once((walletMetaData) => {
+                hashconnect.connectToLocalWallet(pairingString, walletMetaData);
+            });
         
-        hashconnect.findLocalWallets();
+            hashconnect.findLocalWallets();
 
-        //TODO store wallet info in localStorage/HC_DATA
+            return {
+                success: true
+            };
+        } catch (error) {
+            return {
+                success: false
+            };
+        }
     },
     
     /* Topic Subscription and Messages */

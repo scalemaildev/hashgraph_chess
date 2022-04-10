@@ -6,8 +6,10 @@
         Connect HashPack Wallet
       </v-btn>
     </v-col>
+  </v-row>
+  <v-row>
     <v-col align="center" justify="center" class="pt-0 mt-0">
-      <div v-if="clientError">
+      <div v-if="connectError">
         <span style="color: red;"><h4>An error occurred connecting to HashPack wallet extension.</h4></span>
       </div>
     </v-col>
@@ -21,8 +23,8 @@ import { mapActions } from 'vuex';
 export default {
     data () {
         return {
-            connection: false,
-            clientError: false
+            connecting: false,
+            connectError: false
         }
     },
     
@@ -30,15 +32,17 @@ export default {
         ...mapActions('sessionStorage', ['INIT_HASH_CONNECT']),
         
         async initHashConnect() {
-            this.clientError = false;
-            this.connection = false;
-            const response = this.INIT_HASH_CONNECT();
+            this.connectError = false;
+            this.connecting = true;
+            const response = await this.INIT_HASH_CONNECT();
 
             if (response.success) {
                 this.connection = true;
             } else {
-                this.clientError = true;
+                this.connectError = true;
             }
+
+            this.connecting = false;
         },
     }
 }

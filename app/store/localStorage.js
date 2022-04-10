@@ -7,7 +7,7 @@ export const state = () => ({
 export const mutations = {
     STORE_HC_DATA(state, newData) {
         state.HC_DATA = newData;
-    },  
+    },
     CHECK_HC_DATA(state) {
         if(state.HC_DATA){
             console.log('found hc data');

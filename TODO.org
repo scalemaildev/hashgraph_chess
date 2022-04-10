@@ -1,0 +1,11 @@
+* IN PROGRESS
+** Store hashconnect stuff in local storage after init
+*** Figure out how to clear ls for testing
+*** Test that priv key is the same?
+** Replace start panel process with hash connect
+*** First, check for hc data in local storage
+*** Second, display 'wallet connected' message
+*** If no hc data, display connect wallet button
+*** Loading spinner on conditional
+** Reproduce start panel process on slug loading
+* ON DECK
