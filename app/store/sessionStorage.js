@@ -9,56 +9,40 @@ import { HashConnect } from "hashconnect";
 let appMetaData = {
     name: "Hashgraph Chess",
     description: "Play chess over the Hedera Consensus Service",
-    icon: "https://hashgraphchessbeta.scalemail.com/favicon.png"
+    icon: "" //TODO add from S3
 };
 
 /* HEDERA */
-const { Client,
-        AccountId,
-        PrivateKey,
-        TopicId,
+const { TopicId,
         TopicCreateTransaction,
         TopicMessageSubmitTransaction } = require("@hashgraph/sdk");
 
-var HederaClient;
-
 /* STATE */
 export const state = () => ({
-    ACCOUNT_ID: '',
+    WALLET_CONNECTED: false,
     PRIVATE_KEY: '',
     ACTIVE_PANEL: 'loadingPanel',
     LOCK_BUTTON: false,
     MATCHES: {},
     GAME_INSTANCES: {},
-    TOPIC_MESSAGE_COUNTS: {},
-    HC_DATA: {}
+    TOPIC_MESSAGE_COUNTS: {}
 });
 
 /* MUTATIONS */
 export const mutations = {
     /* Setters and Toggles */
     UNSET_CLIENT(state) {
-        HederaClient = null;
-        state.ACCOUNT_ID = '';
+        //TODO unset local storage vars?
+        state.WALLET_CONNECTED = false;
         state.PRIVATE_KEY = '';
         state.ACTIVE_PANEL = 'startPanel';
         state.LOCK_BUTTON = false;
     },
-    GET_LOCAL_DATA(state) {
-        let foundData = localStorage.getItem("hashconnectData");
-
-        if(foundData){
-            state.HC_DATA = JSON.parse(foundData);
-            return true;
-        } else {
-            return false;
-        }
+    SET_WALLET_CONNECTED(state) {
+        state.WALLET_CONNECTED = true;
     },
-    SET_ACCOUNT_ID(state, accountId) {
-        state.ACCOUNT_ID = accountId;
-    },
-    SET_PRIVATE_KEY(state, privateKey) {
-        state.PRIVATE_KEY = privateKey;
+    SET_PRIVATE_KEY(state, newPrivateKey) {
+        state.PRIVATE_KEY = newPrivateKey;
     },
     SET_ACTIVE_PANEL(state, newPanel) {
         state.ACTIVE_PANEL = newPanel;
@@ -200,49 +184,22 @@ export const mutations = {
 
 /* Actions */
 export const actions = {
-    /* Hedera Client */
-    async INIT_HEDERA_CLIENT({}, context) {
-        try {
-            var accountId = AccountId.fromString(context.accountId);
-            var privateKey = PrivateKey.fromString(context.privateKey);
-            HederaClient = Client.forTestnet();
-            HederaClient.setOperator(accountId, privateKey);
-            return {
-                success: true,
-                responseMessage: 'Initialized Hedera client'
-            };
-        } catch (error) {
-            return {
-                success: false,
-                responseMessage: 'Hedera client failed to initialize'
-            };
-        }
-    },
-
     async INIT_HASH_CONNECT({ state, commit }) {
         let hashconnect = new HashConnect();
-        let foundData = commit('GET_LOCAL_DATA');
+        
+        let initData = await hashconnect.init(appMetaData);
 
-        if (!foundData) {
-            console.log('no local data found');
-            let initData = await hashconnect.init(appMetaData);
+        commit('SET_PRIVATE_KEY', initData.privKey);
 
-            commit('SET_PRIVATE_KEY', initData.privKey);
+        let connection = await hashconnect.connect();
 
-            let connection = await hashconnect.connect();
+        hashconnect.foundExtensionEvent.once((walletMetadata) => {
+            console.log(walletMetadata);
+        });
+        
+        hashconnect.findLocalWallets();
 
-            let pairingString = hashconnect.generatePairingString(connection, "testnet", false);
-
-            hashconnect.foundExtensionEvent.once((walletMetadata) => {
-                console.log(walletMetadata);
-            });
-            
-            hashconnect.findLocalWallets();
-        } else {
-            console.log('found local data');
-            commit('SET_PRIVATE_KEY', state.HC_DATA.privKey);
-            await hashconnect.init(appMetaData, state.PRIVATE_KEY);
-        }
+        //TODO store wallet info in localStorage/HC_DATA
     },
     
     /* Topic Subscription and Messages */

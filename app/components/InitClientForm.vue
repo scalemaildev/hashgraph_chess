@@ -2,57 +2,44 @@
 <div>
   <v-row>
     <v-col align="center">
-      <v-btn @click.prevent="initHederaClient">
-          Connect HashPack Wallet
+      <v-btn @click.prevent="initHashConnect">
+        Connect HashPack Wallet
       </v-btn>
+    </v-col>
+    <v-col align="center" justify="center" class="pt-0 mt-0">
+      <div v-if="clientError">
+        <span style="color: red;"><h4>An error occurred connecting to HashPack wallet extension.</h4></span>
+      </div>
     </v-col>
   </v-row>
 </div>
 </template>
 
 <script>
-import { mapMutations, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
 
 export default {
     data () {
         return {
+            connection: false,
             clientError: false
         }
     },
     
     methods: {
-        ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL',
-                                           'SET_ACCOUNT_ID',
-                                           'SET_PRIVATE_KEY',
-                                           'TOGGLE_LOCK_BUTTON']),
         ...mapActions('sessionStorage', ['INIT_HASH_CONNECT']),
         
-        async initHederaClient() {
-            this.INIT_HASH_CONNECT();
-        },
-        
-        /*
-        async initHederaClient_OLD () {
+        async initHashConnect() {
             this.clientError = false;
-            
-            const response = await this.INIT_HEDERA_CLIENT({
-                'accountId': this.accountId,
-                'privateKey': this.privateKey
-            });
-            
+            this.connection = false;
+            const response = this.INIT_HASH_CONNECT();
+
             if (response.success) {
-                this.SET_ACCOUNT_ID(this.accountId);
-                this.SET_PRIVATE_KEY(this.privateKey);
-                this.TOGGLE_LOCK_BUTTON(true);
-                this.accountId = "";
-                this.privateKey = "";
-                this.SET_ACTIVE_PANEL('clientPanel');
+                this.connection = true;
             } else {
-                this.privateKey = "";
                 this.clientError = true;
             }
         },
-        */
     }
 }
 </script>

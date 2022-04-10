@@ -32,24 +32,15 @@ export default {
     },
 
     mounted() {
-        if (!!this.ACCOUNT_ID && !!this.PRIVATE_KEY) {
-            this.$nextTick(() => {
-                this.restoreClient();
-            });
-        } else {
-            this.SET_ACTIVE_PANEL('startPanel');
-        }
+        this.SET_ACTIVE_PANEL('startPanel');
+        this.$nextTick(() => {
+            this.CHECK_HC_DATA();
+        });
     },
     
     methods: {
         ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL']),
-        ...mapActions('sessionStorage', ['INIT_HEDERA_CLIENT']),
-        restoreClient() {
-            this.INIT_HEDERA_CLIENT({
-                accountId: this.ACCOUNT_ID,
-                privateKey: this.PRIVATE_KEY
-            });
-        }
+        ...mapMutations('localStorage', ['CHECK_HC_DATA']),
     },
 };
 </script>
