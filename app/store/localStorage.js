@@ -1,6 +1,6 @@
 /* State */
 export const state = () => ({
-    HC_DATA: {}
+    HC_DATA: false
 });
 
 /* Mutations */
@@ -9,7 +9,7 @@ export const mutations = {
         state.HC_DATA = newData;
     },
     CLEAR_HC_DATA(state) {
-        state.HC_DATA = {};
+        state.HC_DATA = false;
     },
     CHECK_HC_DATA(state) {
         if(state.HC_DATA){

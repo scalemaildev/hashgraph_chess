@@ -11,7 +11,19 @@
       <p>In order to use this application, you will need the <a href="https://www.hashpack.app/">HashPack</a> browser extension, as well as <a href="https://portal.hedera.com/register">Testnet account.</a>. Later versions of this application will also allow players to use their <a href="https://hedera.com/account-creation">Mainnet accounts.</a></p>
     </v-col>
   </v-row>
-  <ConnectWalletButton />
+  <div v-show="!HC_DATA">
+    <ConnectWalletButton />
+  </div>
+  <div v-show="HC_DATA">
+    <v-row>
+      <v-col cols="12" align="center">
+        <i>Looks like you've already connected your wallet.</i>
+      </v-col>
+      <v-col cols="12" align="center">
+        <v-btn>Continue to Account Panel</v-btn>
+      </v-col>
+    </v-row>
+  </div>
   <v-row class="mt-3 pt-2">
     <v-col cols="12" align="center">
       <a href="https://github.com/scalemaildev/hashgraph_chess"
@@ -21,3 +33,13 @@
   </v-row>
 </v-container>  
 </template>
+
+<script>
+import { mapState } from 'vuex';
+
+export default {
+    computed: {
+        ...mapState('localStorage', ['HC_DATA'])
+    },
+};
+</script>

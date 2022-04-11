@@ -25,22 +25,15 @@ import { mapState, mapMutations, mapActions } from 'vuex';
 
 export default {
     computed: {
-        ...mapState('sessionStorage', ['ACTIVE_PANEL',
-                                       'ACCOUNT_ID',
-                                       'PRIVATE_KEY',
-                                       'HEDERA_CLIENT'])
+        ...mapState('sessionStorage', ['ACTIVE_PANEL'])
     },
 
     mounted() {
         this.SET_ACTIVE_PANEL('startPanel');
-        this.$nextTick(() => {
-            this.CHECK_HC_DATA();
-        });
     },
     
     methods: {
-        ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL']),
-        ...mapMutations('localStorage', ['CHECK_HC_DATA']),
+        ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL'])
     },
 };
 </script>
