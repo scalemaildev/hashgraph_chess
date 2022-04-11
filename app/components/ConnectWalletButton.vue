@@ -21,29 +21,10 @@
 import { mapActions } from 'vuex';
 
 export default {
-    data () {
-        return {
-            connecting: false,
-            connectError: false
-        }
-    },
+
     
     methods: {
-        ...mapActions('sessionStorage', ['INIT_HASH_CONNECT']),
-        
-        async initHashConnect() {
-            this.connectError = false;
-            this.connecting = true;
-            const response = await this.INIT_HASH_CONNECT();
 
-            if (response.success) {
-                this.connection = true;
-            } else {
-                this.connectError = true;
-            }
-
-            this.connecting = false;
-        },
     }
 }
 </script>

@@ -21,7 +21,6 @@ const { TopicId,
 /* STATE */
 export const state = () => ({
     WALLET_CONNECTED: false,
-    PRIVATE_KEY: '',
     ACTIVE_PANEL: 'loadingPanel',
     LOCK_BUTTON: false,
     MATCHES: {},
@@ -33,17 +32,14 @@ export const state = () => ({
 export const mutations = {
     /* Setters and Toggles */
     UNSET_CLIENT(state) {
-        //TODO unset local storage vars?
+        //TODO unset local storage vars with clear method
         state.WALLET_CONNECTED = false;
-        state.PRIVATE_KEY = '';
         state.ACTIVE_PANEL = 'startPanel';
         state.LOCK_BUTTON = false;
     },
     SET_WALLET_CONNECTED(state) {
+        console.log('set wallet true');
         state.WALLET_CONNECTED = true;
-    },
-    SET_PRIVATE_KEY(state, newPrivateKey) {
-        state.PRIVATE_KEY = newPrivateKey;
     },
     SET_ACTIVE_PANEL(state, newPanel) {
         state.ACTIVE_PANEL = newPanel;
@@ -185,19 +181,28 @@ export const mutations = {
 
 /* Actions */
 export const actions = {
+    /* HASH CONNECT */
     async INIT_HASH_CONNECT({ state, commit }) {
         try {
             let hashconnect = new HashConnect();
             let initData = await hashconnect.init(appMetaData);
-
-            commit('SET_PRIVATE_KEY', initData.privKey);
-            
             let connection = await hashconnect.connect();
-            let pairingString = hashconnect.generatePairingString(connection, "testnet", false);
+            
+            var privKey = initData.privKey;
+            var accountId;
+            var topicId = connection.topic;
+            var pairingString = hashconnect.generatePairingString(connection, "testnet", false);
 
             hashconnect.foundExtensionEvent.once((walletMetaData) => {
                 hashconnect.connectToLocalWallet(pairingString, walletMetaData);
-                commit('localStorage/SET_HC_DATA', { initData }, { root: true });
+            });
+
+            hashconnect.pairingEvent.once((pairingData) => {
+                accountId = pairingData.accountIds[0];
+                commit('localStorage/SET_PRIVATE_KEY', privKey, { root: true });
+                commit('localStorage/SET_ACCOUNT_ID', accountId, { root: true });
+                commit('localStorage/SET_PAIRING_STRING', pairingString, { root: true });
+                commit('localStorage/SET_HC_TOPIC', topicId, { root: true });
             });
         
             hashconnect.findLocalWallets();
@@ -210,6 +215,8 @@ export const actions = {
                 success: false
             };
         }
+    },
+    async REINIT_HASH_CONNECT({ state, commit }) {
     },
     
     /* Topic Subscription and Messages */
