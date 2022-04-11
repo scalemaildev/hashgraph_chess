@@ -188,7 +188,6 @@ export const actions = {
     async INIT_HASH_CONNECT({ state, commit }) {
         try {
             let hashconnect = new HashConnect();
-        
             let initData = await hashconnect.init(appMetaData);
 
             commit('SET_PRIVATE_KEY', initData.privKey);
@@ -198,8 +197,7 @@ export const actions = {
 
             hashconnect.foundExtensionEvent.once((walletMetaData) => {
                 hashconnect.connectToLocalWallet(pairingString, walletMetaData);
-                console.log(initData);
-                this.dispatch('localStorage/STORE_HC_DATA', initData);
+                commit('localStorage/SET_HC_DATA', { initData }, { root: true });
             });
         
             hashconnect.findLocalWallets();

@@ -1,12 +1,15 @@
 /* State */
 export const state = () => ({
-    HC_DATA: ''
+    HC_DATA: {}
 });
 
 /* Mutations */
 export const mutations = {
     SET_HC_DATA(state, newData) {
         state.HC_DATA = newData;
+    },
+    CLEAR_HC_DATA(state) {
+        state.HC_DATA = {};
     },
     CHECK_HC_DATA(state) {
         if(state.HC_DATA){
@@ -17,11 +20,4 @@ export const mutations = {
             return false;
         }
     },
-};
-
-/* Actions */
-export const actions = {
-    STORE_HC_DATA({ state, commit }, newData) {
-        commit('SET_HC_DATA', newData);
-    }
 };
