@@ -180,7 +180,7 @@ export const mutations = {
 /* Actions */
 export const actions = {
     /* HASH CONNECT */
-    async INIT_HASH_CONNECT({ state, commit }) {
+    async INIT_HASH_CONNECT({ commit }) {
         try {
             let hashconnect = new HashConnect();
             let initData = await hashconnect.init(appMetaData);
@@ -216,7 +216,31 @@ export const actions = {
             };
         }
     },
-    async REINIT_HASH_CONNECT({ state, commit }) {
+    async REINIT_HASH_CONNECT({ commit, rootState }) {
+        try {
+            let privKey = rootState.localStorage.PRIVATE_KEY;
+            let topicId = rootState.localStorage.HC_TOPIC;
+            var pairedWalletData;
+            
+            let hashconnect = new HashConnect();
+
+            hashconnect.foundExtensionEvent.once((walletMetaData) => {
+                pairedWalletData = walletMetaData;
+            });
+        
+            await hashconnect.init(appMetaData, privKey);
+            await hashconnect.connect(topicId, pairedWalletData);
+            commit('SET_WALLET_CONNECTED');
+            commit('SET_ACTIVE_PANEL', 'clientPanel');
+
+            return {
+                success: true
+            };
+        } catch (error) {
+            return {
+                success: false
+            };
+        }
     },
     
     /* Topic Subscription and Messages */

@@ -73,7 +73,8 @@ export default {
         ...mapMutations('sessionStorage', ['UNSET_CLIENT',
                                            'SET_ACTIVE_PANEL']),
         ...mapMutations('localStorage', ['CHECK_HC_DATA']),
-        ...mapActions('sessionStorage', ['INIT_HASH_CONNECT']),
+        ...mapActions('sessionStorage', ['INIT_HASH_CONNECT',
+                                         'REINIT_HASH_CONNECT']),
         
         async initHashConnect() {
             this.hcError = false;
@@ -85,10 +86,12 @@ export default {
         },
         
         async reinitHashConnect() {
-            
-            //TODO call reinit method in session storage
-            
-            this.SET_ACTIVE_PANEL('clientPanel');
+            this.hcError = false;
+            const response = await this.REINIT_HASH_CONNECT();
+
+            if (!response.success) {
+                this.hcError = true;
+            }
         }
     },
 };
