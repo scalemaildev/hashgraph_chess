@@ -198,6 +198,8 @@ export const actions = {
 
             hashconnect.foundExtensionEvent.once((walletMetaData) => {
                 hashconnect.connectToLocalWallet(pairingString, walletMetaData);
+                console.log(initData);
+                this.dispatch('localStorage/STORE_HC_DATA', initData);
             });
         
             hashconnect.findLocalWallets();
