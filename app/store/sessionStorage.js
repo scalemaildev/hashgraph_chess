@@ -202,7 +202,7 @@ export const actions = {
                 commit('localStorage/SET_PAIRING_STRING', pairingString, { root: true });
                 commit('localStorage/SET_HC_TOPIC', topicId, { root: true });
                 commit('SET_WALLET_CONNECTED');
-                //commit('SET_ACTIVE_PANEL', 'clientPanel');
+                commit('SET_ACTIVE_PANEL', 'clientPanel');
             });
         
             hashconnect.findLocalWallets();

@@ -27,14 +27,11 @@ export const mutations = {
         state.HC_TOPIC = '';
     },
     CHECK_HC_DATA(state) {
-        console.log(state);
         if(!!state.PRIVATE_KEY && !!state.ACCOUNT_ID && !!state.PAIRING_STRING && !!state.HC_TOPIC){
-            console.log('found all hc data');
             this.commit('sessionStorage/SET_WALLET_CONNECTED', {}, { root: true });
         } else {
             // clear any leftover data in fields
             this.commit('localStorage/CLEAR_HC_DATA', {}, { root: true });
-            console.log('no or incomplete hc data');
         }
     },
 };

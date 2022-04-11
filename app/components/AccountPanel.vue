@@ -30,7 +30,7 @@ import { mapState, mapMutations } from 'vuex';
   
 export default {
     computed: {
-        ...mapState('sessionStorage', ['ACCOUNT_ID']),
+        ...mapState('localStorage', ['ACCOUNT_ID']),
     },
     
     methods: {
