@@ -1,10 +1,11 @@
 * IN PROGRESS
-** Store account id in local storage during pairing
-** Fix check for hc data (needs complex checking)
-** Fix lock button
-*** Clear local storage on press
+** Fix init method
+*** Needs to wait until accepted connection to change display on start panel
+*** NOTE: init/reinit should send to account panel on success
+** Add reinit button to start panel
+*** And session storage funcs
 ** Fix account panel
-*** Find way to grab account id
+*** Display account id from local storage
 ** Reproduce start panel process on slug loading for matches
 * ON DECK
 ** Increase api call message limit (currently at 20)

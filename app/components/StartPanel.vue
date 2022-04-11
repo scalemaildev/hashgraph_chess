@@ -58,7 +58,6 @@ export default {
     },
 
     mounted() {
-        this.UNSET_CLIENT();
         this.CHECK_HC_DATA();
     },
     
@@ -66,7 +65,7 @@ export default {
         ...mapState('sessionStorage', ['WALLET_CONNECTED']),
         
         walletConnected() {
-            return this.WALLET_CONNECTED
+            return this.WALLET_CONNECTED;
         }
     },
     
@@ -75,18 +74,12 @@ export default {
                                            'SET_ACTIVE_PANEL']),
         ...mapMutations('localStorage', ['CHECK_HC_DATA']),
         ...mapActions('sessionStorage', ['INIT_HASH_CONNECT']),
-
-        checkHcData() {
-            
-        },
         
         async initHashConnect() {
             this.hcError = false;
             const response = await this.INIT_HASH_CONNECT();
             
-            if (response.success) {
-                this.hcData = this.CHECK_HC_DATA;
-            } else {
+            if (!response.success) {
                 this.hcError = true;
             }
         },

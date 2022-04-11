@@ -33,19 +33,17 @@ export const mutations = {
     /* Setters and Toggles */
     UNSET_CLIENT(state) {
         //TODO unset local storage vars with clear method
+        this.commit('localStorage/CLEAR_HC_DATA', {}, { root: true });
         state.WALLET_CONNECTED = false;
         state.ACTIVE_PANEL = 'startPanel';
         state.LOCK_BUTTON = false;
     },
     SET_WALLET_CONNECTED(state) {
-        console.log('set wallet true');
         state.WALLET_CONNECTED = true;
+        state.LOCK_BUTTON = true;
     },
     SET_ACTIVE_PANEL(state, newPanel) {
         state.ACTIVE_PANEL = newPanel;
-    },
-    TOGGLE_LOCK_BUTTON(state, bool) {
-        state.LOCK_BUTTON = bool;
     },
     TOGGLE_INITIAL_QUERY_COMPLETE(state, topicId) {
         state.MATCHES[topicId].initialQueryComplete = true;
@@ -203,6 +201,8 @@ export const actions = {
                 commit('localStorage/SET_ACCOUNT_ID', accountId, { root: true });
                 commit('localStorage/SET_PAIRING_STRING', pairingString, { root: true });
                 commit('localStorage/SET_HC_TOPIC', topicId, { root: true });
+                commit('SET_WALLET_CONNECTED');
+                //commit('SET_ACTIVE_PANEL', 'clientPanel');
             });
         
             hashconnect.findLocalWallets();
