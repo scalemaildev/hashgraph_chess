@@ -1,8 +1,12 @@
 * IN PROGRESS
 ** Change 'lock button' to 'connect wallet' button
 *** Offload functionality there
-*** Should detect on mounted() and reinit from there
+*** Index.vue should detect on mounted() and change panels from there
+*** Change 'connected' to disconnect wallet button
 ** Reproduce start panel process on slug loading for matches
 * ON DECK
 ** Increase api call message limit (currently at 20)
 ** Handle cancelled pairing requests
+** Center the panels vertically
+** Fix-up the init/reinit process after it's working
+** Fix the NavBar (use hash and slash)

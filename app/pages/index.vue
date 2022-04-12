@@ -21,19 +21,30 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 
 export default {
     computed: {
-        ...mapState('sessionStorage', ['ACTIVE_PANEL'])
+        ...mapState('sessionStorage', ['ACTIVE_PANEL',
+                                       'WALLET_CONNECTED'])
     },
 
     mounted() {
-        this.SET_ACTIVE_PANEL('startPanel');
+        // check for HC DATA. if so reinit. otherwise goto start panel.
+        this.CHECK_HC_DATA();
+
+        if (!this.WALLET_CONNECTED) {
+            this.SET_ACTIVE_PANEL('startPanel');
+        } else {
+            this.REINIT_HASH_CONNECT();
+            this.SET_ACTIVE_PANEL('clientPanel');
+        }
     },
     
     methods: {
-        ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL'])
+        ...mapMutations('localStorage', ['CHECK_HC_DATA']),
+        ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL']),
+        ...mapActions('sessionStorage', ['REINIT_HASH_CONNECT'])
     },
 };
 </script>

@@ -4,25 +4,35 @@
     <h2 style="display: inline">Hashgraph Chess</h2> <sup>Beta</sup>
   </v-toolbar-title>
   <v-spacer />
-  <v-btn v-show="LOCK_BUTTON" @click="unsetClient">
-    Lock
-  </v-btn>
+  <div v-if="!walletConnected">
+    <v-btn @click.prevent="initHashConnect">
+      Connect Wallet
+    </v-btn>
+  </div>
+  <div v-else>
+    <h4 style="display: inline">Connected</h4>
+  </div>
 </v-toolbar>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
-  
+import { mapState, mapMutations, mapActions } from 'vuex';
+
 export default {
     computed: {
-        ...mapState('sessionStorage', ['LOCK_BUTTON'])
+        ...mapState('sessionStorage', ['WALLET_CONNECTED']),
+        
+        walletConnected() {
+            return this.WALLET_CONNECTED;
+        }
     },
     
     methods: {
-        ...mapMutations('sessionStorage', ['UNSET_CLIENT']),
-        unsetClient() {
-            this.UNSET_CLIENT();
-            this.$router.push('/');
+        ...mapMutations('localStorage', ['CHECK_HC_DATA']),
+        ...mapActions('sessionStorage', ['INIT_HASH_CONNECT']),
+        
+        initHashConnect() {
+            this.INIT_HASH_CONNECT();
         }
     },
 }
