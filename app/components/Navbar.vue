@@ -10,7 +10,9 @@
     </v-btn>
   </div>
   <div v-else>
-    <h4 style="display: inline">Connected</h4>
+    <v-btn @click.prevent="disconnectWallet">
+      Disconnect Wallet
+    </v-btn>
   </div>
 </v-toolbar>
 </template>
@@ -28,11 +30,19 @@ export default {
     },
     
     methods: {
-        ...mapMutations('localStorage', ['CHECK_HC_DATA']),
+        ...mapMutations('localStorage', ['CHECK_HC_DATA',
+                                         'CLEAR_HC_DATA']),
+        ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL',
+                                           'DISCONNECT_WALLET']),
         ...mapActions('sessionStorage', ['INIT_HASH_CONNECT']),
         
         initHashConnect() {
             this.INIT_HASH_CONNECT();
+        },
+        disconnectWallet() {
+            this.CLEAR_HC_DATA();
+            this.DISCONNECT_WALLET();
+            this.SET_ACTIVE_PANEL('startPanel');
         }
     },
 }

@@ -10,3 +10,4 @@
 ** Center the panels vertically
 ** Fix-up the init/reinit process after it's working
 ** Fix the NavBar (use hash and slash)
+** Handling for disconnected wallet (removed dapp permission)

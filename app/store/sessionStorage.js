@@ -22,7 +22,6 @@ const { TopicId,
 export const state = () => ({
     WALLET_CONNECTED: false,
     ACTIVE_PANEL: 'loadingPanel',
-    LOCK_BUTTON: false,
     MATCHES: {},
     GAME_INSTANCES: {},
     TOPIC_MESSAGE_COUNTS: {}
@@ -40,7 +39,9 @@ export const mutations = {
     },
     SET_WALLET_CONNECTED(state) {
         state.WALLET_CONNECTED = true;
-        state.LOCK_BUTTON = true;
+    },
+    DISCONNECT_WALLET(state) {
+        state.WALLET_CONNECTED = false;
     },
     SET_ACTIVE_PANEL(state, newPanel) {
         state.ACTIVE_PANEL = newPanel;
