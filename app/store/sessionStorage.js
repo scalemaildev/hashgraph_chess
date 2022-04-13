@@ -7,6 +7,9 @@ import Chess from 'chess.js';
 /* HASHCONNECT */
 import { HashConnect } from "hashconnect";
 var hashconnect = new HashConnect();
+
+hashconnect.debug = true; //DEBUG
+
 var appMetaData = {
     name: "Hashgraph Chess",
     description: "Play chess over the Hedera Consensus Service",
@@ -220,7 +223,7 @@ export const actions = {
                 success: true
             };
         } catch (error) {
-            console.log(error);
+            console.warn(error);
             return {
                 success: false
             };
@@ -232,7 +235,7 @@ export const actions = {
             let topic = rootState.localStorage.HC_TOPIC;
             let pairedWalletData = rootState.localStorage.PAIRED_WALLET;
         
-            await hashconnect.init(appMetaData, privKey);
+            await hashconnect.init(pairedWalletData, privKey);
             await hashconnect.connect(topic, pairedWalletData);
             
             commit('SET_WALLET_CONNECTED');
@@ -242,7 +245,7 @@ export const actions = {
                 success: true
             };
         } catch (error) {
-            console.log(error);
+            console.warn(error);
             return {
                 success: false
             };
@@ -349,11 +352,11 @@ export const actions = {
 
             let res = await hashconnect.sendTransaction(topic, transaction);
             
+            console.log(res);
+            
             let topicReceipt;
             if (res.success) topicReceipt = TransactionReceipt.fromBytes(res.receipt);
             const newTopicId = topicReceipt.topicId.toString();
-
-            console.log(newTopicId);
 
             return newTopicId;
             
@@ -490,9 +493,9 @@ export const getters = {
 
 /* UTILS */
 async function signAndMakeBytes(tx, signingAcctId) {
-    const privateKeyString = process.env.SERVER_PRIVATE_KEY;
-    const privateKey = PrivateKey.fromString(privateKeyString); // this is an ACTUAL hedera private key
+    const privateKey = PrivateKey.fromString("302e020100300506032b657004220420b12133b7b9d433a5059624c5ae226c57b60d48d84fc7cad5ebd8c45d69c2d988"); // this is an ACTUAL hedera private key
     const publicKey = privateKey.publicKey;
+    
     let newId = TransactionId.generate(signingAcctId);
     tx.setTransactionId(newId);
     tx.setNodeAccountIds([new AccountId(3)]);

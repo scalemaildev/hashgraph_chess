@@ -8,9 +8,13 @@
 *** Handle in init/reinit methods
 *** May need a new panel for connection/pairing errors
 ** Handling for disconnected wallet (removed dapp permission)
+*** Needs to check if the dapp is connected in addition to all local storage variables
 ** Fix-up the init/reinit process
 *** Handle edge cases like disconnected dapp but hc data exists
 *** Would need checks in the init/reinit methods
+** Loading spinners
+*** Remove timeouts (or extend timer a lot)
+*** Ensure responsiveness to hashconnect 
 ** Fix the NavBar (use hash and slash)
 *** Needs to be a real navbar
 ** Center the panels vertically
