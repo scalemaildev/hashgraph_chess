@@ -20,6 +20,7 @@ const { PrivateKey,
         TopicCreateTransaction,
         TransactionId,
         TransactionReceipt,
+        Transaction,
         TopicMessageSubmitTransaction } = require("@hashgraph/sdk");
 
 /* STATE */
@@ -330,12 +331,11 @@ export const actions = {
     /* Topic and Match Creation */
     async CREATE_TOPIC({ rootState }) {
         try {
-            let privKey = rootState.localStorage.PRIVATE_KEY;
             let acctId = rootState.localStorage.ACCOUNT_ID;
             let topic = rootState.localStorage.HC_TOPIC;
             
             let tx = new TopicCreateTransaction();
-            let txBytes = await signAndMakeBytes(tx, acctId, privKey);
+            let txBytes = await signAndMakeBytes(tx, acctId);
 
             const transaction = {
                 topic,
@@ -489,8 +489,10 @@ export const getters = {
 };
 
 /* UTILS */
-async function signAndMakeBytes(tx, signingAcctId, privKey) {
-    const privKeyObj = PrivateKey.fromString(privKey);
+async function signAndMakeBytes(tx, signingAcctId) {
+    const privateKeyString = process.env.SERVER_PRIVATE_KEY;
+    const privateKey = PrivateKey.fromString(privateKeyString); // this is an ACTUAL hedera private key
+    const publicKey = privateKey.publicKey;
     let newId = TransactionId.generate(signingAcctId);
     tx.setTransactionId(newId);
     tx.setNodeAccountIds([new AccountId(3)]);
@@ -498,7 +500,9 @@ async function signAndMakeBytes(tx, signingAcctId, privKey) {
     tx = await tx.freeze();
     let txBytes = tx.toBytes();
 
-    const sig = await privKeyObj.signTransaction();
+    const sig = await privateKey.signTransaction(Transaction.fromBytes(txBytes));
+    const out = tx.addSignature(publicKey, sig);
+    const outBytes = out.toBytes();
 
-    return txBytes;
+    return outBytes;
 }
