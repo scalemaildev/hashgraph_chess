@@ -14,8 +14,11 @@ var appMetaData = {
 };
 
 /* HEDERA */
-const { TopicId,
+const { AccountId,
+        TopicId,
         TopicCreateTransaction,
+        TransactionId,
+        TransactionReceipt,
         TopicMessageSubmitTransaction } = require("@hashgraph/sdk");
 
 /* STATE */
@@ -323,10 +326,34 @@ export const actions = {
     },
 
     /* Topic and Match Creation */
-    async CREATE_TOPIC() {
-        const tx = await new TopicCreateTransaction().execute(HederaClient);
-        const topicReceipt = await tx.getReceipt(HederaClient);
+    async CREATE_TOPIC({ rootState }) {    
+        let acctId = rootState.localStorage.ACCOUNT_ID;
+        let topic = rootState.localStorage.HC_TOPIC;
+        
+        let tx = new TopicCreateTransaction();
+        let txBytes = await makeBytes(tx, acctId);
+
+        const transaction = {
+            topic,
+            byteArray: txBytes,
+            
+            metadata: {
+                accountToSign: acctId,
+                returnTransaction: true
+            }
+        };
+
+        try {
+            let res = await hashconnect.sendTransaction(topic, transaction);
+        } catch (error) {
+            console.log(error);
+        }
+        
+        let topicReceipt;
+        if (res.success) topicReceipt = TransactionReceipt.fromBytes(res.receipt);
         const newTopicId = topicReceipt.topicId.toString();
+
+        console.log(newTopicId);
 
         return newTopicId;
     },
@@ -453,3 +480,16 @@ export const getters = {
         };
     }
 };
+
+/* UTILS */
+async function makeBytes(tx, signingAcctId) {
+    let newId = TransactionId.generate(signingAcctId);
+    tx.setTransactionId(newId);
+    tx.setNodeAccountIds([new AccountId(3)]);
+
+    await tx.freeze();
+    
+    let txBytes = tx.toBytes();
+
+    return txBytes;
+}

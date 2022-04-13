@@ -1,13 +1,17 @@
 * IN PROGRESS
-** Change 'lock button' to 'connect wallet' button
-*** Offload functionality there
-*** Index.vue should detect on mounted() and change panels from there
-*** Change 'connected' to disconnect wallet button
+** Create topics using the hashconnect api
+** Send topic messages using the hashconnect api
 ** Reproduce start panel process on slug loading for matches
 * ON DECK
 ** Increase api call message limit (currently at 20)
 ** Handle cancelled pairing requests
-** Center the panels vertically
-** Fix-up the init/reinit process after it's working
-** Fix the NavBar (use hash and slash)
+*** Handle in init/reinit methods
+*** May need a new panel for connection/pairing errors
 ** Handling for disconnected wallet (removed dapp permission)
+** Fix-up the init/reinit process
+*** Handle edge cases like disconnected dapp but hc data exists
+*** Would need checks in the init/reinit methods
+** Fix the NavBar (use hash and slash)
+*** Needs to be a real navbar
+** Center the panels vertically
+** Change Account ID to use the message's addition from HIP-171
