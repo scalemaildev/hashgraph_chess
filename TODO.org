@@ -1,22 +1,7 @@
 * IN PROGRESS
-** Refactor saveData and loadData
-*** And checking for ALL saved data
-** Check for wallet connected on index/_match pages
-*** Re-init might cause problems?
-*** Needs to be in session storage?
-** Increase api call message limit (currently at 20)
-** Fix-up the init/reinit process
-*** Handle edge cases like disconnected dapp but hc data exists
-*** Would need checks in the init/reinit methods
-** Handle cancelled pairing requests
-*** Handle in init/reinit methods
-*** May need a new panel for connection/pairing errors
-** Handling for disconnected wallet (removed dapp permission)
-*** Needs to check if the dapp is connected in addition to all local storage variables
-** Private Key in the signAndMakeBytes function
-*** Is signing even necessary for these tx?
-*** Needs to be in .env at the very least
-*** Test if signing is actually necessary as opposed to just makeBytes
+** Check for wallet connected on reinit
+*** Needs some kind of confirmation method from wallet about the pairing
+** Increase api call message limit (currently at 20 max)
 * ON DECK
 ** Handle new topics in game panel
 ** Send topic messages using the hashconnect api
