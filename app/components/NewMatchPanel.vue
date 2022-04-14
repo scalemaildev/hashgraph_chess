@@ -45,7 +45,7 @@
     <v-row align="center" justify="center">
       <v-col cols="12" align="center" justify="center">
         <span style="color: red;"><h3>An error occurred creating the match:</h3></span>
-        <p style="color: red;">Check the console log for potential details.</p>
+        <p style="color: red;">{{ errorMessage }}</p>
       </v-col>
     </v-row>
   </div>
@@ -77,6 +77,7 @@ export default {
         return {
             opponentAccountId: "",
             matchCreationError: false,
+            errorMessage: '',
             creatingMatch: false
         }
     },
@@ -112,7 +113,6 @@ export default {
             this.creatingMatch = true;
             
             const response = await this.CREATE_MATCH({
-                'playerWhite': this.ACCOUNT_ID,
                 'playerBlack': this.opponentAccountId
             });
 
@@ -123,7 +123,7 @@ export default {
                 var newMatchUrl = "/matches/" + topicId;
                 this.$router.push(newMatchUrl);
             } else {
-                console.error(response.errorMessage);
+                this.errorMessage = response.responseMessage;
                 this.matchCreationError = true;
                 this.creatingMatch = false;
             }

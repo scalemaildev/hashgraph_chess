@@ -2,7 +2,7 @@
 <v-container class="content-body">
   <v-row>
     <v-col cols="12" align="center" justify="center">
-      <h1>Welcome, <i>#{{ ACCOUNT_ID }}</i></h1>
+      <h1>Welcome, <i>{{ ACCOUNT_ID }}</i></h1>
     </v-col>
   </v-row>
   <v-row>

@@ -1,14 +1,14 @@
 * IN PROGRESS
 ** Check for wallet connected on reinit
 *** Needs some kind of confirmation method from wallet about the pairing
+*** Otherwise, clear the local storage data
 ** Increase api call message limit (currently at 20 max)
 * ON DECK
-** Handle new topics in game panel
-** Send topic messages using the hashconnect api
+** Create new topics using hashconnect
+*** Implement a check to see if the user approved the first message after creation
+*** If not, go to a unique error panel
+** Send topic messages using the hashconnect
 ** Change Account ID to use the message's addition from HIP-171
-** Handling for cancelled transactions
-*** For sending messages
-*** For creating a new topic
 ** Loading spinners
 *** Remove timeouts (or extend timer a lot)
 *** Ensure responsiveness to hashconnect 

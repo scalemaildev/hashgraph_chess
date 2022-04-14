@@ -241,11 +241,9 @@ export const actions = {
             let privKey = walletData.TOPIC_PRIVATE_KEY;
             let topic = walletData.CONNECTION_TOPIC;
             let walletMetadata = walletData.METADATA;
-
+            
             await hashconnect.init(walletMetadata, privKey);
             await hashconnect.connect(topic, walletMetadata);
-
-            //TODO check if wallet actually connected
             
             commit('SET_WALLET_CONNECTED');
             commit('SET_ACTIVE_PANEL', 'clientPanel');
@@ -287,38 +285,44 @@ export const actions = {
             };
         }
     },
-    async SEND_MESSAGE({ rootState }, messageData) {
-        let acctId = rootState.localStorage.ACCOUNT_ID;
-        let topic = rootState.localStorage.HC_TOPIC;
-        var messagePayload = JSON.stringify(messageData);
-
-        let tx = new TopicMessageSubmitTransaction()
-            .setMessage(messagePayload)
-            .setTopicId(messageData.topicId);
-        
-        let txBytes = await signAndMakeBytes(tx, acctId);
-
-        let transaction = {
-            topic,
-            byteArray: txBytes,
-
-            metadata: {
-                accountToSign: acctId,
-                returnTransaction: false
-            }
-        };
-        
+    async SEND_MESSAGE({ rootState }, messageData) {   
         try {
-            await hashconnect.sendTransaction(topic, transaction);
+            let acctId = rootState.localStorage.WALLET_DATA.ACCOUNT_ID;
+            let topic = rootState.localStorage.WALLET_DATA.CONNECTION_TOPIC;
+            var messagePayload = JSON.stringify(messageData);
 
-            return {
-                success: true,
-                responseMessage: 'Sent message to HCS'
+            let tx = new TopicMessageSubmitTransaction()
+                .setMessage(messagePayload)
+                .setTopicId(messageData.topicId);
+            
+            let txBytes = await signAndMakeBytes(tx, acctId);
+
+            let transaction = {
+                topic,
+                byteArray: txBytes,
+
+                metadata: {
+                    accountToSign: acctId,
+                    returnTransaction: false
+                }
             };
+
+            let res = await hashconnect.sendTransaction(topic, transaction);
+
+            if (res.success) {
+                return {
+                    success: true
+                };
+            } else {
+                return {
+                    success: false,
+                    responseMessage: "Transaction rejected."
+                };
+            }
         } catch (error) {
             return {
                 success: false,
-                responseMessage: 'Failed to send message to HCS'
+                responseMessage: error
             };
         }
     },
@@ -356,58 +360,86 @@ export const actions = {
 
     /* Topic and Match Creation */
     async CREATE_TOPIC({ rootState }) {
-        let acctId = rootState.localStorage.ACCOUNT_ID;
-        let topic = rootState.localStorage.HC_TOPIC;
-        
-        let tx = new TopicCreateTransaction();
-        let txBytes = await signAndMakeBytes(tx, acctId);
-
-        let transaction = {
-            topic,
-            byteArray: txBytes,
-            
-            metadata: {
-                accountToSign: acctId,
-                returnTransaction: false
-            }
-        };
-
-        let topicReceipt;
-        let res = await hashconnect.sendTransaction(topic, transaction);
-
-        // TODO: handle failed transaction
-        if (res.success) topicReceipt = TransactionReceipt.fromBytes(res.receipt);
-        
-        let newTopicId = topicReceipt.topicId.toString();
-
-        return newTopicId;
-    },
-    async CREATE_MATCH({ state }, context) {
         try {
-            var newTopicId = await this.dispatch('sessionStorage/CREATE_TOPIC');
+            let acctId = rootState.localStorage.WALLET_DATA.ACCOUNT_ID;
+            let topic = rootState.localStorage.WALLET_DATA.CONNECTION_TOPIC;
+            
+            let tx = new TopicCreateTransaction();
+            let txBytes = await signAndMakeBytes(tx, acctId);
 
-            if (!newTopicId) return { success: false };
+            let transaction = {
+                topic,
+                byteArray: txBytes,
+                
+                metadata: {
+                    accountToSign: acctId,
+                    returnTransaction: false
+                }
+            };
+
+            let topicReceipt;
+            let res = await hashconnect.sendTransaction(topic, transaction);
+
+            // TODO: handle failed transaction
+            if (res.success) {
+                topicReceipt = TransactionReceipt.fromBytes(res.receipt);
+                let newTopicId = topicReceipt.topicId.toString();
+                return {
+                    success: true,
+                    newTopicId
+                };
+            } else {
+                return {
+                    success: false,
+                    responseMessage: "Transaction rejected."
+                };
+            }
+        } catch (error) {
+            return {
+                success: false,
+                responseMessage: error
+            };
+        }
+    },
+    async CREATE_MATCH({ rootState }, context) {
+        try {
+            let newTopicResult = await this.dispatch('sessionStorage/CREATE_TOPIC');
+            let operatorAccount = rootState.localStorage.WALLET_DATA.ACCOUNT_ID;
+
+            if (!newTopicResult.success) return {
+                success: false,
+                responseMessage: newTopicResult.responseMessage
+            };
+
+            let newTopicId = newTopicResult.newTopicId;
 
             var newMatchData = {
                 messageType: 'matchCreation',
                 topicId: newTopicId,
-                operator: state.ACCOUNT_ID,
-                playerWhite: context.playerWhite,
+                operator: operatorAccount,
+                playerWhite: operatorAccount,
                 playerBlack: context.playerBlack,
             };
 
-            this.dispatch('sessionStorage/SEND_MESSAGE', newMatchData);
-            
-            return {
-                success: true,
-                responseMessage: 'Created new topic ' + newTopicId,
-                newTopicId: newTopicId,
-            };
+            // TODO: check if this was a success
+            let matchCreationResult = this.dispatch('sessionStorage/SEND_MESSAGE', newMatchData);
+
+            if (matchCreationResult.success) {   
+                return {
+                    success: true,
+                    responseMessage: 'Created new topic ' + newTopicId,
+                    newTopicId: newTopicId,
+                };
+            } else {
+                return {
+                    success: false,
+                    responseMessage: 'Match creation message rejected. This topic is now an orphan.'
+                };
+            }
         } catch (error) {
             return {
                 success: false,
-                responseMessage: 'Failed to create a new topic',
-                errorMessage: error
+                responseMessage: 'Failed to create a new match.'
             };
         }
     },
