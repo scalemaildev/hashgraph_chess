@@ -75,9 +75,9 @@ export const mutations = {
         var playerBlack = messageData.playerBlack;
         var userType = 'o';
 
-        if (state.ACCOUNT_ID == playerWhite) {
+        if (rootState.localStorage.WALLET_DATA.ACCOUNT_ID == playerWhite) {
             userType = 'w';
-        } else if (state.ACCOUNT_ID == playerBlack) {
+        } else if (rootState.localStorage.WALLET_DATA.ACCOUNT_ID == playerBlack) {
             userType = 'b';
         }
 
@@ -116,7 +116,7 @@ export const mutations = {
     PROCESS_CHAT_MESSAGE(state, messageData) {
         var topicId = messageData.topicId;
         var message = messageData.message;
-        var operator = messageData.operator;
+        var operator = messageData.sender;
         var match = state.MATCHES[topicId];
 
         // filter out non-players
@@ -139,7 +139,7 @@ export const mutations = {
     PROCESS_CHESS_MOVE(state, messageData) {
         var topicId = messageData.topicId;
         var newPgn = messageData.newPgn;
-        var operator = messageData.operator;
+        var operator = messageData.sender;
         var match = state.MATCHES[topicId];
 
         // filter out moves after game is over (game_over() or resigned match)
@@ -166,7 +166,7 @@ export const mutations = {
     },
     PROCESS_RESIGN(state, messageData) {
         var topicId = messageData.topicId;
-        var operator = messageData.operator;
+        var operator = messageData.sender;
         var playerWhite = state.MATCHES[topicId].playerWhite;
         var playerBlack = state.MATCHES[topicId].playerBlack;
         var resignedPlayer = '';
@@ -332,6 +332,7 @@ export const actions = {
         var msgIndex = messagePayload.sequence_number;
         var rawMessage = new TextDecoder("utf-8").decode(Buffer.from(messagePayload.message, 'base64'));
         var messageObject = JSON.parse(rawMessage);
+        messageObject.sender = messagePayload.payer_account_id;
 
         // ignore messages whose sequence number we have already seen
         if (state.TOPIC_MESSAGE_COUNTS[topicId] >= msgIndex) {
@@ -404,7 +405,7 @@ export const actions = {
     async CREATE_MATCH({ rootState }, context) {
         try {
             let newTopicResult = await this.dispatch('sessionStorage/CREATE_TOPIC');
-            let operatorAccount = rootState.localStorage.WALLET_DATA.ACCOUNT_ID;
+            let operator = rootState.localStorage.WALLET_DATA.ACCOUNT_ID;
 
             if (!newTopicResult.success) return {
                 success: false,
@@ -416,8 +417,8 @@ export const actions = {
             var newMatchData = {
                 messageType: 'matchCreation',
                 topicId: newTopicId,
-                operator: operatorAccount,
-                playerWhite: operatorAccount,
+                operator: operator,
+                playerWhite: operator,
                 playerBlack: context.playerBlack,
             };
 
@@ -433,7 +434,7 @@ export const actions = {
             } else {
                 return {
                     success: false,
-                    responseMessage: 'Match creation message rejected. This topic is now an orphan.'
+                    responseMessage: 'Match creation message rejected. Created topic is now an orphan.'
                 };
             }
         } catch (error) {

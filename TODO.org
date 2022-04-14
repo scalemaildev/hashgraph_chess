@@ -1,18 +1,13 @@
 * IN PROGRESS
-** Check for wallet connected on reinit
-*** Needs some kind of confirmation method from wallet about the pairing
-*** Otherwise, clear the local storage data
-** Increase api call message limit (currently at 20 max)
-* ON DECK
-** Create new topics using hashconnect
-*** Implement a check to see if the user approved the first message after creation
-*** If not, go to a unique error panel
-** Send topic messages using the hashconnect
+** Send topic messages using hashconnect
+*** Needs fix on hashconnect's end
 ** Change Account ID to use the message's addition from HIP-171
+* ON DECK
 ** Loading spinners
 *** Remove timeouts (or extend timer a lot)
 *** Ensure responsiveness to hashconnect 
 ** Fix the NavBar stylings (copy hash and slash)
 *** Needs to be a real navbar
 ** Center the panels vertically
+* FUTURE
 ** Handle multiple accounts in a single wallet
