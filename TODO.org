@@ -1,21 +1,33 @@
 * IN PROGRESS
-** Create topics using the hashconnect api
-** Send topic messages using the hashconnect api
-** Reproduce start panel process on slug loading for matches
-* ON DECK
+** Refactor saveData and loadData
+*** And checking for ALL saved data
+** Check for wallet connected on index/_match pages
+*** Re-init might cause problems?
+*** Needs to be in session storage?
 ** Increase api call message limit (currently at 20)
+** Fix-up the init/reinit process
+*** Handle edge cases like disconnected dapp but hc data exists
+*** Would need checks in the init/reinit methods
 ** Handle cancelled pairing requests
 *** Handle in init/reinit methods
 *** May need a new panel for connection/pairing errors
 ** Handling for disconnected wallet (removed dapp permission)
 *** Needs to check if the dapp is connected in addition to all local storage variables
-** Fix-up the init/reinit process
-*** Handle edge cases like disconnected dapp but hc data exists
-*** Would need checks in the init/reinit methods
+** Private Key in the signAndMakeBytes function
+*** Is signing even necessary for these tx?
+*** Needs to be in .env at the very least
+*** Test if signing is actually necessary as opposed to just makeBytes
+* ON DECK
+** Handle new topics in game panel
+** Send topic messages using the hashconnect api
+** Change Account ID to use the message's addition from HIP-171
+** Handling for cancelled transactions
+*** For sending messages
+*** For creating a new topic
 ** Loading spinners
 *** Remove timeouts (or extend timer a lot)
 *** Ensure responsiveness to hashconnect 
-** Fix the NavBar (use hash and slash)
+** Fix the NavBar stylings (copy hash and slash)
 *** Needs to be a real navbar
 ** Center the panels vertically
-** Change Account ID to use the message's addition from HIP-171
+** Handle multiple accounts in a single wallet

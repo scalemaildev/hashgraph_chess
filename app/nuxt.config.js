@@ -20,6 +20,10 @@ export default {
         ]
     },
 
+    env: {
+        PRIVATE_KEY: process.env.SERVER_PRIVATE_KEY
+    },
+
     server: {        
         https: {
             key: fs.readFileSync(path.resolve(__dirname, 'localhost-key.pem')),
@@ -43,7 +47,8 @@ export default {
     // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
     buildModules: [
         // https://go.nuxtjs.dev/vuetify
-        '@nuxtjs/vuetify'
+        '@nuxtjs/vuetify',
+        '@nuxtjs/dotenv'
     ],
 
     // Modules: https://go.nuxtjs.dev/config-modules

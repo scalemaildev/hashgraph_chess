@@ -1,5 +1,6 @@
 /* UTILS */
 const TextDecoder = require("text-encoding").TextDecoder;
+import { signAndMakeBytes } from "../assets/js/utils";
 
 /* CHESS.JS */
 import Chess from 'chess.js';
@@ -10,26 +11,22 @@ var hashconnect = new HashConnect();
 
 hashconnect.debug = true; //DEBUG
 
-var appMetaData = {
+var appMetadata = {
     name: "Hashgraph Chess",
     description: "Play chess over the Hedera Consensus Service",
-    icon: ""
+    icon: "https://scalemailpublic.s3.us-east-2.amazonaws.com/bn.png"
 };
 
 /* HEDERA */
-const { PrivateKey,
-        AccountId,
-        TopicId,
-        TopicCreateTransaction,
-        TransactionId,
+const { TopicCreateTransaction,
         TransactionReceipt,
-        Transaction,
         TopicMessageSubmitTransaction } = require("@hashgraph/sdk");
 
 /* STATE */
 export const state = () => ({
-    WALLET_CONNECTED: false,
     ACTIVE_PANEL: 'loadingPanel',
+    WALLET_DATA_FOUND: false,
+    WALLET_CONNECTED: false,
     MATCHES: {},
     GAME_INSTANCES: {},
     TOPIC_MESSAGE_COUNTS: {}
@@ -39,11 +36,13 @@ export const state = () => ({
 export const mutations = {
     /* Setters and Toggles */
     UNSET_CLIENT(state) {
-        //TODO unset local storage vars with clear method
-        this.commit('localStorage/CLEAR_HC_DATA', {}, { root: true });
+        this.commit('localStorage/CLEAR_WALLET_DATA', {}, { root: true });
         state.WALLET_CONNECTED = false;
+        state.WALLET_DATA_FOUND = false;
         state.ACTIVE_PANEL = 'startPanel';
-        state.LOCK_BUTTON = false;
+    },
+    SET_WALLET_DATA_FOUND(state) {
+        state.WALLET_DATA_FOUND = true;
     },
     SET_WALLET_CONNECTED(state) {
         state.WALLET_CONNECTED = true;
@@ -191,32 +190,39 @@ export const actions = {
     /* HASH CONNECT */
     async INIT_HASH_CONNECT({ commit }) {
         try {
-            let initData = await hashconnect.init(appMetaData);
+            // init hashconnect
+            let initData = await hashconnect.init(appMetadata);
             let connection = await hashconnect.connect();
-            
+
+            // vars to store locally
             var privKey = initData.privKey;
-            var accountId;
             var pairedWalletData;
             var topic = connection.topic;
-            
             var pairingString = hashconnect.generatePairingString(connection, "testnet", false);
 
+            // find hashpack browser extension & connect
             hashconnect.foundExtensionEvent.once((walletMetaData) => {
                 pairedWalletData = walletMetaData;
                 hashconnect.connectToLocalWallet(pairingString, pairedWalletData);
             });
 
+            // after user accepts pairing store the data locally
             hashconnect.pairingEvent.once((pairingData) => {
-                accountId = pairingData.accountIds[0];
-                commit('localStorage/SET_PRIVATE_KEY', privKey, { root: true });
-                commit('localStorage/SET_ACCOUNT_ID', accountId, { root: true });
-                commit('localStorage/SET_PAIRING_STRING', pairingString, { root: true });
-                commit('localStorage/SET_HC_TOPIC', topic, { root: true });
-                commit('localStorage/SET_PAIRED_WALLET', pairedWalletData, { root: true });
+                let walletData = {
+                    ACCOUNT_ID: pairingData.accountIds[0],
+                    CONNECTION_TOPIC: topic,
+                    TOPIC_PRIVATE_KEY: privKey,
+                    TOPIC_PAIRING_STRING: pairingString,
+                    METADATA: pairedWalletData
+                };
+
+                commit('localStorage/SAVE_WALLET_DATA', walletData, { root: true });
+                commit('SET_WALLET_DATA_FOUND');
                 commit('SET_WALLET_CONNECTED');
                 commit('SET_ACTIVE_PANEL', 'clientPanel');
             });
-        
+
+            // kick off event chain
             hashconnect.findLocalWallets();
 
             return {
@@ -231,12 +237,15 @@ export const actions = {
     },
     async REINIT_HASH_CONNECT({ commit, rootState }) {
         try {
-            let privKey = rootState.localStorage.PRIVATE_KEY;
-            let topic = rootState.localStorage.HC_TOPIC;
-            let pairedWalletData = rootState.localStorage.PAIRED_WALLET;
-        
-            await hashconnect.init(pairedWalletData, privKey);
-            await hashconnect.connect(topic, pairedWalletData);
+            let walletData = rootState.localStorage.WALLET_DATA;
+            let privKey = walletData.TOPIC_PRIVATE_KEY;
+            let topic = walletData.CONNECTION_TOPIC;
+            let walletMetadata = walletData.METADATA;
+
+            await hashconnect.init(walletMetadata, privKey);
+            await hashconnect.connect(topic, walletMetadata);
+
+            //TODO check if wallet actually connected
             
             commit('SET_WALLET_CONNECTED');
             commit('SET_ACTIVE_PANEL', 'clientPanel');
@@ -278,15 +287,29 @@ export const actions = {
             };
         }
     },
-    async SEND_MESSAGE({ state }, messageData) {
-        messageData['operator'] = state.ACCOUNT_ID;
+    async SEND_MESSAGE({ rootState }, messageData) {
+        let acctId = rootState.localStorage.ACCOUNT_ID;
+        let topic = rootState.localStorage.HC_TOPIC;
         var messagePayload = JSON.stringify(messageData);
+
+        let tx = new TopicMessageSubmitTransaction()
+            .setMessage(messagePayload)
+            .setTopicId(messageData.topicId);
+        
+        let txBytes = await signAndMakeBytes(tx, acctId);
+
+        let transaction = {
+            topic,
+            byteArray: txBytes,
+
+            metadata: {
+                accountToSign: acctId,
+                returnTransaction: false
+            }
+        };
         
         try {
-            await new TopicMessageSubmitTransaction({
-                topicId: TopicId.fromString(messageData.topicId),
-                message: messagePayload})
-                .execute(HederaClient);
+            await hashconnect.sendTransaction(topic, transaction);
 
             return {
                 success: true,
@@ -333,37 +356,31 @@ export const actions = {
 
     /* Topic and Match Creation */
     async CREATE_TOPIC({ rootState }) {
-        try {
-            let acctId = rootState.localStorage.ACCOUNT_ID;
-            let topic = rootState.localStorage.HC_TOPIC;
-            
-            let tx = new TopicCreateTransaction();
-            let txBytes = await signAndMakeBytes(tx, acctId);
+        let acctId = rootState.localStorage.ACCOUNT_ID;
+        let topic = rootState.localStorage.HC_TOPIC;
+        
+        let tx = new TopicCreateTransaction();
+        let txBytes = await signAndMakeBytes(tx, acctId);
 
-            const transaction = {
-                topic,
-                byteArray: txBytes,
-                
-                metadata: {
-                    accountToSign: acctId,
-                    returnTransaction: true
-                }
-            };
+        let transaction = {
+            topic,
+            byteArray: txBytes,
+            
+            metadata: {
+                accountToSign: acctId,
+                returnTransaction: false
+            }
+        };
 
-            let res = await hashconnect.sendTransaction(topic, transaction);
-            
-            console.log(res);
-            
-            let topicReceipt;
-            if (res.success) topicReceipt = TransactionReceipt.fromBytes(res.receipt);
-            const newTopicId = topicReceipt.topicId.toString();
+        let topicReceipt;
+        let res = await hashconnect.sendTransaction(topic, transaction);
 
-            return newTopicId;
-            
-        } catch (error) {
-            console.log(error);
-            return false;
-        }
+        // TODO: handle failed transaction
+        if (res.success) topicReceipt = TransactionReceipt.fromBytes(res.receipt);
+        
+        let newTopicId = topicReceipt.topicId.toString();
+
+        return newTopicId;
     },
     async CREATE_MATCH({ state }, context) {
         try {
@@ -490,22 +507,3 @@ export const getters = {
         };
     }
 };
-
-/* UTILS */
-async function signAndMakeBytes(tx, signingAcctId) {
-    const privateKey = PrivateKey.fromString("302e020100300506032b657004220420b12133b7b9d433a5059624c5ae226c57b60d48d84fc7cad5ebd8c45d69c2d988"); // this is an ACTUAL hedera private key
-    const publicKey = privateKey.publicKey;
-    
-    let newId = TransactionId.generate(signingAcctId);
-    tx.setTransactionId(newId);
-    tx.setNodeAccountIds([new AccountId(3)]);
-
-    tx = await tx.freeze();
-    let txBytes = tx.toBytes();
-
-    const sig = await privateKey.signTransaction(Transaction.fromBytes(txBytes));
-    const out = tx.addSignature(publicKey, sig);
-    const outBytes = out.toBytes();
-
-    return outBytes;
-}

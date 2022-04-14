@@ -11,6 +11,7 @@
   "dependencies": {
     "@hashgraph/sdk": "^2.0.29",
     "@nuxtjs/axios": "^5.13.6",
+    "@nuxtjs/dotenv": "^1.4.1",
     "chess.js": "^0.12.0",
     "core-js": "^3.15.1",
     "hashconnect": "^0.1.4",

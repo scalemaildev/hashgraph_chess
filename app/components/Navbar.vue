@@ -30,18 +30,15 @@ export default {
     },
     
     methods: {
-        ...mapMutations('localStorage', ['CHECK_HC_DATA',
-                                         'CLEAR_HC_DATA']),
-        ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL',
-                                           'DISCONNECT_WALLET']),
+        ...mapMutations('localStorage', ['CLEAR_WALLET_DATA']),
+        ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL']),
         ...mapActions('sessionStorage', ['INIT_HASH_CONNECT']),
         
         initHashConnect() {
             this.INIT_HASH_CONNECT();
         },
         disconnectWallet() {
-            this.CLEAR_HC_DATA();
-            this.DISCONNECT_WALLET();
+            this.CLEAR_WALLET_DATA();
             this.SET_ACTIVE_PANEL('startPanel');
         }
     },

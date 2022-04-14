@@ -26,23 +26,22 @@ import { mapState, mapMutations, mapActions } from 'vuex';
 export default {
     computed: {
         ...mapState('sessionStorage', ['ACTIVE_PANEL',
-                                       'WALLET_CONNECTED'])
+                                       'WALLET_DATA_FOUND'])
     },
 
     mounted() {
-        // check for HC DATA. if so reinit. otherwise goto start panel.
-        this.CHECK_HC_DATA();
+        this.CHECK_WALLET_DATA();
 
-        if (!this.WALLET_CONNECTED) {
-            this.SET_ACTIVE_PANEL('startPanel');
-        } else {
+        if (this.WALLET_DATA_FOUND) {
             this.REINIT_HASH_CONNECT();
             this.SET_ACTIVE_PANEL('clientPanel');
+        } else {
+            this.SET_ACTIVE_PANEL('startPanel');
         }
     },
     
     methods: {
-        ...mapMutations('localStorage', ['CHECK_HC_DATA']),
+        ...mapMutations('localStorage', ['CHECK_WALLET_DATA']),
         ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL']),
         ...mapActions('sessionStorage', ['REINIT_HASH_CONNECT'])
     },

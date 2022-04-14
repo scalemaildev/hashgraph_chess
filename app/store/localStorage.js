@@ -1,42 +1,30 @@
 /* State */
 export const state = () => ({
-    PRIVATE_KEY: '',
-    ACCOUNT_ID: '',
-    PAIRING_STRING: '',
-    HC_TOPIC: '',
-    PAIRED_WALLET: {}
+    WALLET_DATA: {},
+
+    /*
+      {
+      ACCOUNT_ID: '',
+      CONNECTION_TOPIC: '',
+      TOPIC_PRIVATE_KEY: '',
+      TOPIC_PAIRING_STRING: '',
+      METADATA: {}
+      }
+    */
 });
 
 /* Mutations */
 export const mutations = {
-    SET_PRIVATE_KEY(state, newPrivateKey) {
-        state.PRIVATE_KEY = newPrivateKey;
+    SAVE_WALLET_DATA(state, walletData) {
+        state.WALLET_DATA = walletData;
     },
-    SET_ACCOUNT_ID(state, newAccountId) {
-        state.ACCOUNT_ID = newAccountId;
+    CLEAR_WALLET_DATA(state) {
+        state.WALLET_DATA = {};
+        this.commit('sessionStorage/DISCONNECT_WALLET', {}, { root: true });
     },
-    SET_PAIRING_STRING(state, newPairingString) {
-        state.PAIRING_STRING = newPairingString;
-    },
-    SET_HC_TOPIC(state, newTopicId) {
-        state.HC_TOPIC = newTopicId;
-    },
-    SET_PAIRED_WALLET(state, newWalletData) {
-        state.PAIRED_WALLET = newWalletData;
-    },
-    CLEAR_HC_DATA(state) {
-        state.PRIVATE_KEY = '';
-        state.ACCOUNT_ID = '';
-        state.PAIRING_STRING = '';
-        state.HC_TOPIC = '';
-        state.PAIRED_WALLET = {};
-    },
-    CHECK_HC_DATA(state) {
-        if(!!state.PRIVATE_KEY && !!state.ACCOUNT_ID && !!state.PAIRING_STRING && !!state.HC_TOPIC && !!state.PAIRED_WALLET){
-            this.commit('sessionStorage/SET_WALLET_CONNECTED', {}, { root: true });
-        } else {
-            // clear any leftover data in fields
-            this.commit('localStorage/CLEAR_HC_DATA', {}, { root: true });
+    CHECK_WALLET_DATA(state) {
+        if(Object.keys(state.WALLET_DATA).length > 0){
+            this.commit('sessionStorage/SET_WALLET_DATA_FOUND', {}, { root: true });
         }
     },
 };
