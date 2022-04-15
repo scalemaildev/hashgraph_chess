@@ -1,13 +1,17 @@
 * IN PROGRESS
 ** Send topic messages using hashconnect
 *** Needs fix on hashconnect's end
-** Change Account ID to use the message's addition from HIP-171
+** Test full game
 * ON DECK
 ** Loading spinners
 *** Remove timeouts (or extend timer a lot)
-*** Ensure responsiveness to hashconnect 
+*** Ensure responsiveness to hashconnect
 ** Fix the NavBar stylings (copy hash and slash)
 *** Needs to be a real navbar
 ** Center the panels vertically
 * FUTURE
+** Is setNodeAccountIds necessary?
 ** Handle multiple accounts in a single wallet
+** Increase API mirror node requests
+*** First query the topic info, then query the messages until the limit is hit
+*** While loop set to message count will work here
