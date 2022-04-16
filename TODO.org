@@ -6,9 +6,6 @@
 ** Loading spinners
 *** Remove timeouts (or extend timer a lot)
 *** Ensure responsiveness to hashconnect
-** Increase API mirror node requests
-*** First query the topic info, then query the messages until the limit is hit
-*** While loop set to message count will work here
 * FUTURE
 ** Handle multiple accounts in a single wallet
 ** Handle disconnected wallet
