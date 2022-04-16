@@ -70,10 +70,10 @@ export const mutations = {
         state.GAME_INSTANCES[topicId] = new Chess();
     },
     CREATE_MATCH_OBJECT(state, messageData) {
-        var topicId = messageData.topicId;
-        var playerWhite = messageData.playerWhite;
-        var playerBlack = messageData.playerBlack;
-        var userType = 'o';
+        let topicId = messageData.topicId;
+        let playerWhite = messageData.playerWhite;
+        let playerBlack = messageData.playerBlack;
+        let userType = 'o';
 
         if (rootState.localStorage.WALLET_DATA.ACCOUNT_ID == playerWhite) {
             userType = 'w';
@@ -100,24 +100,24 @@ export const mutations = {
 
     /* Game Board */
     SET_BOARD_STATE(state, newBoardStateData) {
-        var topicId = newBoardStateData.topicId;
-        var newBoardState = newBoardStateData.newBoardState;
+        let topicId = newBoardStateData.topicId;
+        let newBoardState = newBoardStateData.newBoardState;
         
         state.MATCHES[topicId].boardState = newBoardState;
     },
     LOAD_PGN(state, pgnData) {
-        var topicId = pgnData.topicId;
-        var newPgn = pgnData.newPgn;
+        let topicId = pgnData.topicId;
+        let newPgn = pgnData.newPgn;
 
         state.GAME_INSTANCES[topicId].load_pgn(newPgn);
     },
 
     /* Message and Move Processing */
     PROCESS_CHAT_MESSAGE(state, messageData) {
-        var topicId = messageData.topicId;
-        var message = messageData.message;
-        var operator = messageData.sender;
-        var match = state.MATCHES[topicId];
+        let topicId = messageData.topicId;
+        let message = messageData.message;
+        let operator = messageData.sender;
+        let match = state.MATCHES[topicId];
 
         // filter out non-players
         if (operator != match.playerWhite && operator != match.playerBlack) {
@@ -137,10 +137,10 @@ export const mutations = {
         });
     },
     PROCESS_CHESS_MOVE(state, messageData) {
-        var topicId = messageData.topicId;
-        var newPgn = messageData.newPgn;
-        var operator = messageData.sender;
-        var match = state.MATCHES[topicId];
+        let topicId = messageData.topicId;
+        let newPgn = messageData.newPgn;
+        let operator = messageData.sender;
+        let match = state.MATCHES[topicId];
 
         // filter out moves after game is over (game_over() or resigned match)
         if (state.GAME_INSTANCES[topicId].game_over() || state.MATCHES[topicId.resigned]) {
@@ -165,11 +165,11 @@ export const mutations = {
         });
     },
     PROCESS_RESIGN(state, messageData) {
-        var topicId = messageData.topicId;
-        var operator = messageData.sender;
-        var playerWhite = state.MATCHES[topicId].playerWhite;
-        var playerBlack = state.MATCHES[topicId].playerBlack;
-        var resignedPlayer = '';
+        let topicId = messageData.topicId;
+        let operator = messageData.sender;
+        let playerWhite = state.MATCHES[topicId].playerWhite;
+        let playerBlack = state.MATCHES[topicId].playerBlack;
+        let resignedPlayer = '';
 
         if (operator == playerWhite) {
             resignedPlayer = 'w';
@@ -194,11 +194,11 @@ export const actions = {
             let initData = await hashconnect.init(appMetadata);
             let connection = await hashconnect.connect();
 
-            // vars to store locally
-            var privKey = initData.privKey;
-            var pairedWalletData;
-            var topic = connection.topic;
-            var pairingString = hashconnect.generatePairingString(connection, "testnet", false);
+            // variables to store locally
+            let privKey = initData.privKey;
+            let pairedWalletData;
+            let topic = connection.topic;
+            let pairingString = hashconnect.generatePairingString(connection, "testnet", false);
 
             // find hashpack browser extension & connect
             hashconnect.foundExtensionEvent.once((walletMetaData) => {
@@ -263,12 +263,20 @@ export const actions = {
     async QUERY_TOPIC({ state, commit }, topicId) {
         try {
             // is this our initial query of the topic?
-            var initialQuery = (state.TOPIC_MESSAGE_COUNTS[topicId] > 0) ? false : true;
+            let initialQuery = (state.TOPIC_MESSAGE_COUNTS[topicId] > 0) ? false : true;
             
-            let response = await this.$axios.$get(`/api/v1/topics/${topicId}/messages/?limit=100`);
-            response.messages.forEach(message => {
-                this.dispatch('sessionStorage/PROCESS_MESSAGE', message);
-            });
+            let topicInfo = await this.$axios.get(`/api/v1/topics/${topicId}/messages?order=desc&limit=1`);
+            let lastMessage = topicInfo.data.messages[0];
+            let topicSequenceCount = lastMessage.sequence_number;
+            let lastReadMessage = 1;
+
+            while (lastReadMessage < topicSequenceCount) {
+                let response = await axios.get(`/api/v1/topics/${topicId}/messages/?limit=100&sequenceNumber=gt:${lastReadMessage}`);
+                response.messages.forEach(message => {
+                    lastReadMessage = message.sequence_number;
+                    this.dispatch('sessionStorage/PROCESS_MESSAGE', message);
+                });
+            }
 
             if (initialQuery) {
                 commit('TOGGLE_INITIAL_QUERY_COMPLETE', topicId);
@@ -289,7 +297,7 @@ export const actions = {
         try {
             let acctId = rootState.localStorage.WALLET_DATA.ACCOUNT_ID;
             let topic = rootState.localStorage.WALLET_DATA.CONNECTION_TOPIC;
-            var messagePayload = JSON.stringify(messageData);
+            let messagePayload = JSON.stringify(messageData);
 
             let tx = new TopicMessageSubmitTransaction()
                 .setMessage(messagePayload)
@@ -328,10 +336,10 @@ export const actions = {
     },
     // not to be mistaken for PROCESS_CHAT_MESSAGE
     PROCESS_MESSAGE({ commit, state }, messagePayload) {
-        var topicId = messagePayload.topic_id;
-        var msgIndex = messagePayload.sequence_number;
-        var rawMessage = new TextDecoder("utf-8").decode(Buffer.from(messagePayload.message, 'base64'));
-        var messageObject = JSON.parse(rawMessage);
+        let topicId = messagePayload.topic_id;
+        let msgIndex = messagePayload.sequence_number;
+        let rawMessage = new TextDecoder("utf-8").decode(Buffer.from(messagePayload.message, 'base64'));
+        let messageObject = JSON.parse(rawMessage);
         messageObject.sender = messagePayload.payer_account_id;
 
         // ignore messages whose sequence number we have already seen
@@ -414,7 +422,7 @@ export const actions = {
 
             let newTopicId = newTopicResult.newTopicId;
 
-            var newMatchData = {
+            let newMatchData = {
                 messageType: 'matchCreation',
                 topicId: newTopicId,
                 operator: operator,
@@ -490,7 +498,7 @@ export const getters = {
     },
     GAME_HISTORY(state) {
         return topicId => {
-            var initState = [''];
+            let initState = [''];
             return initState.concat(state.GAME_INSTANCES[topicId].history());
         };
     },
@@ -502,7 +510,7 @@ export const getters = {
     GAME_RESIGNED_STATUS(state) {
         return topicId => {
             // check if either player resigned
-            var resignedPlayer = state.MATCHES[topicId].resigned;
+            let resignedPlayer = state.MATCHES[topicId].resigned;
             
             if (resignedPlayer == 'w') {
                 return 'Game Result: Resignation - Black Wins';
@@ -519,7 +527,7 @@ export const getters = {
             if (state.GAME_INSTANCES[topicId].game_over()) {
                 // check specific game over type
                 if (state.GAME_INSTANCES[topicId].in_checkmate()) {
-                    var currentTurn = state.GAME_INSTANCES[topicId].turn();
+                    let currentTurn = state.GAME_INSTANCES[topicId].turn();
                     if (currentTurn == 'w') {
                         return 'Game Result: Checkmate - Black Wins';
                     } else {
