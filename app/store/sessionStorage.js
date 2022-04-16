@@ -272,6 +272,7 @@ export const actions = {
             let lastReadMessage = 1;
 
             // loop through topic. process messages until we hit limit from our topic info query
+            // note: this is not great. gRPC subs are easier to work with, but require a server
             while (lastReadMessage < topicSequenceCount) {
                 let response = await axios.get(`/api/v1/topics/${topicId}/messages/?limit=100&sequenceNumber=gt:${lastReadMessage}`);
                 response.messages.forEach(message => {
