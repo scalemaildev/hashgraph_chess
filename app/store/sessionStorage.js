@@ -264,12 +264,14 @@ export const actions = {
         try {
             // is this our initial query of the topic?
             let initialQuery = (state.TOPIC_MESSAGE_COUNTS[topicId] > 0) ? false : true;
-            
+
+            // topic info query
             let topicInfo = await this.$axios.get(`/api/v1/topics/${topicId}/messages?order=desc&limit=1`);
             let lastMessage = topicInfo.data.messages[0];
             let topicSequenceCount = lastMessage.sequence_number;
             let lastReadMessage = 1;
 
+            // loop through topic. process messages until we hit limit from our topic info query
             while (lastReadMessage < topicSequenceCount) {
                 let response = await axios.get(`/api/v1/topics/${topicId}/messages/?limit=100&sequenceNumber=gt:${lastReadMessage}`);
                 response.messages.forEach(message => {
