@@ -1,9 +1,10 @@
 <template>
-<div>
-  <div v-show="ACTIVE_PANEL == 'loadingPanel'" class="spaced-mid">
+<v-container fluid fill-height>
+  <v-row>
+    <v-col>
+  <div v-show="ACTIVE_PANEL == 'loadingPanel'">
     <LoadingPanel loadingText='LOADING'
                   warningTime=10000 />
-    </v-row>
   </div>
   <div v-show="ACTIVE_PANEL == 'startPanel'">
     <StartPanel />
@@ -17,7 +18,9 @@
   <div v-show="ACTIVE_PANEL == 'joinMatchPanel'">
     <JoinMatchPanel />
   </div>
-</div>
+  </v-col>
+  </v-row>
+</v-container>
 </template>
 
 <script>

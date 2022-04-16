@@ -1,8 +1,6 @@
 <template>
-<v-toolbar color="rgba(18, 32, 59, 0.8);" class="navbar-wrapper">
-  <v-toolbar-title class="navbar-backing">
-    <h2 style="display: inline">Hashgraph Chess</h2> <sup>Beta</sup>
-  </v-toolbar-title>
+  <v-app-bar elevation="4" app>
+    <h1 style="display: inline">Hashgraph Chess</h1> <sup>Beta</sup>
   <v-spacer />
   <div v-if="!walletConnected">
     <v-btn @click.prevent="initHashConnect">
@@ -14,7 +12,7 @@
       Disconnect Wallet
     </v-btn>
   </div>
-</v-toolbar>
+</v-app-bar>
 </template>
 
 <script>

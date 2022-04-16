@@ -6,9 +6,6 @@
 ** Loading spinners
 *** Remove timeouts (or extend timer a lot)
 *** Ensure responsiveness to hashconnect
-** Fix the NavBar stylings (copy hash and slash)
-*** Needs to be a real navbar
-** Center the panels vertically
 * FUTURE
 ** Is setNodeAccountIds necessary?
 ** Handle multiple accounts in a single wallet
