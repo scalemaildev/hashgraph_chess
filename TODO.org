@@ -1,6 +1,4 @@
 * IN PROGRESS
-** Send topic messages using hashconnect
-*** Needs fix on hashconnect's end
 ** Test full game
 * ON DECK
 ** Loading spinners
