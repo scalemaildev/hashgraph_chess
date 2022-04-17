@@ -2,7 +2,7 @@
 
 This is an application that allows users to conduct chess matches over the [Hedera Consensus Service.](https://hedera.com/consensus-service) Chess moves (and chat messages) are submitted to the consensus service, where they are ordered as an immutable log of events. These events are then translated into board states and messages that are served to the client.
 
-In order to use this application, you will need a Hedera [Testnet account](https://portal.hedera.com/register) as well as a [HashPack](https://www.hashpack.app/) wallet. Later versions of this application will also allow players to use their [Mainnet accounts.](https://hedera.com/account-creation)
+In order to use this application, you will need a Hedera [Testnet account](https://portal.hedera.com/register) as well as a [HashPack](https://www.hashpack.app/) wallet version v2.4.6+. Later versions of this application will also allow players to use their [Mainnet accounts.](https://hedera.com/account-creation)
 
 ## Technical Information
 
