@@ -1,9 +1,7 @@
 * IN PROGRESS
 ** Test full game
+*** discord
 * ON DECK
-** Loading spinners
-*** Remove timeouts (or extend timer a lot)
-*** Ensure responsiveness to hashconnect
 * FUTURE
 ** Handle multiple accounts in a single wallet
 ** Handle disconnected wallet
