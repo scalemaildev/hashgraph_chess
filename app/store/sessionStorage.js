@@ -1,25 +1,33 @@
 /* UTILS */
 const TextDecoder = require("text-encoding").TextDecoder;
+import { signAndMakeBytes } from "../assets/js/utils";
 
 /* CHESS.JS */
 import Chess from 'chess.js';
 
-/* HEDERA */
-const { Client,
-        AccountId,
-        PrivateKey,
-        TopicId,
-        TopicCreateTransaction,
-        TopicMessageSubmitTransaction } = require("@hashgraph/sdk");
+/* HASHCONNECT */
+import { HashConnect } from "hashconnect";
+var hashconnect = new HashConnect();
 
-var HederaClient;
+//hashconnect.debug = true; //DEBUG
+
+var appMetadata = {
+    name: "Hashgraph Chess",
+    description: "Play chess over the Hedera Consensus Service",
+    icon: "https://scalemailpublic.s3.us-east-2.amazonaws.com/bn.png"
+};
+
+/* HEDERA */
+const { PublicKey,
+        TopicCreateTransaction,
+        TransactionReceipt,
+        TopicMessageSubmitTransaction } = require("@hashgraph/sdk");
 
 /* STATE */
 export const state = () => ({
-    ACCOUNT_ID: '',
-    PRIVATE_KEY: '',
     ACTIVE_PANEL: 'loadingPanel',
-    LOCK_BUTTON: false,
+    WALLET_DATA_FOUND: false,
+    WALLET_CONNECTED: false,
     MATCHES: {},
     GAME_INSTANCES: {},
     TOPIC_MESSAGE_COUNTS: {}
@@ -29,23 +37,22 @@ export const state = () => ({
 export const mutations = {
     /* Setters and Toggles */
     UNSET_CLIENT(state) {
-        HederaClient = null;
-        state.ACCOUNT_ID = '';
-        state.PRIVATE_KEY = '';
+        this.commit('localStorage/CLEAR_WALLET_DATA', {}, { root: true });
+        state.WALLET_CONNECTED = false;
+        state.WALLET_DATA_FOUND = false;
         state.ACTIVE_PANEL = 'startPanel';
-        state.LOCK_BUTTON = false;
     },
-    SET_ACCOUNT_ID(state, accountId) {
-        state.ACCOUNT_ID = accountId;
+    SET_WALLET_DATA_FOUND(state) {
+        state.WALLET_DATA_FOUND = true;
     },
-    SET_PRIVATE_KEY(state, privateKey) {
-        state.PRIVATE_KEY = privateKey;
+    SET_WALLET_CONNECTED(state) {
+        state.WALLET_CONNECTED = true;
+    },
+    DISCONNECT_WALLET(state) {
+        state.WALLET_CONNECTED = false;
     },
     SET_ACTIVE_PANEL(state, newPanel) {
         state.ACTIVE_PANEL = newPanel;
-    },
-    TOGGLE_LOCK_BUTTON(state, bool) {
-        state.LOCK_BUTTON = bool;
     },
     TOGGLE_INITIAL_QUERY_COMPLETE(state, topicId) {
         state.MATCHES[topicId].initialQueryComplete = true;
@@ -64,14 +71,15 @@ export const mutations = {
         state.GAME_INSTANCES[topicId] = new Chess();
     },
     CREATE_MATCH_OBJECT(state, messageData) {
-        var topicId = messageData.topicId;
-        var playerWhite = messageData.playerWhite;
-        var playerBlack = messageData.playerBlack;
-        var userType = 'o';
+        let topicId = messageData.topicId;
+        let playerWhite = messageData.playerWhite;
+        let playerBlack = messageData.playerBlack;
+        let userType = 'o';
+        let playerAccount = messageData.playerAccount;
 
-        if (state.ACCOUNT_ID == playerWhite) {
+        if (playerAccount == playerWhite) {
             userType = 'w';
-        } else if (state.ACCOUNT_ID == playerBlack) {
+        } else if (playerAccount == playerBlack) {
             userType = 'b';
         }
 
@@ -94,47 +102,47 @@ export const mutations = {
 
     /* Game Board */
     SET_BOARD_STATE(state, newBoardStateData) {
-        var topicId = newBoardStateData.topicId;
-        var newBoardState = newBoardStateData.newBoardState;
+        let topicId = newBoardStateData.topicId;
+        let newBoardState = newBoardStateData.newBoardState;
         
         state.MATCHES[topicId].boardState = newBoardState;
     },
     LOAD_PGN(state, pgnData) {
-        var topicId = pgnData.topicId;
-        var newPgn = pgnData.newPgn;
+        let topicId = pgnData.topicId;
+        let newPgn = pgnData.newPgn;
 
         state.GAME_INSTANCES[topicId].load_pgn(newPgn);
     },
 
     /* Message and Move Processing */
     PROCESS_CHAT_MESSAGE(state, messageData) {
-        var topicId = messageData.topicId;
-        var message = messageData.message;
-        var operator = messageData.operator;
-        var match = state.MATCHES[topicId];
+        let topicId = messageData.topicId;
+        let message = messageData.message;
+        let sender = messageData.senderAccount;
+        let match = state.MATCHES[topicId];
 
         // filter out non-players
-        if (operator != match.playerWhite && operator != match.playerBlack) {
-            console.warn('Rejected a chat message from: ' + operator);
+        if (sender != match.playerWhite && sender != match.playerBlack) {
+            console.warn('Rejected a chat message from: ' + sender);
             return;
         }
 
         // filter out blank messages
         if (message.trim() == '') {
-            console.warn('Rejected an empty chat message from: ' + operator);
+            console.warn('Rejected an empty chat message from: ' + sender);
             return;
         }
         
         state.MATCHES[topicId].messages.push({
-            account: operator,
+            account: sender,
             message: message
         });
     },
     PROCESS_CHESS_MOVE(state, messageData) {
-        var topicId = messageData.topicId;
-        var newPgn = messageData.newPgn;
-        var operator = messageData.operator;
-        var match = state.MATCHES[topicId];
+        let topicId = messageData.topicId;
+        let newPgn = messageData.newPgn;
+        let sender = messageData.senderAccount;
+        let match = state.MATCHES[topicId];
 
         // filter out moves after game is over (game_over() or resigned match)
         if (state.GAME_INSTANCES[topicId].game_over() || state.MATCHES[topicId.resigned]) {
@@ -142,36 +150,36 @@ export const mutations = {
         }
 
         // filter out non-players
-        if (operator != match.playerWhite && operator != match.playerBlack) {
-            console.warn('Rejected a chess move from: ' + operator);
+        if (sender != match.playerWhite && sender != match.playerBlack) {
+            console.warn('Rejected a chess move from: ' + sender);
             return;
         }
 
         // filter out double moves
-        if (state.MATCHES[topicId].pgns.length > 0 && operator == state.MATCHES[topicId].pgns.at(-1).operator) {
-            console.warn('Rejected a double move from: ' + operator);
+        if (state.MATCHES[topicId].pgns.length > 0 && sender == state.MATCHES[topicId].pgns.at(-1).sender) {
+            console.warn('Rejected a double move from: ' + sender);
             return;
         }
         
         state.MATCHES[topicId].pgns.push({
-            operator: operator,
+            operator: sender,
             newPgn: newPgn
         });
     },
     PROCESS_RESIGN(state, messageData) {
-        var topicId = messageData.topicId;
-        var operator = messageData.operator;
-        var playerWhite = state.MATCHES[topicId].playerWhite;
-        var playerBlack = state.MATCHES[topicId].playerBlack;
-        var resignedPlayer = '';
+        let topicId = messageData.topicId;
+        let sender = messageData.senderAccount;
+        let playerWhite = state.MATCHES[topicId].playerWhite;
+        let playerBlack = state.MATCHES[topicId].playerBlack;
+        let resignedPlayer = '';
 
-        if (operator == playerWhite) {
+        if (sender == playerWhite) {
             resignedPlayer = 'w';
-        } else if (operator == playerBlack) {
+        } else if (sender == playerBlack) {
             resignedPlayer = 'b';
         } else {
             // somehow got a non-player resignation
-            console.warn('Rejected a resignation attempt from non-player: ' + operator);
+            console.warn('Rejected a resignation attempt from non-player: ' + sender);
             return;
         }
 
@@ -181,21 +189,74 @@ export const mutations = {
 
 /* Actions */
 export const actions = {
-    /* Hedera Client */
-    async INIT_HEDERA_CLIENT({}, context) {
+    /* HASH CONNECT */
+    async INIT_HASH_CONNECT({ commit }) {
         try {
-            var accountId = AccountId.fromString(context.accountId);
-            var privateKey = PrivateKey.fromString(context.privateKey);
-            HederaClient = Client.forTestnet();
-            HederaClient.setOperator(accountId, privateKey);
+            // init hashconnect
+            let initData = await hashconnect.init(appMetadata);
+            let connection = await hashconnect.connect();
+
+            // variables to store locally
+            let privKey = initData.privKey;
+            let pairedWalletData;
+            let topic = connection.topic;
+            let pairingString = hashconnect.generatePairingString(connection, "testnet", false);
+
+            // find hashpack browser extension & connect
+            hashconnect.foundExtensionEvent.once((walletMetaData) => {
+                pairedWalletData = walletMetaData;
+                hashconnect.connectToLocalWallet(pairingString, pairedWalletData);
+            });
+
+            // after user accepts pairing store the data locally
+            hashconnect.pairingEvent.once((pairingData) => {
+                let walletData = {
+                    ACCOUNT_ID: pairingData.accountIds[0],
+                    CONNECTION_TOPIC: topic,
+                    TOPIC_PRIVATE_KEY: privKey,
+                    TOPIC_PAIRING_STRING: pairingString,
+                    METADATA: pairedWalletData
+                };
+
+                commit('localStorage/SAVE_WALLET_DATA', walletData, { root: true });
+                commit('SET_WALLET_DATA_FOUND');
+                commit('SET_WALLET_CONNECTED');
+                commit('SET_ACTIVE_PANEL', 'clientPanel');
+            });
+
+            // kick off event chain
+            hashconnect.findLocalWallets();
+
             return {
-                success: true,
-                responseMessage: 'Initialized Hedera client'
+                success: true
             };
         } catch (error) {
+            console.warn(error);
             return {
-                success: false,
-                responseMessage: 'Hedera client failed to initialize'
+                success: false
+            };
+        }
+    },
+    async REINIT_HASH_CONNECT({ commit, rootState }) {
+        try {
+            let walletData = rootState.localStorage.WALLET_DATA;
+            let privKey = walletData.TOPIC_PRIVATE_KEY;
+            let topic = walletData.CONNECTION_TOPIC;
+            let walletMetadata = walletData.METADATA;
+            
+            await hashconnect.init(walletMetadata, privKey);
+            await hashconnect.connect(topic, walletMetadata);
+            
+            commit('SET_WALLET_CONNECTED');
+            commit('SET_ACTIVE_PANEL', 'clientPanel');
+
+            return {
+                success: true
+            };
+        } catch (error) {
+            console.warn(error);
+            return {
+                success: false
             };
         }
     },
@@ -204,12 +265,29 @@ export const actions = {
     async QUERY_TOPIC({ state, commit }, topicId) {
         try {
             // is this our initial query of the topic?
-            var initialQuery = (state.TOPIC_MESSAGE_COUNTS[topicId] > 0) ? false : true;
-            
-            let response = await this.$axios.$get(`/api/v1/topics/${topicId}/messages/?limit=100`);
-            response.messages.forEach(message => {
-                this.dispatch('sessionStorage/PROCESS_MESSAGE', message);
-            });
+            let initialQuery = (state.TOPIC_MESSAGE_COUNTS[topicId] > 0) ? false : true;
+
+            // topic info query
+            let topicInfo = await this.$axios.get(`/api/v1/topics/${topicId}/messages?order=desc&limit=1`);
+            let lastMessage = topicInfo.data.messages[0];
+            let topicSequenceCount = lastMessage.sequence_number;
+            let lastReadMessage = 0;
+
+            // loop through topic. process messages until we hit limit from our topic info query
+            // note: this is not great, esp. for 100+ message topics. gRPC subs are easier to work with, but require a server
+            while (lastReadMessage < topicSequenceCount) {
+                var response; // API wont let me query gt:0
+                if (lastReadMessage === 0) {
+                    response = await this.$axios.$get(`/api/v1/topics/${topicId}/messages/?limit=100`);
+                } else {
+                    response = await this.$axios.$get(`/api/v1/topics/${topicId}/messages/?limit=100&sequenceNumber=gt:${lastReadMessage}`);
+                }
+                
+                response.messages.forEach(message => {
+                    lastReadMessage = message.sequence_number;
+                    this.dispatch('sessionStorage/PROCESS_MESSAGE', message);
+                });
+            }
 
             if (initialQuery) {
                 commit('TOGGLE_INITIAL_QUERY_COMPLETE', topicId);
@@ -226,33 +304,54 @@ export const actions = {
             };
         }
     },
-    async SEND_MESSAGE({ state }, messageData) {
-        messageData['operator'] = state.ACCOUNT_ID;
-        var messagePayload = JSON.stringify(messageData);
-        
+    async SEND_MESSAGE({ rootState }, messageData) {   
         try {
-            await new TopicMessageSubmitTransaction({
-                topicId: TopicId.fromString(messageData.topicId),
-                message: messagePayload})
-                .execute(HederaClient);
+            let acctId = rootState.localStorage.WALLET_DATA.ACCOUNT_ID;
+            let topic = rootState.localStorage.WALLET_DATA.CONNECTION_TOPIC;
+            messageData.senderAccount = acctId;
+            let messagePayload = JSON.stringify(messageData);
 
-            return {
-                success: true,
-                responseMessage: 'Sent message to HCS'
+            let tx = new TopicMessageSubmitTransaction()
+                .setMessage(messagePayload)
+                .setTopicId(messageData.topicId);
+            
+            let txBytes = await signAndMakeBytes(tx, acctId);
+
+            let transaction = {
+                topic,
+                byteArray: txBytes,
+
+                metadata: {
+                    accountToSign: acctId,
+                    returnTransaction: false
+                }
             };
+
+            let res = await hashconnect.sendTransaction(topic, transaction);
+
+            if (res.success) {
+                return {
+                    success: true
+                };
+            } else {
+                return {
+                    success: false,
+                    responseMessage: "Transaction rejected."
+                };
+            }
         } catch (error) {
             return {
                 success: false,
-                responseMessage: 'Failed to send message to HCS'
+                responseMessage: error
             };
         }
     },
     // not to be mistaken for PROCESS_CHAT_MESSAGE
-    PROCESS_MESSAGE({ commit, state }, messagePayload) {
-        var topicId = messagePayload.topic_id;
-        var msgIndex = messagePayload.sequence_number;
-        var rawMessage = new TextDecoder("utf-8").decode(Buffer.from(messagePayload.message, 'base64'));
-        var messageObject = JSON.parse(rawMessage);
+    PROCESS_MESSAGE({ commit, state, rootState }, messagePayload) {
+        let topicId = messagePayload.topic_id;
+        let msgIndex = messagePayload.sequence_number;
+        let rawMessage = new TextDecoder("utf-8").decode(Buffer.from(messagePayload.message, 'base64'));
+        let messageObject = JSON.parse(rawMessage);
 
         // ignore messages whose sequence number we have already seen
         if (state.TOPIC_MESSAGE_COUNTS[topicId] >= msgIndex) {
@@ -263,6 +362,8 @@ export const actions = {
         
         switch(messageObject.messageType) {
         case 'matchCreation':
+            let playerAccount = rootState.localStorage.WALLET_DATA.ACCOUNT_ID;
+            messageObject.playerAccount = playerAccount;
             commit('CREATE_MATCH_OBJECT', messageObject);
             break;
         case 'chatMessage':
@@ -280,37 +381,86 @@ export const actions = {
     },
 
     /* Topic and Match Creation */
-    async CREATE_TOPIC() {
-        const tx = await new TopicCreateTransaction().execute(HederaClient);
-        const topicReceipt = await tx.getReceipt(HederaClient);
-        const newTopicId = topicReceipt.topicId.toString();
-
-        return newTopicId;
-    },
-    async CREATE_MATCH({ state }, context) {
+    async CREATE_TOPIC({ rootState }) {
         try {
-            var newTopicId = await this.dispatch('sessionStorage/CREATE_TOPIC');
-
-            var newMatchData = {
-                messageType: 'matchCreation',
-                topicId: newTopicId,
-                operator: state.ACCOUNT_ID,
-                playerWhite: context.playerWhite,
-                playerBlack: context.playerBlack,
-            };
-
-            this.dispatch('sessionStorage/SEND_MESSAGE', newMatchData);
+            let acctId = rootState.localStorage.WALLET_DATA.ACCOUNT_ID;
+            let topic = rootState.localStorage.WALLET_DATA.CONNECTION_TOPIC;
             
-            return {
-                success: true,
-                responseMessage: 'Created new topic ' + newTopicId,
-                newTopicId: newTopicId,
+            let tx = new TopicCreateTransaction()
+                .setSubmitKey(PublicKey.fromString(process.env.SERVER_PUBLIC_KEY));
+            let txBytes = await signAndMakeBytes(tx, acctId);
+
+            let transaction = {
+                topic,
+                byteArray: txBytes,
+                
+                metadata: {
+                    accountToSign: acctId,
+                    returnTransaction: false
+                }
             };
+
+            let topicReceipt;
+            let res = await hashconnect.sendTransaction(topic, transaction);
+
+            // TODO: handle failed transaction
+            if (res.success) {
+                topicReceipt = TransactionReceipt.fromBytes(res.receipt);
+                let newTopicId = topicReceipt.topicId.toString();
+                return {
+                    success: true,
+                    newTopicId
+                };
+            } else {
+                return {
+                    success: false,
+                    responseMessage: "Transaction rejected."
+                };
+            }
         } catch (error) {
             return {
                 success: false,
-                responseMessage: 'Failed to create a new topic',
-                errorMessage: error
+                responseMessage: error
+            };
+        }
+    },
+    async CREATE_MATCH({ rootState }, context) {
+        try {
+            let newTopicResult = await this.dispatch('sessionStorage/CREATE_TOPIC');
+            let creatorAccount = rootState.localStorage.WALLET_DATA.ACCOUNT_ID;
+
+            if (!newTopicResult.success) return {
+                success: false,
+                responseMessage: newTopicResult.responseMessage
+            };
+
+            let newTopicId = newTopicResult.newTopicId;
+
+            let newMatchData = {
+                messageType: 'matchCreation',
+                topicId: newTopicId,
+                playerWhite: creatorAccount,
+                playerBlack: context.playerBlack,
+            };
+
+            let matchCreationResult = await this.dispatch('sessionStorage/SEND_MESSAGE', newMatchData);
+
+            if (matchCreationResult.success) {   
+                return {
+                    success: true,
+                    responseMessage: 'Created new topic ' + newTopicId,
+                    newTopicId: newTopicId,
+                };
+            } else {
+                return {
+                    success: false,
+                    responseMessage: 'Match creation message rejected. Created topic is now an orphan.'
+                };
+            }
+        } catch (error) {
+            return {
+                success: false,
+                responseMessage: 'Failed to create a new match.'
             };
         }
     },
@@ -360,7 +510,7 @@ export const getters = {
     },
     GAME_HISTORY(state) {
         return topicId => {
-            var initState = [''];
+            let initState = [''];
             return initState.concat(state.GAME_INSTANCES[topicId].history());
         };
     },
@@ -372,7 +522,7 @@ export const getters = {
     GAME_RESIGNED_STATUS(state) {
         return topicId => {
             // check if either player resigned
-            var resignedPlayer = state.MATCHES[topicId].resigned;
+            let resignedPlayer = state.MATCHES[topicId].resigned;
             
             if (resignedPlayer == 'w') {
                 return 'Game Result: Resignation - Black Wins';
@@ -389,7 +539,7 @@ export const getters = {
             if (state.GAME_INSTANCES[topicId].game_over()) {
                 // check specific game over type
                 if (state.GAME_INSTANCES[topicId].in_checkmate()) {
-                    var currentTurn = state.GAME_INSTANCES[topicId].turn();
+                    let currentTurn = state.GAME_INSTANCES[topicId].turn();
                     if (currentTurn == 'w') {
                         return 'Game Result: Checkmate - Black Wins';
                     } else {

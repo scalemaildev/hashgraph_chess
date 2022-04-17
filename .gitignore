@@ -9,6 +9,10 @@ yarn-error.log*
 todo.org
 deploy.zip
 
+# ssl certs for localhost
+localhost.pem
+localhost-key.pem
+
 # Runtime data
 pids
 *.pid

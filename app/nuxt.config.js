@@ -1,4 +1,6 @@
 import colors from 'vuetify/es5/util/colors';
+import path from 'path';
+import fs from 'fs';
 
 export default {
     // Global page headers: https://go.nuxtjs.dev/config-head
@@ -18,9 +20,23 @@ export default {
         ]
     },
 
+    env: {
+        PRIVATE_KEY: process.env.SERVER_PRIVATE_KEY
+    },
+
+    server: {
+        https: process.env.NODE_ENV === 'development'
+            ? {
+                key: fs.readFileSync(path.resolve(__dirname, 'localhost-key.pem')),
+                cert: fs.readFileSync(path.resolve(__dirname, 'localhost.pem'))
+            }
+        : false,
+    },
+
     // Global CSS: https://go.nuxtjs.dev/config-css
     css: [
         '@/assets/styles.scss',
+        '@/assets/overrides.scss'
     ],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
@@ -34,7 +50,8 @@ export default {
     // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
     buildModules: [
         // https://go.nuxtjs.dev/vuetify
-        '@nuxtjs/vuetify'
+        '@nuxtjs/vuetify',
+        '@nuxtjs/dotenv'
     ],
 
     // Modules: https://go.nuxtjs.dev/config-modules
@@ -74,5 +91,6 @@ export default {
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {
+        transpile: ["hashconnect"]
     }
 };

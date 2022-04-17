@@ -2,7 +2,7 @@
 <div>
   <div v-if="!matchDataLoaded" class="spaced-mid">
     <LoadingPanel loadingText="SUBSCRIBING"
-                  warningTime=12000 />
+                  warningTime=20000 />
   </div>
   <div v-else>
     <v-container fluid style="padding: 0;">

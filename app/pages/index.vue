@@ -1,9 +1,10 @@
 <template>
-<div>
-  <div v-show="ACTIVE_PANEL == 'loadingPanel'" class="spaced-mid">
+<v-container fluid fill-height>
+  <v-row>
+    <v-col>
+  <div v-show="ACTIVE_PANEL == 'loadingPanel'">
     <LoadingPanel loadingText='LOADING'
-                  warningTime=10000 />
-    </v-row>
+                  warningTime=20000 />
   </div>
   <div v-show="ACTIVE_PANEL == 'startPanel'">
     <StartPanel />
@@ -17,7 +18,9 @@
   <div v-show="ACTIVE_PANEL == 'joinMatchPanel'">
     <JoinMatchPanel />
   </div>
-</div>
+  </v-col>
+  </v-row>
+</v-container>
 </template>
 
 <script>
@@ -26,30 +29,24 @@ import { mapState, mapMutations, mapActions } from 'vuex';
 export default {
     computed: {
         ...mapState('sessionStorage', ['ACTIVE_PANEL',
-                                       'ACCOUNT_ID',
-                                       'PRIVATE_KEY',
-                                       'HEDERA_CLIENT'])
+                                       'WALLET_DATA_FOUND'])
     },
 
     mounted() {
-        if (!!this.ACCOUNT_ID && !!this.PRIVATE_KEY) {
-            this.$nextTick(() => {
-                this.restoreClient();
-            });
+        this.CHECK_WALLET_DATA();
+
+        if (this.WALLET_DATA_FOUND) {
+            this.REINIT_HASH_CONNECT();
+            this.SET_ACTIVE_PANEL('clientPanel');
         } else {
             this.SET_ACTIVE_PANEL('startPanel');
         }
     },
     
     methods: {
+        ...mapMutations('localStorage', ['CHECK_WALLET_DATA']),
         ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL']),
-        ...mapActions('sessionStorage', ['INIT_HEDERA_CLIENT']),
-        restoreClient() {
-            this.INIT_HEDERA_CLIENT({
-                accountId: this.ACCOUNT_ID,
-                privateKey: this.PRIVATE_KEY
-            });
-        }
+        ...mapActions('sessionStorage', ['REINIT_HASH_CONNECT'])
     },
 };
 </script>

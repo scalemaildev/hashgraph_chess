@@ -1,28 +1,43 @@
 <template>
-<v-toolbar color="rgba(18, 32, 59, 0.8);" class="navbar-wrapper">
-  <v-toolbar-title class="navbar-backing">
-    <h2 style="display: inline">Hashgraph Chess</h2> <sup>Beta</sup>
-  </v-toolbar-title>
+  <v-app-bar elevation="4" app>
+    <h1 style="display: inline">Hashgraph Chess</h1> <sup>Beta</sup>
   <v-spacer />
-  <v-btn v-show="LOCK_BUTTON" @click="unsetClient">
-    Lock
-  </v-btn>
-</v-toolbar>
+  <div v-if="!walletConnected">
+    <v-btn @click.prevent="initHashConnect">
+      Connect Wallet
+    </v-btn>
+  </div>
+  <div v-else>
+    <v-btn @click.prevent="disconnectWallet">
+      Disconnect Wallet
+    </v-btn>
+  </div>
+</v-app-bar>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
-  
+import { mapState, mapMutations, mapActions } from 'vuex';
+
 export default {
     computed: {
-        ...mapState('sessionStorage', ['LOCK_BUTTON'])
+        ...mapState('sessionStorage', ['WALLET_CONNECTED']),
+        
+        walletConnected() {
+            return this.WALLET_CONNECTED;
+        }
     },
     
     methods: {
-        ...mapMutations('sessionStorage', ['UNSET_CLIENT']),
-        unsetClient() {
-            this.UNSET_CLIENT();
-            this.$router.push('/');
+        ...mapMutations('localStorage', ['CLEAR_WALLET_DATA']),
+        ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL']),
+        ...mapActions('sessionStorage', ['INIT_HASH_CONNECT']),
+        
+        initHashConnect() {
+            this.INIT_HASH_CONNECT();
+        },
+        disconnectWallet() {
+            this.CLEAR_WALLET_DATA();
+            this.SET_ACTIVE_PANEL('startPanel');
         }
     },
 }
