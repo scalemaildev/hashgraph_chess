@@ -18,7 +18,8 @@ var appMetadata = {
 };
 
 /* HEDERA */
-const { TopicCreateTransaction,
+const { PublicKey,
+        TopicCreateTransaction,
         TransactionReceipt,
         TopicMessageSubmitTransaction } = require("@hashgraph/sdk");
 
@@ -74,10 +75,11 @@ export const mutations = {
         let playerWhite = messageData.playerWhite;
         let playerBlack = messageData.playerBlack;
         let userType = 'o';
+        let playerAccount = messageData.playerAccount;
 
-        if (messageData.account == playerWhite) {
+        if (playerAccount == playerWhite) {
             userType = 'w';
-        } else if (messageData.account == playerBlack) {
+        } else if (playerAccount == playerBlack) {
             userType = 'b';
         }
 
@@ -116,30 +118,30 @@ export const mutations = {
     PROCESS_CHAT_MESSAGE(state, messageData) {
         let topicId = messageData.topicId;
         let message = messageData.message;
-        let operator = messageData.sender;
+        let sender = messageData.senderAccount;
         let match = state.MATCHES[topicId];
 
         // filter out non-players
-        if (operator != match.playerWhite && operator != match.playerBlack) {
-            console.warn('Rejected a chat message from: ' + operator);
+        if (sender != match.playerWhite && sender != match.playerBlack) {
+            console.warn('Rejected a chat message from: ' + sender);
             return;
         }
 
         // filter out blank messages
         if (message.trim() == '') {
-            console.warn('Rejected an empty chat message from: ' + operator);
+            console.warn('Rejected an empty chat message from: ' + sender);
             return;
         }
         
         state.MATCHES[topicId].messages.push({
-            account: operator,
+            account: sender,
             message: message
         });
     },
     PROCESS_CHESS_MOVE(state, messageData) {
         let topicId = messageData.topicId;
         let newPgn = messageData.newPgn;
-        let operator = messageData.sender;
+        let sender = messageData.senderAccount;
         let match = state.MATCHES[topicId];
 
         // filter out moves after game is over (game_over() or resigned match)
@@ -148,36 +150,36 @@ export const mutations = {
         }
 
         // filter out non-players
-        if (operator != match.playerWhite && operator != match.playerBlack) {
-            console.warn('Rejected a chess move from: ' + operator);
+        if (sender != match.playerWhite && sender != match.playerBlack) {
+            console.warn('Rejected a chess move from: ' + sender);
             return;
         }
 
         // filter out double moves
-        if (state.MATCHES[topicId].pgns.length > 0 && operator == state.MATCHES[topicId].pgns.at(-1).operator) {
-            console.warn('Rejected a double move from: ' + operator);
+        if (state.MATCHES[topicId].pgns.length > 0 && sender == state.MATCHES[topicId].pgns.at(-1).sender) {
+            console.warn('Rejected a double move from: ' + sender);
             return;
         }
         
         state.MATCHES[topicId].pgns.push({
-            operator: operator,
+            operator: sender,
             newPgn: newPgn
         });
     },
     PROCESS_RESIGN(state, messageData) {
         let topicId = messageData.topicId;
-        let operator = messageData.sender;
+        let sender = messageData.senderAccount;
         let playerWhite = state.MATCHES[topicId].playerWhite;
         let playerBlack = state.MATCHES[topicId].playerBlack;
         let resignedPlayer = '';
 
-        if (operator == playerWhite) {
+        if (sender == playerWhite) {
             resignedPlayer = 'w';
-        } else if (operator == playerBlack) {
+        } else if (sender == playerBlack) {
             resignedPlayer = 'b';
         } else {
             // somehow got a non-player resignation
-            console.warn('Rejected a resignation attempt from non-player: ' + operator);
+            console.warn('Rejected a resignation attempt from non-player: ' + sender);
             return;
         }
 
@@ -306,6 +308,7 @@ export const actions = {
         try {
             let acctId = rootState.localStorage.WALLET_DATA.ACCOUNT_ID;
             let topic = rootState.localStorage.WALLET_DATA.CONNECTION_TOPIC;
+            messageData.senderAccount = acctId;
             let messagePayload = JSON.stringify(messageData);
 
             let tx = new TopicMessageSubmitTransaction()
@@ -349,7 +352,6 @@ export const actions = {
         let msgIndex = messagePayload.sequence_number;
         let rawMessage = new TextDecoder("utf-8").decode(Buffer.from(messagePayload.message, 'base64'));
         let messageObject = JSON.parse(rawMessage);
-        messageObject.sender = messagePayload.payer_account_id;
 
         // ignore messages whose sequence number we have already seen
         if (state.TOPIC_MESSAGE_COUNTS[topicId] >= msgIndex) {
@@ -360,7 +362,8 @@ export const actions = {
         
         switch(messageObject.messageType) {
         case 'matchCreation':
-            messageObject.account = rootState.localStorage.WALLET_DATA.ACCOUNT_ID;
+            let playerAccount = rootState.localStorage.WALLET_DATA.ACCOUNT_ID;
+            messageObject.playerAccount = playerAccount;
             commit('CREATE_MATCH_OBJECT', messageObject);
             break;
         case 'chatMessage':
@@ -383,7 +386,8 @@ export const actions = {
             let acctId = rootState.localStorage.WALLET_DATA.ACCOUNT_ID;
             let topic = rootState.localStorage.WALLET_DATA.CONNECTION_TOPIC;
             
-            let tx = new TopicCreateTransaction();
+            let tx = new TopicCreateTransaction()
+                .setSubmitKey(PublicKey.fromString(process.env.SERVER_PUBLIC_KEY));
             let txBytes = await signAndMakeBytes(tx, acctId);
 
             let transaction = {
@@ -423,7 +427,7 @@ export const actions = {
     async CREATE_MATCH({ rootState }, context) {
         try {
             let newTopicResult = await this.dispatch('sessionStorage/CREATE_TOPIC');
-            let operator = rootState.localStorage.WALLET_DATA.ACCOUNT_ID;
+            let creatorAccount = rootState.localStorage.WALLET_DATA.ACCOUNT_ID;
 
             if (!newTopicResult.success) return {
                 success: false,
@@ -435,8 +439,7 @@ export const actions = {
             let newMatchData = {
                 messageType: 'matchCreation',
                 topicId: newTopicId,
-                operator: operator,
-                playerWhite: operator,
+                playerWhite: creatorAccount,
                 playerBlack: context.playerBlack,
             };
 
