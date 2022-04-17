@@ -9,7 +9,7 @@ import Chess from 'chess.js';
 import { HashConnect } from "hashconnect";
 var hashconnect = new HashConnect();
 
-hashconnect.debug = true; //DEBUG
+//hashconnect.debug = true; //DEBUG
 
 var appMetadata = {
     name: "Hashgraph Chess",
@@ -75,9 +75,9 @@ export const mutations = {
         let playerBlack = messageData.playerBlack;
         let userType = 'o';
 
-        if (rootState.localStorage.WALLET_DATA.ACCOUNT_ID == playerWhite) {
+        if (messageData.account == playerWhite) {
             userType = 'w';
-        } else if (rootState.localStorage.WALLET_DATA.ACCOUNT_ID == playerBlack) {
+        } else if (messageData.account == playerBlack) {
             userType = 'b';
         }
 
@@ -269,12 +269,18 @@ export const actions = {
             let topicInfo = await this.$axios.get(`/api/v1/topics/${topicId}/messages?order=desc&limit=1`);
             let lastMessage = topicInfo.data.messages[0];
             let topicSequenceCount = lastMessage.sequence_number;
-            let lastReadMessage = 1;
+            let lastReadMessage = 0;
 
             // loop through topic. process messages until we hit limit from our topic info query
-            // note: this is not great. gRPC subs are easier to work with, but require a server
+            // note: this is not great, esp. for 100+ message topics. gRPC subs are easier to work with, but require a server
             while (lastReadMessage < topicSequenceCount) {
-                let response = await axios.get(`/api/v1/topics/${topicId}/messages/?limit=100&sequenceNumber=gt:${lastReadMessage}`);
+                var response; // API wont let me query gt:0
+                if (lastReadMessage === 0) {
+                    response = await this.$axios.$get(`/api/v1/topics/${topicId}/messages/?limit=100`);
+                } else {
+                    response = await this.$axios.$get(`/api/v1/topics/${topicId}/messages/?limit=100&sequenceNumber=gt:${lastReadMessage}`);
+                }
+                
                 response.messages.forEach(message => {
                     lastReadMessage = message.sequence_number;
                     this.dispatch('sessionStorage/PROCESS_MESSAGE', message);
@@ -338,7 +344,7 @@ export const actions = {
         }
     },
     // not to be mistaken for PROCESS_CHAT_MESSAGE
-    PROCESS_MESSAGE({ commit, state }, messagePayload) {
+    PROCESS_MESSAGE({ commit, state, rootState }, messagePayload) {
         let topicId = messagePayload.topic_id;
         let msgIndex = messagePayload.sequence_number;
         let rawMessage = new TextDecoder("utf-8").decode(Buffer.from(messagePayload.message, 'base64'));
@@ -354,6 +360,7 @@ export const actions = {
         
         switch(messageObject.messageType) {
         case 'matchCreation':
+            messageObject.account = rootState.localStorage.WALLET_DATA.ACCOUNT_ID;
             commit('CREATE_MATCH_OBJECT', messageObject);
             break;
         case 'chatMessage':
@@ -433,8 +440,7 @@ export const actions = {
                 playerBlack: context.playerBlack,
             };
 
-            // TODO: check if this was a success
-            let matchCreationResult = this.dispatch('sessionStorage/SEND_MESSAGE', newMatchData);
+            let matchCreationResult = await this.dispatch('sessionStorage/SEND_MESSAGE', newMatchData);
 
             if (matchCreationResult.success) {   
                 return {
