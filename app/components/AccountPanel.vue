@@ -26,11 +26,11 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapMutations, mapGetters } from 'vuex';
   
 export default {
     computed: {
-        ...mapState('localStorage', ['ACCOUNT_ID']),
+        ...mapGetters('localStorage', ['ACCOUNT_ID']),
     },
     
     methods: {

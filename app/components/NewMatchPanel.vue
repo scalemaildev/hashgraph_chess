@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required, helpers } from 'vuelidate/lib/validators';
 
@@ -83,7 +83,7 @@ export default {
     },
     
     computed: {
-        ...mapState('localStorage', ['ACCOUNT_ID']),
+        ...mapGetters('localStorage', ['ACCOUNT_ID']),
         ...mapState('sessionStorage', ['MATCHES']),
         opponentAccountIdErrors () {
             const errors = [];

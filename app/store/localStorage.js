@@ -28,3 +28,11 @@ export const mutations = {
         }
     },
 };
+
+/* GETTERS */
+export const getters = {
+    ACCOUNT_ID: (state) => {
+        return state.WALLET_DATA.ACCOUNT_ID;
+    }
+};
+
