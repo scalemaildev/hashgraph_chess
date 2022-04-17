@@ -5,7 +5,7 @@
   </div>
   <div v-if="ACTIVE_PANEL == 'loadingPanel'" class="spaced-mid">
     <LoadingPanel loadingText="LOADING"
-                  warningTime=12000 />
+                  warningTime=20000 />
   </div>
   <div v-else-if="ACTIVE_PANEL == 'startPanel'">
     <MatchStartPanel />

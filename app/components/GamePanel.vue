@@ -96,7 +96,7 @@
       </div>
       <div v-else-if="SUBMITTING_MOVE" style="margin-top: 4vh;">
         <LoadingPanel loadingText="SUBMITTING"
-                      warningTime=12000 />
+                      warningTime=20000 />
       </div>
     </div>
   </v-row>

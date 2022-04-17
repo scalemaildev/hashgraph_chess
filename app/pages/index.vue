@@ -4,7 +4,7 @@
     <v-col>
   <div v-show="ACTIVE_PANEL == 'loadingPanel'">
     <LoadingPanel loadingText='LOADING'
-                  warningTime=10000 />
+                  warningTime=20000 />
   </div>
   <div v-show="ACTIVE_PANEL == 'startPanel'">
     <StartPanel />
