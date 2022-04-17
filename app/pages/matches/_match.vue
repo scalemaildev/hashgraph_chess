@@ -5,7 +5,7 @@
   </div>
   <div v-if="ACTIVE_PANEL == 'loadingPanel'" class="spaced-mid">
     <LoadingPanel loadingText="LOADING"
-                  warningTime=12000 />
+                  warningTime=20000 />
   </div>
   <div v-else-if="ACTIVE_PANEL == 'startPanel'">
     <MatchStartPanel />
@@ -28,8 +28,7 @@ export default {
     
     computed: {
         ...mapState('sessionStorage', ['ACTIVE_PANEL',
-                                       'ACCOUNT_ID',
-                                       'PRIVATE_KEY'])
+                                       'WALLET_DATA_FOUND'])
     },
     
     created() {
@@ -37,28 +36,20 @@ export default {
     },
     
     mounted() {
-        if (!!this.ACCOUNT_ID && !!this.PRIVATE_KEY) {
-            this.$nextTick(() => {
-                this.restoreClient();
-            });
+        this.CHECK_WALLET_DATA();
+        
+        if (this.WALLET_DATA_FOUND) {
+            this.REINIT_HASH_CONNECT();
+            this.SET_ACTIVE_PANEL('clientPanel');
         } else {
             this.SET_ACTIVE_PANEL('startPanel');
         }
     },
     
     methods: {
+        ...mapMutations('localStorage', ['CHECK_WALLET_DATA']),
         ...mapMutations('sessionStorage', ['SET_ACTIVE_PANEL']),
-        ...mapActions('sessionStorage', ['INIT_HEDERA_CLIENT']),
-        async restoreClient() {
-            const response = await this.INIT_HEDERA_CLIENT({
-                accountId: this.ACCOUNT_ID,
-                privateKey: this.PRIVATE_KEY
-            });
-
-            if (response.success) {
-                this.SET_ACTIVE_PANEL('clientPanel');
-            }
-        },
+        ...mapActions('sessionStorage', ['REINIT_HASH_CONNECT'])
     }
 }
 </script>

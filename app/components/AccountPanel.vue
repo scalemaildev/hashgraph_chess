@@ -2,7 +2,7 @@
 <v-container class="content-body">
   <v-row>
     <v-col cols="12" align="center" justify="center">
-      <h1>Welcome, <i>#{{ ACCOUNT_ID }}</i></h1>
+      <h1>Welcome, <i>{{ ACCOUNT_ID }}</i></h1>
     </v-col>
   </v-row>
   <v-row>
@@ -26,11 +26,11 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapMutations, mapGetters } from 'vuex';
   
 export default {
     computed: {
-        ...mapState('sessionStorage', ['ACCOUNT_ID']),
+        ...mapGetters('localStorage', ['ACCOUNT_ID']),
     },
     
     methods: {

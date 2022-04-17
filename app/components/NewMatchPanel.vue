@@ -7,7 +7,7 @@
     <v-col cols="12" align="center" justify="center">
       <p>From this panel, you can create a new chess match. You'll need to know your opponent's <strong>Account ID</strong> in order to create the match. Other players can join your match as observers, but only you and your opponent will be able to move pieces or send chat messages.</p>
       <p>After creating the match, you'll be given a <strong>Topic ID</strong>. To invite your opponent to the match, give them this ID. They can enter it on the <strong>Join Game</strong> panel to enter the match.</p>
-    </v-col>    
+    </v-col>
   </v-row>
   <!-- MATCH CREATION FORM -->
   <div v-if="!creatingMatch">
@@ -45,7 +45,7 @@
     <v-row align="center" justify="center">
       <v-col cols="12" align="center" justify="center">
         <span style="color: red;"><h3>An error occurred creating the match:</h3></span>
-        <p style="color: red;">Check the console log for potential details.</p>
+        <p style="color: red;">{{ errorMessage }}</p>
       </v-col>
     </v-row>
   </div>
@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required, helpers } from 'vuelidate/lib/validators';
 
@@ -77,13 +77,14 @@ export default {
         return {
             opponentAccountId: "",
             matchCreationError: false,
+            errorMessage: '',
             creatingMatch: false
         }
     },
     
     computed: {
-        ...mapState('sessionStorage', ['ACCOUNT_ID',
-                                      'MATCHES']),
+        ...mapGetters('localStorage', ['ACCOUNT_ID']),
+        ...mapState('sessionStorage', ['MATCHES']),
         opponentAccountIdErrors () {
             const errors = [];
             if (!this.$v.opponentAccountId.$dirty) return errors
@@ -112,7 +113,6 @@ export default {
             this.creatingMatch = true;
             
             const response = await this.CREATE_MATCH({
-                'playerWhite': this.ACCOUNT_ID,
                 'playerBlack': this.opponentAccountId
             });
 
@@ -123,7 +123,7 @@ export default {
                 var newMatchUrl = "/matches/" + topicId;
                 this.$router.push(newMatchUrl);
             } else {
-                console.error(response.errorMessage);
+                this.errorMessage = response.responseMessage;
                 this.matchCreationError = true;
                 this.creatingMatch = false;
             }
