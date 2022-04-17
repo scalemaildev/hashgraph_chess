@@ -8,10 +8,22 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+  
 export default {
     data: () => {
         return {
             isMounted: false
+        }
+    },
+    
+    watch: {
+        mobileLayout (newDisplay, oldDisplay) {
+            if (newDisplay == "mobile") {
+                this.TOGGLE_SMALL_SCREEN(true);
+            } else {
+                this.TOGGLE_SMALL_SCREEN(false);
+            }
         }
     },
     
@@ -23,6 +35,10 @@ export default {
         mobileLayout() {
             return this.isMounted && this.$vuetify.breakpoint.xs ? "mobile" : ""
         }
+    },
+    
+    methods: {
+        ...mapMutations(['TOGGLE_SMALL_SCREEN']),
     }
 }
 </script>
