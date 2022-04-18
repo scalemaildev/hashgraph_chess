@@ -1,6 +1,11 @@
 <template>
-  <v-app-bar elevation="4" app>
-    <h1 style="display: inline">Hashgraph Chess</h1> <sup>Beta</sup>
+<v-app-bar elevation="4" app>
+  <div v-if="!SMALL_SCREEN">
+    <h1 style="display: inline">Hashgraph Chess</h1> <sup><sup>Beta</sup></sup>
+  </div>
+  <div v-else>
+    <h1 style="display: inline">♄-Chess</h1> <sup><sup>Beta</sup></sup>
+  </div>
   <v-spacer />
   <div v-if="!walletConnected">
     <v-btn @click.prevent="initHashConnect">
@@ -20,6 +25,7 @@ import { mapState, mapMutations, mapActions } from 'vuex';
 
 export default {
     computed: {
+        ...mapState(['SMALL_SCREEN']),
         ...mapState('sessionStorage', ['WALLET_CONNECTED']),
         
         walletConnected() {
