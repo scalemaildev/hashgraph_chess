@@ -200,7 +200,7 @@ export const actions = {
             let privKey = initData.privKey;
             let pairedWalletData;
             let topic = connection.topic;
-            let pairingString = hashconnect.generatePairingString(connection, "testnet", false);
+            let pairingString = hashconnect.generatePairingString(connection, "mainnet", false);
 
             // find hashpack browser extension & connect
             hashconnect.foundExtensionEvent.once((walletMetaData) => {
