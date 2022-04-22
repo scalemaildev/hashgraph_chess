@@ -2,11 +2,13 @@
 
 This is an application that allows users to conduct chess matches over the [Hedera Consensus Service.](https://hedera.com/consensus-service) Chess moves (and chat messages) are submitted to the consensus service, where they are ordered as an immutable log of events. These events are then translated into board states and messages that are served to the client.
 
-In order to use this application, you will need a Hedera [Mainnet account](https://hedera.com/account-creation) as well as a [HashPack](https://www.hashpack.app/) wallet version v2.4.6+.
+In order to use this application, you will need a [Hedera account](https://hedera.com/account-creation) as well as a [HashPack](https://www.hashpack.app/) wallet version v2.4.6+.
+
+**Note:** This is a proof-of-concept application that was intended to demonsrate the technical feasibility of storing gamestates in the HCS. This is not intended to replace traditional online chess venues. I have made this repo open source to assist other developers in creating Hedera dApps.
 
 ## Technical Information
 
-This is a [NuxtJS](https://nuxtjs.org/) application that leverages several useful node modules, most notably: [chess.js](https://github.com/jhlywa/chess.js), [hashconnect](https://www.hashpack.app/hashconnect), and of course [hedera-sdk-js](https://github.com/hashgraph/hedera-sdk-js). It comes with a compose file for [docker containerization](https://www.docker.com/) which is intended for use with [Elastic Beanstalk.](https://aws.amazon.com/elasticbeanstalk/) A live version of the application is currently hosted on [hashgraphchess.com.](https://hashgraphchess.com)
+This is a [NuxtJS](https://nuxtjs.org/) application that leverages several useful node modules, most notably: [chess.js](https://github.com/jhlywa/chess.js), [hashconnect](https://www.hashpack.app/hashconnect), and of course [hedera-sdk-js](https://github.com/hashgraph/hedera-sdk-js). It comes with a compose file for [docker containerization](https://www.docker.com/) which is intended for use with [Elastic Beanstalk.](https://aws.amazon.com/elasticbeanstalk/) A live version of the application (Mainnet) is currently hosted on [hashgraphchess.com.](https://hashgraphchess.com)
 
 The app can be run locally via either its compose file, or the usual "npm install" -> "npm run dev" method. Since matches are stored on the HCS, you'll be able to access your match data regardless of where you run this application. **You also need to be using HTTPS in your local environment.** I recommend using mkcert for 'localhost' and putting the .pem keys in the ./app directory.
 
