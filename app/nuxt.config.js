@@ -20,10 +20,6 @@ export default {
         ]
     },
 
-    env: {
-        PRIVATE_KEY: process.env.SERVER_PRIVATE_KEY
-    },
-
     server: {
         https: process.env.NODE_ENV === 'development'
             ? {
