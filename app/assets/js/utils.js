@@ -5,7 +5,7 @@ const { Client,
         TransactionId,
         Transaction } = require("@hashgraph/sdk");
 
-const HederaClient = Client.forTestnet(); //TODO testnet for now
+const HederaClient = Client.forMainnet(); //TODO testnet for now
 HederaClient.setOperator(AccountId.fromString(process.env.SERVER_ACCOUNT_ID),
                          PrivateKey.fromString(process.env.SERVER_PRIVATE_KEY));
 
