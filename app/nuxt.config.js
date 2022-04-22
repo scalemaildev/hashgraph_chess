@@ -67,7 +67,7 @@ export default {
     },
 
     proxy: {
-        '/api/': process.env.MIRROR_NODE_URL || "https://testnet.mirrornode.hedera.com/"
+        '/api/': process.env.MIRROR_NODE_URL
     },
 
     // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

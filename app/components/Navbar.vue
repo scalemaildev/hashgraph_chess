@@ -1,10 +1,10 @@
 <template>
 <v-app-bar elevation="4" app>
   <div v-if="!SMALL_SCREEN">
-    <h1 style="display: inline">Hashgraph Chess</h1> <sup><sup>Beta</sup></sup>
+    <h1 style="display: inline">Hashgraph Chess</h1>
   </div>
   <div v-else>
-    <h1 style="display: inline">♄-Chess</h1> <sup><sup>Beta</sup></sup>
+    <h1 style="display: inline">♄-Chess</h1>
   </div>
   <v-spacer />
   <div v-if="!walletConnected">
