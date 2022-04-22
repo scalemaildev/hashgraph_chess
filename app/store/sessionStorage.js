@@ -1,6 +1,6 @@
 /* UTILS */
 const TextDecoder = require("text-encoding").TextDecoder;
-import { signAndMakeBytes } from "../assets/js/utils";
+import { makeBytes } from "../assets/js/utils";
 
 /* CHESS.JS */
 import Chess from 'chess.js';
@@ -18,8 +18,7 @@ var appMetadata = {
 };
 
 /* HEDERA */
-const { PublicKey,
-        TopicCreateTransaction,
+const { TopicCreateTransaction,
         TransactionReceipt,
         TopicMessageSubmitTransaction } = require("@hashgraph/sdk");
 
@@ -315,7 +314,7 @@ export const actions = {
                 .setMessage(messagePayload)
                 .setTopicId(messageData.topicId);
             
-            let txBytes = await signAndMakeBytes(tx, acctId);
+            let txBytes = await makeBytes(tx, acctId);
 
             let transaction = {
                 topic,
@@ -386,9 +385,8 @@ export const actions = {
             let acctId = rootState.localStorage.WALLET_DATA.ACCOUNT_ID;
             let topic = rootState.localStorage.WALLET_DATA.CONNECTION_TOPIC;
             
-            let tx = new TopicCreateTransaction()
-                .setSubmitKey(PublicKey.fromString(process.env.SERVER_PUBLIC_KEY));
-            let txBytes = await signAndMakeBytes(tx, acctId);
+            let tx = new TopicCreateTransaction();
+            let txBytes = await makeBytes(tx, acctId);
 
             let transaction = {
                 topic,
