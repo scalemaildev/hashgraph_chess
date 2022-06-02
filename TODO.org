@@ -1,7 +1,0 @@
-* IN PROGRESS
-** TODO Test full game
-* ON DECK
-* FUTURE
-** Handle multiple accounts in a single wallet
-** Handle disconnected wallet
-*** When local storage data still exists
